@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+    <application setting="true">
+        <name><![CDATA[微小智全景红包]]></name>
+        <identifie><![CDATA[wxz_panorama]]></identifie>
+        <version><![CDATA[1.0.0]]></version>
+        <type><![CDATA[activity]]></type>
+        <ability><![CDATA[wxz_panorama]]></ability>
+        <description><![CDATA[wxz_panorama]]></description>
+        <author><![CDATA[lirui]]></author>
+        <url><![CDATA[http://bbs.we7.cc/]]></url>
+    </application>
+    <platform>
+        <subscribes>
+            <message type="text" />
+            <message type="image" />
+            <message type="voice" />
+            <message type="video" />
+            <message type="location" />
+            <message type="link" />
+            <message type="subscribe" />
+            <message type="unsubscribe" />
+            <message type="qr" />
+            <message type="trace" />
+            <message type="click" />
+            <message type="view" />
+            <message type="enter" />
+        </subscribes>
+        <handles>
+            <message type="image" />
+            <message type="voice" />
+            <message type="video" />
+            <message type="location" />
+            <message type="link" />
+            <message type="subscribe" />
+            <message type="qr" />
+            <message type="trace" />
+            <message type="click" />
+            <message type="enter" />
+            <message type="text" />
+        </handles>
+        <rule embed="true" />
+    </platform>
+    <bindings>
+        <menu>
+            <entry title="粉丝列表" do="fans_list" state="" direct="false" />
+            <entry title="中奖列表" do="win_list" state="" direct="false" />
+            <entry title="场景列表" do="scene_list" state="" direct="false" />
+            <entry title="奖品设置" do="award_list" state="" direct="false" />
+            <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
+            <!--<entry title="微信配置" do="wx_pay_setting" state="" direct="false" icon="fa fa-weixin"/>-->
+            <entry title="数据配置" do="page_list" state="" direct="false" />
+            <!--<entry title="数据配置" do="page_list" state="" direct="false" icon="fa fa-cubes"/>-->
+        </menu>
+    </bindings>
+    <install><![CDATA[
+CREATE TABLE `ims_wxz_panorama_win` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `fans_id` int(11) NOT NULL COMMENT '粉丝id',
+  `pano` int(11) NOT NULL COMMENT '场景id',
+  `award_id` int(11) NOT NULL COMMENT '奖品id',
+  `award` varchar(50) NOT NULL DEFAULT '' COMMENT '奖品名称',
+  `fee` int(10) NOT NULL COMMENT '红包金额',
+  `is_send` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否发放',
+  `create_time` int(10) NOT NULL COMMENT '中奖时间',
+  PRIMARY KEY (`id`),
+  KEY `fans_id` (`fans_id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ims_wxz_panorama_fans` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `openid` varchar(40) NOT NULL DEFAULT '',
+  `proxy` varchar(40) NOT NULL DEFAULT '',
+  `unionid` varchar(40) NOT NULL DEFAULT '',
+  `nickname` varchar(20) NOT NULL DEFAULT '',
+  `gender` varchar(2) DEFAULT '',
+  `state` varchar(20) NOT NULL DEFAULT '',
+  `city` varchar(20) NOT NULL DEFAULT '',
+  `country` varchar(20) NOT NULL DEFAULT '',
+  `award_name` varchar(50) NOT NULL DEFAULT '' COMMENT '奖品名称',
+  `avatar` varchar(500) NOT NULL DEFAULT '',
+  `username` varchar(255) NOT NULL COMMENT '用户姓名',
+  `cellphone` varchar(20) NOT NULL COMMENT '手机号',
+  `award_num` int(11) NOT NULL DEFAULT 0 COMMENT '领取次数',
+  `share_num` int(11) NOT NULL DEFAULT 0 COMMENT '分享次数',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  KEY `uniacid` (`uniacid`),
+  KEY `openid` (`openid`),
+  KEY `proxy` (`proxy`),
+  KEY `nickname` (`nickname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ims_wxz_panorama_payrecord` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '微信',
+  `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
+  `openid` varchar(200) NOT NULL DEFAULT '' COMMENT 'openid',
+  `pano` int(11) NOT NULL COMMENT '场景id',
+  `fee` int(10) NOT NULL COMMENT '发放金额',
+  `log` varchar(500) NOT NULL DEFAULT '' COMMENT '日志',
+  `created` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `completed` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '完成状态,0未完成,1已完成',
+  `pay_time` int(10) unsigned NOT NULL COMMENT '支付时间',
+  KEY `id` (`id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发红包记录表';
+
+CREATE TABLE `ims_wxz_panorama_award` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '奖品名称',
+  `num` int(11) NOT NULL COMMENT '奖品数量',
+  `left_num` int(11) NOT NULL COMMENT '奖品剩余数量',
+  `cashed` int(11) NOT NULL COMMENT '已中奖品数量',
+  `probability` int(11) NOT NULL COMMENT '中奖概率',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  KEY `id` (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='奖品表';
+
+CREATE TABLE `ims_wxz_panorama_scene` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '全景名称',
+  `up` varchar(255) NOT NULL DEFAULT '' COMMENT '图片1',
+  `back` varchar(200) NOT NULL DEFAULT '' COMMENT '图片2',
+  `down` varchar(200) NOT NULL DEFAULT '' COMMENT '图片3',
+  `front` varchar(200) NOT NULL DEFAULT '' COMMENT '图片4',
+  `left` varchar(200) NOT NULL DEFAULT '' COMMENT '图片5',
+  `right` varchar(200) NOT NULL DEFAULT '' COMMENT '图片6',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  KEY `id` (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全景场景表';
+        
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_page` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `type` VARCHAR(50) NOT NULL COMMENT '页面类型',
+  `title` VARCHAR(500) NOT NULL COMMENT '标题',
+  `desc` TEXT NOT NULL COMMENT '描述',
+  `img` VARCHAR(255) NOT NULL COMMENT '图片',
+  `link` VARCHAR(255) NOT NULL COMMENT '链接地址',
+  `isdel` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `update_at` INT(11) NOT NULL,
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;         
+]]></install>
+    <uninstall><![CDATA[
+DROP TABLE `ims_wxz_panorama_win`;
+DROP TABLE `ims_wxz_panorama_fans`; 
+DROP TABLE `ims_wxz_panorama_payrecord`;
+DROP TABLE `ims_wxz_panorama_award`;
+DROP TABLE `ims_wxz_panorama_page`;
+DROP TABLE `ims_wxz_panorama_scene`;
+]]></uninstall>
+    <upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

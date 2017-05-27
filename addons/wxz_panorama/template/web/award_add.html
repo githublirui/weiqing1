@@ -1,0 +1,42 @@
+{template 'common/header'}
+<div class="clearfix">
+    <form id="theform" class="form form-horizontal" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                添加活动
+            </div>
+            <div class="panel-body">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">奖品名称</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="name" value="">
+                            <span class="help-block">奖品名称为现金时，中奖会给用户发现金红包</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">奖品数量</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="num" value="">
+                            <span class="help-block">奖品名称为现金时，奖品数量为现金金额,按分计算</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">中奖概率(百分比)</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="如: 填写50为50%的中奖概率" name="probability" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}

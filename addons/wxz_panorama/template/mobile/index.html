@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{php echo $this->module['config']['active_name'];}</title>
+        <link href="{$modulePath}static/css/css.css" rel="stylesheet"/>
+        <meta name="viewport" id="viewport" content="width=device-width,user-scalable=no">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="{$modulePath}static/css/swiper.3.1.7.min.css">
+        <link rel="stylesheet" href="{$modulePath}static/css/animate.min.css">
+        <script src="{$modulePath}static/js/jquery-1.8.3.min.js"></script>
+    </head>
+    <body>
+    <style type="text/css">
+.Txt{position: absolute; width: 60%; top: 34px; left: 20%; color: #fff; font-size: 0.22rem ;font-weight: bold;; text-align: center}
+.mesge{position: absolute; width: 60%; bottom: 40px; left: 20%;color: #fff; font-size: 0.18rem;font-weight: bold;}
+.mesge .pro{font-size: 0.14rem;font-weight: none;}
+    </style>
+        <section class="swiper-container">
+            <section class=" swiper-wrapper">
+				
+                <section class="page1-3 swiper-slide" style="background: url({php echo $attach_url . '/'.$pageContents[1]['img']}) no-repeat center top; background-size: cover; position: relative; width: 100%; height: 100%">
+                    <!--<div class="p1b2"></div>-->
+                    <!--<div class="p1T2 ani"  swiper-animate-effect="fadeInUp" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"></div>-->
+                    <!--<div class="p1T1 ani"  swiper-animate-effect="shake" swiper-animate-duration="0.7s" swiper-animate-delay="0.5s"></div>-->
+                    <img src="{$modulePath}static/img/web-swipe-tip.png" style="width: 60px; height: 55px; bottom: 0; left: 40%;" id="array" class="resize"> 
+                </section >
+              
+		<section class="page1-1 swiper-slide">
+                    <img src="{php echo $attach_url . '/'.$pageContents[2]['img']}" style=" width:100%; height:100%;"> 
+					<img src="{$modulePath}static/img/web-swipe-tip.png" style="width: 60px; height: 55px; bottom: 0; left: 40%;" id="array" class="resize">
+                </section >
+				<!--<section class="page1-2 swiper-slide">
+                    <img src="{$modulePath}static/img//web-swipe-tip.jpg" style="width:100%; height:100%;"> 
+					<img src="{$modulePath}static/img/web-swipe-tip.png" style="width: 60px; height: 55px; bottom: 0; left: 40%;" id="array" class="resize">
+                </section >
+				-->
+				<section  class="page1-4 swiper-slide " style="background: url({php echo $attach_url . '/'.$pageContents[3]['img']}) no-repeat center top; background-size: cover; position: relative; width: 100%; height: 100%;">
+                    <div class="buzou">
+                    <div class="Txt ani"  swiper-animate-effect="bounceInDown" swiper-animate-duration="0.3s" swiper-animate-delay="0s">寻宝攻略</div>
+                        <div class="bz1 ani"  swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.2s"><img src="{$modulePath}static/img/page1/ico1.png" width="100%"></div>
+                        <div class="bz2 ani"  swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"><img src="{$modulePath}static/img/page1/ico2.png" width="100%"></div>
+                        <div class="bz3 ani"  swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.6s"><img src="{$modulePath}static/img/page1/ico33.png" width="100%"></div>
+                        <div class="mesge ani"  swiper-animate-effect="bounceInDown" swiper-animate-duration="0.5s" swiper-animate-delay="0.8s">
+                        	<!--<div class="T">活动奖品：</div>
+                        	<div class="pro">奖品1：XXXX</div>-->
+                        </div>
+                    </div>
+                    <div class="btn1 ani"  swiper-animate-effect="shake" swiper-animate-duration="0.7s" swiper-animate-delay="1.3s">
+                        <input style="cursor: pointer;" type="button" onClick="location.href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}'"></div>
+                    <footer><a href="{$pageContents[7]['title']}">{$pageContents[8]['title']}</a></footer>
+                </section>
+				
+				
+            </section>
+        </section>
+        <script src="{$modulePath}static/js/swiper.min.js"></script>
+        <script src="{$modulePath}static/js/swiper.animate.min.js"></script>
+        <script>
+
+            $("section").height($(window).height());
+            var mySwiper = new Swiper('.swiper-container', {
+                paginationClickable: true,
+                direction: 'vertical',
+                noSwiping: true,
+                preloadImages: false,
+                onInit: function (swiper) { //Swiper2.x的初始化是onFirstInit
+                    swiperAnimateCache(swiper); //隐藏动画元素 
+                    swiperAnimate(swiper); //初始化完成开始动画
+                },
+                onSlideChangeEnd: function (swiper) {
+                    swiperAnimate(swiper); //每个slide切换结束时也运行当前slide动画
+                }
+            })
+        </script>
+       {template 'share'}
+    </body>
+</html>

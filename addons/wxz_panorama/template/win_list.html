@@ -1,0 +1,76 @@
+{template 'common/header'}
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            用户列表
+        </div>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+            <table class="table table-hover">
+                <tr>
+                    <th style="width:5%">ID</th>
+                    <th style="width:20%">微信openid</th>
+                    <th style="width:10%">微信昵称</th>
+                    <th style="width:10%">用户姓名</th>
+                    <th style="width:10%">手机号</th>
+                    <th style="width:10%">奖品名称</th>
+                    <th style="width:10%">红包金额</th>
+                    <th style="width:10%">分享次数</th>
+                    <th style="width:20%">中奖时间</th>
+                </tr>
+                {loop $list $row}
+                <tr>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['id']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['openid']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['nickname']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['username']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['cellphone']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['award']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['fee']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['share_num']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {php echo date('Y-m-d H:i', $row['create_time'])}
+                        </p>
+                    </td>
+                </tr>
+                {/loop}
+            </table>
+        </div>
+        <div class="panel-body text-right">
+            {$pager}
+        </div>
+    </div>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{php echo $this->module['config']['active_name'];}</title>
+        <link href="{$modulePath}static/css/css.css" rel="stylesheet"/>
+        <meta name="viewport" id="viewport" content="width=device-width,user-scalable=no">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="{$modulePath}static/css/swiper.3.1.7.min.css">
+        <link rel="stylesheet" href="{$modulePath}static/css/animate.min.css">
+        <script src="{$modulePath}static/js/jquery-1.8.3.min.js"></script>
+    </head>
+    <body>
+        <section class="page4 " id="bg">
+            <div class="page4-img" style="padding-top: 7%">
+                <img src="{$modulePath}static/img/page4/img4.png" width="100%">
+            </div>
+            <div class="page4_text" style="padding-top: 5px;">
+                {$show_msg}
+				分享朋友圈后可以领取!
+				<br />
+				<!--<br />-->
+				<!--<a href="https://720yun.com/t/a8b27qpvx1s?pano_id=861586">我还想去逛逛华盛BBB</a>-->
+				<!--<br />-->
+				领奖时间：{$pageContents[4]['title']}
+				<br />
+				领奖电话：{$pageContents[5]['title']}
+				<br />
+				领奖地址：{$pageContents[6]['title']}
+            </div>
+           <!-- <div class="page4_logo"><img src="{$modulePath}static/img/page4/logo.png" width="60%"></div>-->
+            <footer><!--<a href="tel:13956993061">©微小智技术支持</a></footer>-->
+        </section>
+        <script>
+            $("section").height($(window).height());
+        </script>
+        {template 'share'}
+    </body>
+</html>
+

@@ -1,0 +1,141 @@
+{template 'common/header'}
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $(function () {
+            $('#theform').submit(function () {
+                var message = '';
+                if ($.trim($(':text[name=start_time]').val()) == '') {
+                    message += '必须活动开始时间<br>';
+                }
+                if ($.trim($(':text[name=end_time]').val()) == '') {
+                    message += '必须活动结束时间<br>';
+                }
+                if (message) {
+                    u.message(message);
+                    return false;
+                }
+                return true;
+            });
+
+            $('#start_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                language: 'zh-CN',
+                pickDate: true,
+                pickTime: true,
+                hourStep: 1,
+                autoclose: true,
+                inputMask: true,
+                minView: "month",
+                timepicker: true,
+            });
+            $("#end_time").datetimepicker({
+                format: 'Y-m-d H:i',
+                language: 'zh-CN',
+                pickDate: true,
+                pickTime: true,
+                hourStep: 1,
+                autoclose: true,
+                inputMask: true,
+                minView: "month",
+                timepicker: true,
+            });
+
+            //强制关注
+            $(".force_follow").change(function () {
+                var checked = $(this).is(":checked");
+                if (checked) {
+                    $(".force_follow_div").show();
+                } else {
+                    $(".force_follow_div").hide();
+                }
+            });
+        });
+    });
+</script>
+<div class="clearfix">
+    <form id="theform" class="form form-horizontal" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                系统参数
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动首页</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=index&m={$_GPC['m']}
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-heading">
+                    活动设置
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动名称</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="active_name" class="form-control span7" placeholder="" name="active_name" value="{$settings['active_name']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动开始时间</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="start_time" class="form-control span7" placeholder="" name="start_time" value="{$settings['quanjin']['start_time']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动结束时间</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="end_time" class="form-control span7" placeholder="" name="end_time" value="{$settings['quanjin']['end_time']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">强制关注</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            <input type="checkbox" value="1" name="force_follow" class="force_follow" {if $settings['force_follow']==1 }checked="checked"{/if}/>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group force_follow_div" {if $settings['force_follow']!=1 }style="display:none"{/if}>
+                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">引导关注链接</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="force_follow_url" value="{$settings['force_follow_url']}">
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-heading">
+                    入口
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文标题</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="title" value="{$settings['quanjin']['title']}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文图片</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_form_field_image('img',$settings['quanjin']['img'])}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文描述</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <textarea style="height:60px;" name="desc" class="form-control span7" cols="60">{$settings['quanjin']['desc']}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}

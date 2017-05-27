@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{php echo $this->module['config']['active_name'];}</title>
+        <link href="{$modulePath}static/css/css.css" rel="stylesheet"/>
+        <meta name="viewport" id="viewport" content="width=device-width,user-scalable=no">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="{$modulePath}static/css/swiper.3.1.7.min.css">
+        <link rel="stylesheet" href="{$modulePath}static/css/animate.min.css">
+        <script src="{$modulePath}static/js/jquery-1.8.3.min.js"></script>
+    </head>
+
+    <body>
+        <section class="page3 " id="bg">
+            <div class="page3-img"><img src="{$modulePath}static/img/page3/img3.png" width="100%"></div>
+            <div class="page3_text"><img src="{$modulePath}static/img/page3/text1.png" width="100%"></div>
+            <div class="name"><input type="text" name ="uername" placeholder="请输入姓名" id="name" ></div>
+            <div class="ph name"><input type="text" name ="phone" placeholder="请输入手机号码" maxlength=11 id="phone"></div>
+            <div class="btn3"><input type="button" value="点击领取" onclick="doProfile();"></div>
+            <footer><a href="tel:{$pageContents[7]['title']}">{$pageContents[8]['title']}</a></footer>
+        </section>
+        <script>
+            $("section").height($(window).height());
+        </script>
+        <script>
+            function doProfile() {
+                var pars = {};
+                pars.name = $.trim($('#name').val());
+                pars.phone = $.trim($('#phone').val());
+                var msg = '';
+                if (pars.name == '') {
+                    msg = '请输入姓名';
+                    alert(msg);
+                    return;
+                }
+                if (pars.phone == '' || !(/^1\d{10}$/).test(pars.phone)) {
+                    msg = '请输入有效的手机号码';
+                    alert(msg);
+                    return;
+                }
+                $.post('{php echo $this->createMobileUrl("ajax",array("sdo"=>"regmsg"))}', pars).success(function (dat) {
+                    if (dat == 'success') {
+                        //location.href = location.href;
+                        location.href = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=win&m={$_GPC['m']}";
+                    } else {
+                        alert(dat);
+                    }
+                });
+            }
+        </script>
+         {template 'share'}
+    </body>
+</html>
+
