@@ -51,4 +51,26 @@ function sence_img_process($source, $destination, $type) {
     UtilsImage::square_crop($source, $destination . "/tb_{$type}.jpg", '1500');
 }
 
+/**
+ * 全景远程附件图片处理
+ * @param type $sence_config_path
+ * @param type $imgUrl
+ * @param type $type
+ */
+function sence_img_process_remote($sence_config_path, $imgUrl, $type) {
+    $panoImg = \Qiniu\thumbnail($imgUrl, 1, '1834', '1834');
+    $mbImg = \Qiniu\thumbnail($imgUrl, 1, '400', '400');
+    $tbImg = \Qiniu\thumbnail($imgUrl, 1, '1500', '1500');
+
+    $sence_config_content = file_get_contents($sence_config_path);
+    $replaceStrPano = "%SWFPATH%/images/pano_{$type}.jpg";
+    $replaceStrMb = "%SWFPATH%/images/mb_{$type}.jpg";
+    $replaceStrTb = "%SWFPATH%/images/tb_{$type}.jpg";
+
+    $sence_config_content = str_replace($replaceStrPano, $panoImg, $sence_config_content);
+    $sence_config_content = str_replace($replaceStrMb, $mbImg, $sence_config_content);
+    $sence_config_content = str_replace($replaceStrTb, $tbImg, $sence_config_content);
+    file_put_contents($sence_config_path, $sence_config_content);
+}
+
 ?>

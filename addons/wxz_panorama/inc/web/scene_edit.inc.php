@@ -12,13 +12,13 @@ if (!$scene_info) {
 load()->web('tpl');
 if (checksubmit()) {
     require_once WXZ_PANORAMA . '/source/UtilsFile.class.php';
-    //字段验证, 并获得正确的数据$dat
+    //字段验证, 并获得正确的数据$data
     $data = array(
         'name' => trim($_GPC['name']),
         'create_time' => time(),
     );
 
-    $img_columns = array('front', 'back', 'up', 'down', 'left', 'right');
+    $img_columns = array('front', 'back', 'up', 'down', 'left', 'right', 'treasures');
 
     foreach ($img_columns as $img_column) {
         if ($scene_info[$img_column] != $_GPC[$img_column]) {
@@ -27,6 +27,8 @@ if (checksubmit()) {
     }
 
     if (pdo_update('wxz_panorama_scene', $data, array('id' => $id))) {
+        setting_load('remote');
+
         //目录处理
         $modulePath = '../addons/' . $_GPC['m'] . '/';
         $attachdir = IA_ROOT . '/' . $_W['config']['upload']['attachdir'] . '/';
@@ -55,15 +57,29 @@ if (checksubmit()) {
 
         require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
 
-        //图片处理
-        foreach ($img_columns as $img_column) {
-            if (isset($data[$img_column])) {
-                sence_img_process($attachdir . $data[$img_column], $scene_img_path, $img_column);
+        if (!empty($_W['setting']['remote']['type'])) {
+            $url = $_W['setting']['remote']['qiniu']['url'];
+            //远程附件处理
+            foreach ($img_columns as $img_column) {
+                if (isset($data[$img_column]) && $img_column == 'treasures') {
+                    sence_img_process_remote($sence_config_path, $url . '/' . $data['front'], 'front');
+                }
+            }
+            if (isset($data['front'])) {
+                UtilsImage::square_crop($attachdir . $data['front'], $scene_img_path . "/thumb.jpg", '188');
+            }
+        } else {
+            //本地图片处理
+            foreach ($img_columns as $img_column) {
+                if (isset($data[$img_column]) && $img_column == 'treasures') {
+                    sence_img_process($attachdir . $data[$img_column], $scene_img_path, $img_column);
+                }
+            }
+            if (isset($data['front'])) {
+                UtilsImage::square_crop($attachdir . $data['front'], $scene_img_path . "/thumb.jpg", '188');
             }
         }
-        if (isset($data['front'])) {
-            UtilsImage::square_crop($attachdir . $data['front'], $scene_img_path . "/thumb.jpg", '188');
-        }
+
 
         message('更新成功', $this->createWebUrl('scene_list'));
     } else {

@@ -132,6 +132,7 @@ CREATE TABLE `ims_wxz_panorama_scene` (
   `front` varchar(200) NOT NULL DEFAULT '' COMMENT '图片4',
   `left` varchar(200) NOT NULL DEFAULT '' COMMENT '图片5',
   `right` varchar(200) NOT NULL DEFAULT '' COMMENT '图片6',
+  `treasures` varchar(200) NOT NULL DEFAULT '' COMMENT '宝藏图片',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   KEY `id` (`id`),
   KEY `uniacid` (`uniacid`)
