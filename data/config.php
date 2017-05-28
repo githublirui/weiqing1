@@ -38,7 +38,7 @@ $config['setting']['memory_limit'] = '256M';
 $config['setting']['filemode'] = 0644;
 $config['setting']['authkey'] = 'b284ba33';
 $config['setting']['founder'] = '1';
-$config['setting']['development'] = 0;
+$config['setting']['development'] = 1;
 $config['setting']['referrer'] = 0;
 $config['setting']['https'] = 0;
 

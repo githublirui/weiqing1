@@ -7,7 +7,13 @@ defined('IN_IA') or exit('Access Denied');
 
 
 function ihttp_request($url, $post = '', $extra = array(), $timeout = 60) {
+        global $_W;
 	$urlset = parse_url($url);
+        //bug fix windows 不支持并发请求
+        if(strpos($url,$_W['siteroot']) !== false) {
+            return true;
+        }
+       
 	if (empty($urlset['path'])) {
 		$urlset['path'] = '/';
 	}
