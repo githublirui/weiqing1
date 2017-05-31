@@ -7,15 +7,16 @@
         <div class="table-responsive panel-body" style="overflow:visible;">
             <table class="table table-hover">
                 <tr>
-                    <th style="width:5%">ID</th>
-                    <th style="width:20%">微信openid</th>
-                    <th style="width:10%">微信昵称</th>
-                    <th style="width:10%">用户姓名</th>
-                    <th style="width:10%">手机号</th>
-                    <th style="width:10%">奖品名称</th>
-                    <th style="width:10%">红包金额</th>
-                    <th style="width:10%">分享次数</th>
-                    <th style="width:20%">中奖时间</th>
+                    <th>ID</th>
+                    <th>微信openid</th>
+                    <th>微信昵称</th>
+                    <th>用户姓名</th>
+                    <th>手机号</th>
+                    <th>奖品名称</th>
+                    <th>红包金额</th>
+                    <th>分享次数</th>
+                    <th>中奖时间</th>
+                    <th>发放状态</th>
                 </tr>
                 {loop $list $row}
                 <tr>
@@ -62,6 +63,15 @@
                     <td>
                         <p class="form-control-static">
                             {php echo date('Y-m-d H:i', $row['create_time'])}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {if $row['is_send']==1}
+                               已发放
+                            {else}
+                               未发放
+                            {/if}
                         </p>
                     </td>
                 </tr>

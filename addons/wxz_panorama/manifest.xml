@@ -98,7 +98,10 @@ CREATE TABLE `ims_wxz_panorama_payrecord` (
 CREATE TABLE `ims_wxz_panorama_award` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '奖品类型1:现金 2实物',
   `name` varchar(200) NOT NULL DEFAULT '' COMMENT '奖品名称',
+  `min_money` int(11) NOT NULL DEFAULT '0' COMMENT '现金最小金额',
+  `max_money` int(11) NOT NULL DEFAULT '0' COMMENT '现金最大金额',
   `num` int(11) NOT NULL COMMENT '奖品数量',
   `left_num` int(11) NOT NULL COMMENT '奖品剩余数量',
   `cashed` int(11) NOT NULL COMMENT '已中奖品数量',

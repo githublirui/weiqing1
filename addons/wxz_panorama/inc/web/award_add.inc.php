@@ -3,10 +3,14 @@
 global $_W, $_GPC;
 
 if (checksubmit()) {
+    $_GPC['name'] = $_GPC['type'] == 1 ? '现金' : $_GPC['name'];
     //字段验证, 并获得正确的数据$dat
     $data = array(
         'uniacid' => $_W['uniacid'],
-        'name' => $_GPC['name'],
+        'type' => (int) $_GPC['type'],
+        'min_money' => (int) $_GPC['min_money'],
+        'max_money' => (int) $_GPC['max_money'],
+        'name' => (string) $_GPC['name'],
         'num' => (int) $_GPC['num'],
         'left_num' => (int) $_GPC['num'],
         'probability' => (int) $_GPC['probability'],

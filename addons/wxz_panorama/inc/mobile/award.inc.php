@@ -78,20 +78,23 @@ foreach ($prize_arr as $key => $val) {
     $probability[$key] = $val["pro"];
 }
 $award_n = get_rand($probability);
+$award_type = $prize_arr[$award_n]["type"];
+$award_min_money = $prize_arr[$award_n]["min_money"];
+$award_max_money = $prize_arr[$award_n]["max_money"];
 $award_name = $prize_arr[$award_n]["prize"];
 $award_id = $prize_arr[$award_n]["id"];
 $award_num = $prize_arr[$award_n]["left_num"];
 $fee = 0;
 $inventory = 1;
-if ($award_name == '现金') {
+if ($award_type == 1) {
     if ($award_num < 100) {
         $award_id = 0;
         $award_name = '未中奖';
     } else {
-        if ($award_num < 150) {
-            $fee = $award_num;
+        if ($award_num <= $award_min_money) {
+            $fee = $award_min_money;
         } else {
-            $fee = rand(100, 150);
+            $fee = rand($award_min_money, $award_max_money);
         }
         $award_name = '现金' . ($fee / 100) . '元';
         $inventory = $fee;

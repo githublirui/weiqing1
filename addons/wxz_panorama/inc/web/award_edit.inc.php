@@ -10,12 +10,18 @@ if (!$award_info) {
 }
 load()->web('tpl');
 if (checksubmit()) {
+    $_GPC['name'] = $_GPC['type'] == 1 ? '现金' : $_GPC['name'];
     //字段验证, 并获得正确的数据$dat
     $data = array(
         'name' => $_GPC['name'],
         'num' => (int) $_GPC['num'],
         'probability' => $_GPC['probability'],
     );
+
+    if ($_GPC['type'] == 1) {
+        $data['min_money'] = (int) $_GPC['min_money'];
+        $data['max_money'] = (int) $_GPC['max_money'];
+    }
 
     if ($_GPC['num'] < $coupon_info['cashed']) {
         message('总数量不能小于已兑换数量', $this->createWebUrl('award_edit', array('id' => $id)));
