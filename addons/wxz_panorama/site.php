@@ -26,7 +26,8 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
         $state = $_SERVER['REQUEST_URI'];
         $stateKey = substr(md5($state), 0, 8);
         $_SESSION['__:proxy:forward'] = $state;
-        $forward = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$_W['account']['jssdkconfig']['appId']}&redirect_uri={$callback}&response_type=code&scope=snsapi_userinfo&state={$stateKey}#wechat_redirect";
+    
+        $forward = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$this->module['config']['pay']['appid']}&redirect_uri={$callback}&response_type=code&scope=snsapi_userinfo&state={$stateKey}#wechat_redirect";
         header('Location: ' . $forward);
         exit;
     }

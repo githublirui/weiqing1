@@ -8,14 +8,14 @@ require_once WXZ_PANORAMA . '/source/Page.class.php';
 
 global $_W, $_GPC;
 
-$info = Page::getPage(array(10));
+$info = Page::getPage(array(8));
 
 if (checksubmit()) {
     if (!$copyRight) {
         //版权
         $insertData = array(
             'uniacid' => $_W['uniacid'],
-            'type' => 10,
+            'type' => 8,
             'img' => $_GPC['copyright'],
             'create_at' => time(),
         );
