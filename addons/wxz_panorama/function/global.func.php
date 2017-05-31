@@ -11,6 +11,9 @@ function get_real_tpl($tpl_name) {
 
 function getfilecounts($ff) {
     $dir = './' . $ff;
+    if (!file_exists($dir)) {
+        return false;
+    }
     $handle = opendir($dir);
     $sences = array();
     while (false !== $file = (readdir($handle))) {

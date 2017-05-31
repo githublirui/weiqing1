@@ -3,6 +3,7 @@
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once (IA_ROOT . '/framework/library/qiniu/autoload.php'); //七牛
+require_once WXZ_PANORAMA . '/source/Page.class.php';
 
 if (checksubmit()) {
     //字段验证, 并获得正确的数据$dat
@@ -72,6 +73,14 @@ if (checksubmit()) {
                 $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $url . '/' . $_GPC['treasures'], $sence_config_content);
                 file_put_contents($sence_config_path, $sence_config_content);
             }
+
+            //版权信息
+            $copyRight = Page::getPage(array(7, 8));
+            $sence_config_content = file_get_contents($sence_config_path);
+            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $url . '/' . $copyRight[8]['img'], $sence_config_content);
+            $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
+            file_put_contents($sence_config_path, $sence_config_content);
+            //音频设置
             if ($_GPC['audio']) {
                 $sence_index_content = file_get_contents($sence_index_path);
                 $sence_index_content = str_replace('{$audioPath}', $url . '/' . $_GPC['audio'], $sence_index_content);
@@ -93,6 +102,14 @@ if (checksubmit()) {
                 $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $_GPC['treasures'], $sence_config_content);
                 file_put_contents($sence_config_path, $sence_config_content);
             }
+            //版权信息
+            $copyRight = Page::getPage(array(7, 8));
+            $sence_config_content = file_get_contents($sence_config_path);
+            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $copyRight[8]['img'], $sence_config_content);
+            $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
+            file_put_contents($sence_config_path, $sence_config_content);
+            //
+            //音频设置
             if ($_GPC['audio']) {
                 $sence_index_content = file_get_contents($sence_index_path);
                 $sence_index_content = str_replace('{$audioPath}', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $_GPC['audio'], $sence_index_content);

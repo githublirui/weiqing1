@@ -71,12 +71,13 @@ function get_rand($probability) {
 $sql = "SELECT * FROM " . tablename('wxz_panorama_award') . " WHERE uniacid={$_GPC['i']} AND left_num>0";
 $award_list = pdo_fetchall($sql, $pars);
 foreach ($award_list as $award) {
-    $prize_arr[] = array('id' => $award['id'], 'left_num' => $award['left_num'], 'prize' => $award['name'], 'pro' => $award['probability']);
+    $prize_arr[] = array('id' => $award['id'], 'type' => $award['type'], 'min_money' => $award['min_money'], 'max_money' => $award['max_money'], 'left_num' => $award['left_num'], 'prize' => $award['name'], 'pro' => $award['probability']);
 }
 $prize_arr[] = array('id' => 0, 'left_num' => 0, 'prize' => '未中奖', 'pro' => '50');
 foreach ($prize_arr as $key => $val) {
     $probability[$key] = $val["pro"];
 }
+
 $award_n = get_rand($probability);
 $award_type = $prize_arr[$award_n]["type"];
 $award_min_money = $prize_arr[$award_n]["min_money"];
@@ -86,6 +87,7 @@ $award_id = $prize_arr[$award_n]["id"];
 $award_num = $prize_arr[$award_n]["left_num"];
 $fee = 0;
 $inventory = 1;
+
 if ($award_type == 1) {
     if ($award_num < 100) {
         $award_id = 0;

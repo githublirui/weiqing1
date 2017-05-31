@@ -11,6 +11,10 @@ $pano = $_GPC['pno'] ? $_GPC['pno'] : 1;
 
 $scene_path = "$modulePath/template/mobile/scene/{$_GPC['i']}";
 $pano_count = getfilecounts($scene_path);
+if (!$pano_count) {
+    message('暂未上传场景，请耐心等待', $this->createMobileUrl('index'));
+}
+
 sort($pano_count);
 $pano = $pano_count <= 1 ? 1 : $pano;
 

@@ -8,7 +8,9 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
     protected function auth() {
         global $_W, $_GPC;
         session_start();
-//        $_SESSION['__:proxy:openid'] = 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';
+        if (getip() == '127.0.0.1') {
+            $_SESSION['__:proxy:openid'] = 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';
+        }
         $openid = $_SESSION['__:proxy:openid'];
         require_once WXZ_PANORAMA . '/source/Fans.class.php';
         $f = new Fans();
@@ -26,7 +28,7 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
         $state = $_SERVER['REQUEST_URI'];
         $stateKey = substr(md5($state), 0, 8);
         $_SESSION['__:proxy:forward'] = $state;
-    
+
         $forward = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$this->module['config']['pay']['appid']}&redirect_uri={$callback}&response_type=code&scope=snsapi_userinfo&state={$stateKey}#wechat_redirect";
         header('Location: ' . $forward);
         exit;
