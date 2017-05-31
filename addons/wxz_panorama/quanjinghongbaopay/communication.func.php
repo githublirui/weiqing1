@@ -285,101 +285,113 @@ if (!function_exists('ihttp_response_parse')) {
     }
 
 }
+if (!function_exists('ihttp_response_parse_unchunk')) {
 
-function ihttp_response_parse_unchunk($str = null) {
-    if (!is_string($str) or strlen($str) < 1) {
-        return false;
-    }
-    $eol = "\r\n";
-    $add = strlen($eol);
-    $tmp = $str;
-    $str = '';
-    do {
-        $tmp = ltrim($tmp);
-        $pos = strpos($tmp, $eol);
-        if ($pos === false) {
+    function ihttp_response_parse_unchunk($str = null) {
+        if (!is_string($str) or strlen($str) < 1) {
             return false;
         }
-        $len = hexdec(substr($tmp, 0, $pos));
-        if (!is_numeric($len) or $len < 0) {
-            return false;
-        }
-        $str .= substr($tmp, ($pos + $add), $len);
-        $tmp = substr($tmp, ($len + $pos + $add));
-        $check = trim($tmp);
-    } while (!empty($check));
-    unset($tmp);
-    return $str;
-}
-
-function ihttp_get($url) {
-    return ihttp_request($url);
-}
-
-function ihttp_post($url, $data) {
-    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
-    return ihttp_request($url, $data, $headers);
-}
-
-function ihttp_email($to, $subject, $body, $global = false) {
-    static $mailer;
-    set_time_limit(0);
-
-    if (empty($mailer)) {
-        if (!class_exists('PHPMailer')) {
-            require IA_ROOT . '/framework/library/phpmailer/PHPMailerAutoload.php';
-        }
-        $mailer = new PHPMailer();
-        global $_W;
-        $config = $GLOBALS['_W']['setting']['mail'];
-        if (!$global) {
-            $row = pdo_fetch("SELECT `notify` FROM " . tablename('uni_settings') . " WHERE uniacid = :uniacid", array(':uniacid' => $_W['uniacid']));
-            $row['notify'] = @iunserializer($row['notify']);
-            if (!empty($row['notify']) && !empty($row['notify']['mail'])) {
-                $config = $row['notify']['mail'];
+        $eol = "\r\n";
+        $add = strlen($eol);
+        $tmp = $str;
+        $str = '';
+        do {
+            $tmp = ltrim($tmp);
+            $pos = strpos($tmp, $eol);
+            if ($pos === false) {
+                return false;
             }
-        }
+            $len = hexdec(substr($tmp, 0, $pos));
+            if (!is_numeric($len) or $len < 0) {
+                return false;
+            }
+            $str .= substr($tmp, ($pos + $add), $len);
+            $tmp = substr($tmp, ($len + $pos + $add));
+            $check = trim($tmp);
+        } while (!empty($check));
+        unset($tmp);
+        return $str;
+    }
 
-        $config['charset'] = 'utf-8';
-        if ($config['smtp']['type'] == '163') {
-            $config['smtp']['server'] = 'smtp.163.com';
-            $config['smtp']['port'] = 25;
-        } else {
+}
+if (!function_exists('ihttp_get')) {
+
+    function ihttp_get($url) {
+        return ihttp_request($url);
+    }
+
+}
+if (!function_exists('ihttp_post')) {
+
+    function ihttp_post($url, $data) {
+        $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+        return ihttp_request($url, $data, $headers);
+    }
+
+}
+if (!function_exists('ihttp_email')) {
+
+    function ihttp_email($to, $subject, $body, $global = false) {
+        static $mailer;
+        set_time_limit(0);
+
+        if (empty($mailer)) {
+            if (!class_exists('PHPMailer')) {
+                require IA_ROOT . '/framework/library/phpmailer/PHPMailerAutoload.php';
+            }
+            $mailer = new PHPMailer();
+            global $_W;
+            $config = $GLOBALS['_W']['setting']['mail'];
+            if (!$global) {
+                $row = pdo_fetch("SELECT `notify` FROM " . tablename('uni_settings') . " WHERE uniacid = :uniacid", array(':uniacid' => $_W['uniacid']));
+                $row['notify'] = @iunserializer($row['notify']);
+                if (!empty($row['notify']) && !empty($row['notify']['mail'])) {
+                    $config = $row['notify']['mail'];
+                }
+            }
+
+            $config['charset'] = 'utf-8';
+            if ($config['smtp']['type'] == '163') {
+                $config['smtp']['server'] = 'smtp.163.com';
+                $config['smtp']['port'] = 25;
+            } else {
+                if (!empty($config['smtp']['authmode'])) {
+                    $config['smtp']['server'] = 'ssl://' . $config['smtp']['server'];
+                }
+            }
+
             if (!empty($config['smtp']['authmode'])) {
-                $config['smtp']['server'] = 'ssl://' . $config['smtp']['server'];
+                if (!extension_loaded('openssl')) {
+                    return error(1, '请开启 php_openssl 扩展！');
+                }
             }
-        }
+            $mailer->signature = $config['signature'];
+            $mailer->isSMTP();
+            $mailer->CharSet = $config['charset'];
+            $mailer->Host = $config['smtp']['server'];
+            $mailer->Port = $config['smtp']['port'];
+            $mailer->SMTPAuth = true;
+            $mailer->Username = $config['username'];
+            $mailer->Password = $config['password'];
+            !empty($config['smtp']['authmode']) && $mailer->SMTPSecure = 'ssl';
 
-        if (!empty($config['smtp']['authmode'])) {
-            if (!extension_loaded('openssl')) {
-                return error(1, '请开启 php_openssl 扩展！');
-            }
+            $mailer->From = $config['username'];
+            $mailer->FromName = $config['sender'];
+            $mailer->isHTML(true);
         }
-        $mailer->signature = $config['signature'];
-        $mailer->isSMTP();
-        $mailer->CharSet = $config['charset'];
-        $mailer->Host = $config['smtp']['server'];
-        $mailer->Port = $config['smtp']['port'];
-        $mailer->SMTPAuth = true;
-        $mailer->Username = $config['username'];
-        $mailer->Password = $config['password'];
-        !empty($config['smtp']['authmode']) && $mailer->SMTPSecure = 'ssl';
+        if (!empty($mailer->signature)) {
+            $body .= htmlspecialchars_decode($mailer->signature);
+        }
+        $mailer->Subject = $subject;
+        $mailer->Body = $body;
+        $mailer->addAddress($to);
+        if ($mailer->send()) {
+            return true;
+        } else {
+            return error(1, $mailer->ErrorInfo);
+        }
+    }
 
-        $mailer->From = $config['username'];
-        $mailer->FromName = $config['sender'];
-        $mailer->isHTML(true);
-    }
-    if (!empty($mailer->signature)) {
-        $body .= htmlspecialchars_decode($mailer->signature);
-    }
-    $mailer->Subject = $subject;
-    $mailer->Body = $body;
-    $mailer->addAddress($to);
-    if ($mailer->send()) {
-        return true;
-    } else {
-        return error(1, $mailer->ErrorInfo);
-    }
 }
 
 /**
