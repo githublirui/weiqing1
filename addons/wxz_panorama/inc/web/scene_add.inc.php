@@ -51,8 +51,8 @@ if (checksubmit()) {
         $sence_index_content = str_replace('{$scenetitle}', $_GPC['name'], $sence_index_content);
         file_put_contents($sence_index_path, $sence_index_content);
 
-        if (!empty($_W['setting']['remote']['type'])) {
-            //远程附件图片处理
+        if ($_W['setting']['remote']['type'] == 3) {
+            //七牛远程附件图片处理
             $url = $_W['setting']['remote']['qiniu']['url'];
             sence_img_process_remote($sence_config_path, $url . '/' . $data['front'], 'front');
             sence_img_process_remote($sence_config_path, $url . '/' . $data['back'], 'back');
@@ -86,7 +86,7 @@ if (checksubmit()) {
                 $sence_index_content = str_replace('{$audioPath}', $url . '/' . $_GPC['audio'], $sence_index_content);
                 file_put_contents($sence_index_path, $sence_index_content);
             }
-        } else {
+        } elseif (!$_W['setting']['remote']['type']) {
             //本地图片处理
             require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
             sence_img_process($attachdir . $data['front'], $scene_img_path, 'front');
@@ -113,6 +113,30 @@ if (checksubmit()) {
             if ($_GPC['audio']) {
                 $sence_index_content = file_get_contents($sence_index_path);
                 $sence_index_content = str_replace('{$audioPath}', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $_GPC['audio'], $sence_index_content);
+                file_put_contents($sence_index_path, $sence_index_content);
+            }
+        } else {
+            //远程附件本地处理
+            require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
+            $url = $_W['setting']['remote']['qiniu']['url'];
+            
+            //宝藏图标设置
+            if ($_GPC['treasures']) {
+                $sence_config_content = file_get_contents($sence_config_path);
+                $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $url . '/' . $_GPC['treasures'], $sence_config_content);
+                file_put_contents($sence_config_path, $sence_config_content);
+            }
+
+            //版权信息
+            $copyRight = Page::getPage(array(7, 8));
+            $sence_config_content = file_get_contents($sence_config_path);
+            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $url . '/' . $copyRight[8]['img'], $sence_config_content);
+            $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
+            file_put_contents($sence_config_path, $sence_config_content);
+            //音频设置
+            if ($_GPC['audio']) {
+                $sence_index_content = file_get_contents($sence_index_path);
+                $sence_index_content = str_replace('{$audioPath}', $url . '/' . $_GPC['audio'], $sence_index_content);
                 file_put_contents($sence_index_path, $sence_index_content);
             }
         }

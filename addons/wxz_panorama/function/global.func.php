@@ -55,7 +55,7 @@ function sence_img_process($source, $destination, $type) {
 }
 
 /**
- * 全景远程附件图片处理
+ * 全景七牛远程附件图片处理
  * @param type $sence_config_path
  * @param type $imgUrl
  * @param type $type
