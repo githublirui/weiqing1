@@ -76,4 +76,24 @@ function sence_img_process_remote($sence_config_path, $imgUrl, $type) {
     file_put_contents($sence_config_path, $sence_config_content);
 }
 
+/**
+ * 远程附件存本地处理
+ * @param type $source
+ * @param type $destination
+ * @param type $type
+ */
+function sence_remote_img_process($source, $destination, $type) {
+    require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
+    $localSource = $destination . "/{$type}.jpg";
+    file_put_contents($localSource, file_get_contents($source));
+    //mb 400 x 400,pano 1834,tb 1500 x 1500
+    UtilsImage::square_crop($localSource, $destination . "/pano_{$type}.jpg", '1834');
+    UtilsImage::square_crop($localSource, $destination . "/mb_{$type}.jpg", '400');
+    UtilsImage::square_crop($localSource, $destination . "/tb_{$type}.jpg", '1500');
+    if ($type == 'front') {
+        UtilsImage::square_crop($localSource, $destination . "/thumb.jpg", '188');
+    }
+    unlink($localSource);
+}
+
 ?>
