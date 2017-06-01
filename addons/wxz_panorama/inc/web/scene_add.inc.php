@@ -118,8 +118,16 @@ if (checksubmit()) {
         } else {
             //远程附件本地处理
             require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
-            $url = $_W['setting']['remote']['qiniu']['url'];
-            
+            $url = $_W['attachurl_remote'];
+
+            //场景图片处理
+            sence_remote_img_process($url . $data['front'], $scene_img_path, 'front');
+            sence_remote_img_process($url . $data['back'], $scene_img_path, 'back');
+            sence_remote_img_process($url . $data['up'], $scene_img_path, 'up');
+            sence_remote_img_process($url . $data['down'], $scene_img_path, 'down');
+            sence_remote_img_process($url . $data['left'], $scene_img_path, 'left');
+            sence_remote_img_process($url . $data['right'], $scene_img_path, 'right');
+
             //宝藏图标设置
             if ($_GPC['treasures']) {
                 $sence_config_content = file_get_contents($sence_config_path);
