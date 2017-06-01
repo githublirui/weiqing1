@@ -130,15 +130,15 @@ if (checksubmit()) {
 
             //宝藏图标设置
             if ($_GPC['treasures']) {
-                $sence_config_content = file_get_contents($sence_config_path);
-                $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $url . $_GPC['treasures'], $sence_config_content);
-                file_put_contents($sence_config_path, $sence_config_content);
+                $sence_config_content = file_get_contents($url . $_GPC['treasures']);
+               $scene_treasures_img_path = "{$modulePath}template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/spot/1446487094CA8Llf.png";
+                file_put_contents($scene_treasures_img_path, $sence_config_content);
             }
 
             //版权信息
             $copyRight = Page::getPage(array(7, 8));
             $sence_config_content = file_get_contents($sence_config_path);
-            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $url . $copyRight[8]['img'], $sence_config_content);
+//            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $url . $copyRight[8]['img'], $sence_config_content);
             $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
             file_put_contents($sence_config_path, $sence_config_content);
             //音频设置
