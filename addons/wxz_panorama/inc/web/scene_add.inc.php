@@ -51,42 +51,7 @@ if (checksubmit()) {
         $sence_index_content = str_replace('{$scenetitle}', $_GPC['name'], $sence_index_content);
         file_put_contents($sence_index_path, $sence_index_content);
 
-        if ($_W['setting']['remote']['type'] == 3) {
-            //七牛远程附件图片处理
-            $url = $_W['setting']['remote']['qiniu']['url'];
-            sence_img_process_remote($sence_config_path, $url . '/' . $data['front'], 'front');
-            sence_img_process_remote($sence_config_path, $url . '/' . $data['back'], 'back');
-            sence_img_process_remote($sence_config_path, $url . '/' . $data['up'], 'up');
-            sence_img_process_remote($sence_config_path, $url . '/' . $data['down'], 'down');
-            sence_img_process_remote($sence_config_path, $url . '/' . $data['left'], 'left');
-            sence_img_process_remote($sence_config_path, $url . '/' . $data['right'], 'right');
-
-            $sence_config_content = file_get_contents($sence_config_path);
-            $replaceStrThumb = "%SWFPATH%/images/thumb.jpg";
-            $thumbImg = \Qiniu\thumbnail($url . '/' . $data['front'], 1, '188', '188');
-            str_replace($sence_config_content, $thumbImg, $tbImg);
-            $sence_config_content = str_replace($replaceStrThumb, $thumbImg, $sence_config_content);
-            file_put_contents($sence_config_path, $sence_config_content);
-
-            if ($_GPC['treasures']) {
-                $sence_config_content = file_get_contents($sence_config_path);
-                $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $url . '/' . $_GPC['treasures'], $sence_config_content);
-                file_put_contents($sence_config_path, $sence_config_content);
-            }
-
-            //版权信息
-            $copyRight = Page::getPage(array(7, 8));
-            $sence_config_content = file_get_contents($sence_config_path);
-            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $url . '/' . $copyRight[8]['img'], $sence_config_content);
-            $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
-            file_put_contents($sence_config_path, $sence_config_content);
-            //音频设置
-            if ($_GPC['audio']) {
-                $sence_index_content = file_get_contents($sence_index_path);
-                $sence_index_content = str_replace('{$audioPath}', $url . '/' . $_GPC['audio'], $sence_index_content);
-                file_put_contents($sence_index_path, $sence_index_content);
-            }
-        } elseif (!$_W['setting']['remote']['type']) {
+        if (!$_W['setting']['remote']['type']) {
             //本地图片处理
             require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
             sence_img_process($attachdir . $data['front'], $scene_img_path, 'front');
@@ -97,15 +62,17 @@ if (checksubmit()) {
             sence_img_process($attachdir . $data['right'], $scene_img_path, 'right');
             UtilsImage::square_crop($attachdir . $data['front'], $scene_img_path . "/thumb.jpg", '188');
 
+            //宝藏图片
             if ($_GPC['treasures']) {
                 $sence_config_content = file_get_contents($sence_config_path);
                 $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $_GPC['treasures'], $sence_config_content);
                 file_put_contents($sence_config_path, $sence_config_content);
             }
+
             //版权信息
             $copyRight = Page::getPage(array(7, 8));
             $sence_config_content = file_get_contents($sence_config_path);
-            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $copyRight[8]['img'], $sence_config_content);
+//            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $copyRight[8]['img'], $sence_config_content);
             $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
             file_put_contents($sence_config_path, $sence_config_content);
             //
@@ -131,14 +98,13 @@ if (checksubmit()) {
             //宝藏图标设置
             if ($_GPC['treasures']) {
                 $sence_config_content = file_get_contents($url . $_GPC['treasures']);
-               $scene_treasures_img_path = "{$modulePath}template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/spot/1446487094CA8Llf.png";
+                $scene_treasures_img_path = "{$modulePath}template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/spot/1446487094CA8Llf.png";
                 file_put_contents($scene_treasures_img_path, $sence_config_content);
             }
 
             //版权信息
             $copyRight = Page::getPage(array(7, 8));
             $sence_config_content = file_get_contents($sence_config_path);
-//            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $url . $copyRight[8]['img'], $sence_config_content);
             $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
             file_put_contents($sence_config_path, $sence_config_content);
             //音频设置
