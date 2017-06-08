@@ -9,6 +9,7 @@ $scene_info = pdo_fetch($scene_info_sql);
 if (!$scene_info) {
     message('场景不存在', $this->createWebUrl('scene_list'));
 }
+
 load()->web('tpl');
 if (checksubmit()) {
     require_once WXZ_PANORAMA . '/source/UtilsFile.class.php';
@@ -57,22 +58,23 @@ if (checksubmit()) {
 
         require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
 
-        if (!empty($_W['setting']['remote']['type'])) {
-            $url = $_W['setting']['remote']['qiniu']['url'];
-            //远程附件处理
+        if (!$_W['setting']['remote']['type']) {
+            //本地处理
             foreach ($img_columns as $img_column) {
                 if (isset($data[$img_column]) && $img_column == 'treasures') {
-                    sence_img_process_remote($sence_config_path, $url . '/' . $data['front'], 'front');
+                    sence_img_process($attachdir . $data[$img_column], $scene_img_path, $img_column);
                 }
             }
             if (isset($data['front'])) {
                 UtilsImage::square_crop($attachdir . $data['front'], $scene_img_path . "/thumb.jpg", '188');
             }
         } else {
-            //本地图片处理
+            //远程附件处理
+            $url = $_W['setting']['remote']['qiniu']['url'];
+
             foreach ($img_columns as $img_column) {
                 if (isset($data[$img_column]) && $img_column == 'treasures') {
-                    sence_img_process($attachdir . $data[$img_column], $scene_img_path, $img_column);
+                    sence_img_process_remote($sence_config_path, $url . '/' . $data['front'], 'front');
                 }
             }
             if (isset($data['front'])) {

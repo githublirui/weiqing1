@@ -17,6 +17,7 @@ if (checksubmit()) {
         'left' => $_GPC['left'],
         'right' => $_GPC['right'],
         'treasures' => $_GPC['treasures'],
+        'audio' => $_GPC['audio'],
         'create_time' => time(),
     );
     if (pdo_insert('wxz_panorama_scene', $data)) {
@@ -64,9 +65,9 @@ if (checksubmit()) {
 
             //宝藏图片
             if ($_GPC['treasures']) {
-                $sence_config_content = file_get_contents($sence_config_path);
-                $sence_config_content = str_replace('%SWFPATH%/spot/1446487094CA8Llf.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $_GPC['treasures'], $sence_config_content);
-                file_put_contents($sence_config_path, $sence_config_content);
+                $sence_treasures_content = file_get_contents($attachdir . $_GPC['treasures']);
+                $scene_treasures_img_path = "{$modulePath}template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/spot/1446487094CA8Llf.png";
+                file_put_contents($scene_treasures_img_path, $sence_treasures_content);
             }
 
             //版权信息

@@ -15,3 +15,7 @@ if (!pdo_fieldexists('wxz_panorama_award', 'min_money')) {
 if (!pdo_fieldexists('wxz_panorama_award', 'max_money')) {
     pdo_query("ALTER TABLE " . tablename('wxz_panorama_award') . " ADD `max_money` int(11) DEFAULT '0';");
 }
+
+if (!pdo_fieldexists('wxz_panorama_scene', 'audio')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_scene') . " ADD `audio` varchar(255) DEFAULT '';");
+}
