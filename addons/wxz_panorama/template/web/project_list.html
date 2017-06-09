@@ -21,15 +21,15 @@
 <div class="clearfix">
     <div class="panel panel-default">
         <div class="panel-heading">
-            场景列表
+            项目列表
             &nbsp;&nbsp;
-            <a class="btn btn-success" href='{php echo $this->createWebUrl("scene_add",array("pid"=>$pid))}' id="export">新建场景</a>
+            <a class="btn btn-success" href='{php echo $this->createWebUrl("project_add")}' id="export">添加项目</a>
         </div>
         <div class="table-responsive panel-body" style="overflow:visible;">
             <table class="table table-hover">
                 <tr>
                     <th>ID</th>
-                    <th>场景名称</th>
+                    <th>项目名称</th>
                     <th>操作</th>
                 </tr>
                 {loop $list $row}
@@ -46,8 +46,10 @@
                     </td>
                     <td>
                         <p class="form-control-static">
-                            <a class='btn btn-info'  href='{php echo $this->createWebUrl("scene_edit",array("id"=>$row["id"]))}'>编辑</a>
-                            <a  class='btn btn-danger' href="javascript:void(0)" onclick="del_scene('{$row['id']}')">删除</a>
+                            <a class='btn btn-primary' href='{php echo $this->createWebUrl("project_config",array("id"=>$row["id"]))}'>全局配置</a>
+                            <a class='btn btn-info' href='{php echo $this->createWebUrl("scene_list",array("pid"=>$row["id"]))}'>场景管理</a>
+                            <a class='btn btn-info' href='{php echo $this->createWebUrl("project_edit",array("id"=>$row["id"]))}'>编辑</a>
+                            <a class='btn btn-danger' href="javascript:void(0)" onclick="del_project('{$row['id']}')">删除</a>
                         </p>
                     </td>
                 </tr>
@@ -60,12 +62,12 @@
     </div>
 </div>
 <script>
-    function del_scene(scene_id) {
-        if (confirm("确定删除吗？")) {
+    function del_project(id) {
+        if (confirm("删除项目会删除项目下的所有配置和场景！确定删除吗？")) {
             var pars = {};
-            pars.scene_id = scene_id;
+            pars.id = id;
             $.ajax({
-                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_scene'))}",
+                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_project'))}",
                 type: "post",
                 dataType: "html",
                 data: pars,

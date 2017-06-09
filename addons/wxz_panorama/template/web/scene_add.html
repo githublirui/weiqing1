@@ -16,72 +16,55 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">顶面图片（up）</label>
-                        <div class="col-sm-9 col-xs-12">
-                            {php echo tpl_form_field_image('up',$info['up'])}
-                            <span class="help-block">推荐尺寸(1835 x 1835)</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">底面图片（down）</label>
-                        <div class="col-sm-9 col-xs-12">
-                            {php echo tpl_form_field_image('down',$info['down'])}
-                            <span class="help-block">推荐尺寸(1835 x 1835)</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">正面图片（front）</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">前（front）</label>
                         <div class="col-sm-9 col-xs-12">
                             {php echo tpl_form_field_image('front',$info['front'])}
-                            <span class="help-block">推荐尺寸(1835 x 1835)</span>
+                            <span class="help-block">尺寸建议1000px到2500px（推荐用整数）。图片质量不要超过95，体积不要超过1M/张。六图最好直接由ptgui生成，不要用图片处理软件再处理。</span>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">背面图片（back）</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">后（back）</label>
                         <div class="col-sm-9 col-xs-12">
                             {php echo tpl_form_field_image('back',$info['back'])}
-                            <span class="help-block">推荐尺寸(1835 x 1835)</span>
+                            <span class="help-block"></span>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">左面图片（left）</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">左（left）</label>
                         <div class="col-sm-9 col-xs-12">
                             {php echo tpl_form_field_image('left',$info['left'])}
-                            <span class="help-block">推荐尺寸(1835 x 1835)</span>
+                            <span class="help-block"></span>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">右面图片（right）</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">右（right）</label>
                         <div class="col-sm-9 col-xs-12">
                             {php echo tpl_form_field_image('right',$info['right'])}
-                            <span class="help-block">推荐尺寸(1835 x 1835)</span>
+                            <span class="help-block"></span>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">宝藏图片</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">上（up）</label>
                         <div class="col-sm-9 col-xs-12">
-                            {php echo tpl_form_field_image('treasures',$info['treasures'])}
-                            <span class="help-block">推荐尺寸(150 x 150)，非必填</span>
+                            {php echo tpl_form_field_image('up',$info['up'])}
+                            <span class="help-block"></span>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">背景音乐</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">下（down）</label>
                         <div class="col-sm-9 col-xs-12">
-                            {php echo tpl_form_field_audio('audio',$info['audio'])}
+                            {php echo tpl_form_field_image('down',$info['down'])}
+                            <span class="help-block"></span>
                         </div>
                     </div>
                 </div>

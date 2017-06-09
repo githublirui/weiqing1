@@ -29,7 +29,7 @@ if (checksubmit()) {
             $url = $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/';
             $sence_config_content = file_get_contents($url . $_GPC['copyright']);
         }
-        $scene_copyright_img_path = "{$modulePath}template/scence_demo/ui/1446498065z0nkqD.png";
+        $scene_copyright_img_path = "{$modulePath}template/Scene_demo/ui/1446498065z0nkqD.png";
         file_put_contents($scene_copyright_img_path, $sence_config_content);
         pdo_insert(Page::$table, $insertData);
     } else {

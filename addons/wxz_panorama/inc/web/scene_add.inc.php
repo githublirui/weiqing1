@@ -1,124 +1,37 @@
 <?php
 
 global $_W, $_GPC;
+
+$pid = intval($_GPC['pid']);
+if (!$pid) {
+    message('请选择一个项目', $this->createWebUrl('project_list'));
+}
+
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once (IA_ROOT . '/framework/library/qiniu/autoload.php'); //七牛
 require_once WXZ_PANORAMA . '/source/Page.class.php';
+require_once WXZ_PANORAMA . '/source/Scene.class.php';
 
 if (checksubmit()) {
-    //字段验证, 并获得正确的数据$dat
+    //字段验证, 并获得正确的数据
     $data = array(
         'uniacid' => $_W['uniacid'],
-        'name' => $_GPC['name'],
-        'front' => $_GPC['front'],
-        'back' => $_GPC['back'],
-        'up' => $_GPC['up'],
-        'down' => $_GPC['down'],
-        'left' => $_GPC['left'],
-        'right' => $_GPC['right'],
-        'treasures' => $_GPC['treasures'],
-        'audio' => $_GPC['audio'],
+        'project_id' => $pid,
+        'name' => (string) $_GPC['name'],
         'create_time' => time(),
     );
+
+    $img_columns = array('front', 'back', 'up', 'down', 'left', 'right');
+
+    foreach ($img_columns as $img_column) {
+        $imgSrc = Scene::getSceneImageSrc($_GPC[$img_column]);
+        $data[$img_column] = serialize($imgSrc);
+    }
+
     if (pdo_insert('wxz_panorama_scene', $data)) {
-        setting_load('remote');
-
-        //目录处理
-        $modulePath = '../addons/' . $_GPC['m'] . '/';
-        $attachdir = IA_ROOT . '/' . $_W['config']['upload']['attachdir'] . '/';
-        require_once WXZ_PANORAMA . '/source/UtilsFile.class.php';
-        $id = pdo_insertid();
-        $demo_path = "$modulePath/template/scence_demo";
-        $scene_base_path = "$modulePath/template/mobile/scene/{$_W['uniacid']}";
-        $scene_path = "$scene_base_path/vrpano{$id}";
-        $scene_img_path = "$modulePath/template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/images";
-        $sence_config_path = "$modulePath/template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/krpano.php";
-        $sence_index_path = "$modulePath/template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/index.html";
-
-        //目录拷贝
-        if (!file_exists($scene_base_path)) {
-            mkdir($scene_base_path, 0777, true);
-        }
-
-        if (file_exists($scene_path)) {
-            UtilsFile::deleteDirectory($scene_path);
-        }
-        copy_dir($demo_path, $scene_path);
-        $sence_config_content = file_get_contents($sence_config_path);
-        $sence_config_content = str_replace('{$scenetitle}', $_GPC['name'], $sence_config_content);
-        file_put_contents($sence_config_path, $sence_config_content);
-
-        $sence_index_content = file_get_contents($sence_index_path);
-        $sence_index_content = str_replace('{$scenetitle}', $_GPC['name'], $sence_index_content);
-        file_put_contents($sence_index_path, $sence_index_content);
-
-        if (!$_W['setting']['remote']['type']) {
-            //本地图片处理
-            require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
-            sence_img_process($attachdir . $data['front'], $scene_img_path, 'front');
-            sence_img_process($attachdir . $data['back'], $scene_img_path, 'back');
-            sence_img_process($attachdir . $data['up'], $scene_img_path, 'up');
-            sence_img_process($attachdir . $data['down'], $scene_img_path, 'down');
-            sence_img_process($attachdir . $data['left'], $scene_img_path, 'left');
-            sence_img_process($attachdir . $data['right'], $scene_img_path, 'right');
-            UtilsImage::square_crop($attachdir . $data['front'], $scene_img_path . "/thumb.jpg", '188');
-
-            //宝藏图片
-            if ($_GPC['treasures']) {
-                $sence_treasures_content = file_get_contents($attachdir . $_GPC['treasures']);
-                $scene_treasures_img_path = "{$modulePath}template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/spot/1446487094CA8Llf.png";
-                file_put_contents($scene_treasures_img_path, $sence_treasures_content);
-            }
-
-            //版权信息
-            $copyRight = Page::getPage(array(7, 8));
-            $sence_config_content = file_get_contents($sence_config_path);
-//            $sence_config_content = str_replace('%SWFPATH%/ui/1446498065z0nkqD.png', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $copyRight[8]['img'], $sence_config_content);
-            $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
-            file_put_contents($sence_config_path, $sence_config_content);
-            //
-            //音频设置
-            if ($_GPC['audio']) {
-                $sence_index_content = file_get_contents($sence_index_path);
-                $sence_index_content = str_replace('{$audioPath}', $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/' . $_GPC['audio'], $sence_index_content);
-                file_put_contents($sence_index_path, $sence_index_content);
-            }
-        } else {
-            //远程附件本地处理
-            require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
-            $url = $_W['attachurl_remote'];
-
-            //场景图片处理
-            sence_remote_img_process($url . $data['front'], $scene_img_path, 'front');
-            sence_remote_img_process($url . $data['back'], $scene_img_path, 'back');
-            sence_remote_img_process($url . $data['up'], $scene_img_path, 'up');
-            sence_remote_img_process($url . $data['down'], $scene_img_path, 'down');
-            sence_remote_img_process($url . $data['left'], $scene_img_path, 'left');
-            sence_remote_img_process($url . $data['right'], $scene_img_path, 'right');
-
-            //宝藏图标设置
-            if ($_GPC['treasures']) {
-                $sence_config_content = file_get_contents($url . $_GPC['treasures']);
-                $scene_treasures_img_path = "{$modulePath}template/mobile/scene/{$_W['uniacid']}/vrpano{$id}/spot/1446487094CA8Llf.png";
-                file_put_contents($scene_treasures_img_path, $sence_config_content);
-            }
-
-            //版权信息
-            $copyRight = Page::getPage(array(7, 8));
-            $sence_config_content = file_get_contents($sence_config_path);
-            $sence_config_content = str_replace('13956993061', $copyRight[7]['title'], $sence_config_content);
-            file_put_contents($sence_config_path, $sence_config_content);
-            //音频设置
-            if ($_GPC['audio']) {
-                $sence_index_content = file_get_contents($sence_index_path);
-                $sence_index_content = str_replace('{$audioPath}', $url . $_GPC['audio'], $sence_index_content);
-                file_put_contents($sence_index_path, $sence_index_content);
-            }
-        }
-
-        message('添加成功', $this->createWebUrl('scene_list'));
+        message('添加成功', $this->createWebUrl('scene_list', array('pid' => $pid)));
     } else {
-        message('添加失败', $this->createWebUrl('scene_add'));
+        message('添加失败', $this->createWebUrl('scene_add', array('pid' => $pid)));
     }
 }
 

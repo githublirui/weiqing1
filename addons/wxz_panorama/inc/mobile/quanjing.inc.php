@@ -5,27 +5,27 @@
  * 
  */
 require_once WXZ_PANORAMA . '/function/global.func.php';
+require_once WXZ_PANORAMA . '/source/Scene.class.php';
+
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
-$pano = $_GPC['pno'] ? $_GPC['pno'] : 1;
 
-$scene_path = "$modulePath/template/mobile/scene/{$_GPC['i']}";
-$pano_count = getfilecounts($scene_path);
-if (!$pano_count) {
+//获取所有全景
+$Scenes = Scene::getAllScene();
+
+if (!$Scenes) {
     message('暂未上传场景，请耐心等待', $this->createMobileUrl('index'));
 }
 
-sort($pano_count);
-$pano = $pano_count <= 1 ? 1 : $pano;
+$sid = $_GPC['sid'] ? $_GPC['sid'] : $Scenes[0]['id']; //默认第一个场景
 
-if (!isset($pano_count[$pano - 1])) {
-    $pano = 1;
+$SceneInfo = Scene::getById($sid);
+if (!$SceneInfo) {
+    message('场景不存在，或已删除', $this->createMobileUrl('index'));
 }
-$panoFolder = $pano_count[$pano - 1];
 
-$siteroot_encode = urlencode($_W['siteroot']);
+$audioPath = tomedia($SceneInfo['audio']);
 
-$redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}";
 $user = $this->auth();
 include dirname(__FILE__) . '/permission.php';
 
@@ -47,11 +47,6 @@ if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
     die();
 }
 
-//if ($is_win && $is_fans['share_num'] >= '1' && $is_fans['cellphone']) {
-//    $show_msg = "<p>恭喜你，已经获得了</p><p id='black'>" . $is_win['award'] . "</p><p>（您奖品ID为：" . $is_win['award_id'] . " ）</p>";
-//    include $this->template(get_real_tpl('msg'));
-//    die();
-//}
 
-include $this->template('scene/' . $_GPC['i'] . '/' . $panoFolder . '/index');
+include $this->template('scene/index');
 ?>
