@@ -19,9 +19,37 @@
             }
         })
     });
+
+    //抓取场景hv
+    function getspot() {
+        var id = $(".scene_id").val();
+        var styleid = $("input[name='img']").val();
+        if (!styleid) {
+            alert('请先上传热点图片');
+            return;
+        }
+        var h = $("input[name='spoth']").val();
+        var v = $("input[name='spotv']").val();
+
+        var url = "{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=getspot&m={$_GPC['m']}&id=" + id + "&styleid=" + styleid + "&h=" + h + "&v=" + v;
+        window.open(url, "pano", "width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + ",top=0,left=0,scrollbars,toolbar=no,location=no;menubar=no,resizable=yes");
+    }
+    //抓取目标场景hv
+    function gettargethv() {
+        var id = $("#target_scene").val();
+        var h = $("input[name='target_spoth']").val();
+        var v = $("input[name='target_spotv']").val();
+        if (id == 0) {
+            alert("场景不存在！！！");
+        } else {
+            var url = "{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=targethv&m={$_GPC['m']}&id=" + id + "&h=" + h + "&v=" + v;
+            window.open(url, "width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + ",top=0,left=0,scrollbars,toolbar=no,location=no;menubar=no,resizable=yes");
+        }
+    }
 </script>
 <div class="clearfix">
     <form id="theform" class="form form-horizontal" action="" method="post">
+        <input type="hidden" class="scene_id" value="{$sid}"/>
         <div class="panel panel-default">
             <div class="panel-heading">
                 添加热点
@@ -93,7 +121,7 @@
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点坐标抓取</label>
                     <div class="col-sm-9 col-xs-12">
-                        <input type="button" id="scan_title" class="btn btn-info"  value="抓取">
+                        <input type="button" id="scan_title" class="btn btn-info"  value="抓取" onclick="getspot()">
                     </div>
                 </div>
                 <div class="form-group">
@@ -123,7 +151,7 @@
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景</label>
                         <div class="col-sm-9 col-xs-12">
-                            <select class="level form-control" name="target_scene">
+                            <select class="level form-control" name="target_scene" id="target_scene">
                                 <option value="0">场景跳转请选择</option>
                                 {php foreach($scenes as $k=>$scene) {}
                                 <option value="{$scene['id']}">{$scene['name']}</option>
@@ -146,7 +174,7 @@
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景转场位置抓取</label>
                         <div class="col-sm-9 col-xs-12">
-                            <input type="button" id="scan_title" class="btn btn-info"  value="抓取">
+                            <input type="button" id="scan_title" class="btn btn-info"  value="抓取" onclick="gettargethv()">
                         </div>
                     </div>
                     <div class="form-group">
