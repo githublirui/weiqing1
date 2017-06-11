@@ -35,13 +35,17 @@ if ($projectConfigInfo['autorotate']) {
 $scenes = Scene::getScenesByProId($pid);
 
 //添加actions
+$element = "if(startscene === null, copy(startscene,scene[0].name));
+        loadscene(get(startscene), null, MERGE);";
+if ($projectConfigInfo['sound']) {
+    $music = tomedia($projectConfigInfo['sound']);
+    $element .="\r\n playsound(bggsnd, '{$music}', 10);";
+}
+//开始执行的action
 $attributes = array(
     'name' => 'startup',
 );
-$element = "if(startscene === null, copy(startscene,scene[0].name));
-        loadscene(get(startscene), null, MERGE);";
-$krpanoElement .= Scene::createTag('action', $attributes, $element, true);
-
+$krpanoElement .= Scene::createTag('action', $attributes, $element, true); //开始aaction
 //皮肤
 if ($projectConfigInfo['skin']) {
     $attributes = array(
@@ -133,7 +137,37 @@ foreach ($scenes as $i => $scene) {
 }
 //场景结束
 //
-//
+//背景音乐
+if ($projectConfigInfo['sound']) {
+    $attributes = array(
+        "name" => "soundinterface",
+        "url" => "%SWFPATH%/plugins/soundinterface.swf",
+        "alturl" => "%SWFPATH%/plugins/soundinterface.js",
+        "rootpath" => "",
+        "preload" => "true",
+        "keep" => "true",
+        "volume" => "1.0",
+    );
+    $soundPlugin = Scene::createTag('plugin', $attributes);
+
+    $attributes = array(
+        "name" => "sndbt",
+        "url" => "%SWFPATH%/images/soundonoff.png",
+        "align" => "righttop",
+        "x" => "10",
+        "y" => "10",
+        "keep" => "true",
+        "scale" => "0.65",
+        "onover" => "tween(alpha,1);",
+        "onout" => "tween(alpha,0.45);",
+        "crop" => "0|0|50|50",
+        "onclick" => "switch(soundinterface.mute); switch(crop, 0|0|50|50, 0|50|50|50);",
+    );
+    $soundPlugin .= Scene::createTag('plugin', $attributes);
+
+    $krpanoElement.= $soundPlugin;
+}
+
 //krpano 属性
 $attributes = array(
     'version' => $krpanoVersion,
@@ -151,4 +185,5 @@ if ($_W['config']['setting']['development']) {
 }
 
 $html = Scene::createTag('krpano', $attributes, $krpanoElement, true);
+
 include $this->template('scene/krpano');

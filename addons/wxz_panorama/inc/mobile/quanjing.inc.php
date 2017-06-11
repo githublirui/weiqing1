@@ -31,7 +31,6 @@ $is_win = pdo_fetch($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
 
-
 if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone'] == '') {
     include $this->template(get_real_tpl('input_msg'));
     die();
@@ -42,7 +41,6 @@ if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
     include $this->template(get_real_tpl('msg'));
     die();
 }
-
 
 include $this->template('scene/index');
 ?>
