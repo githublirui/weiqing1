@@ -116,26 +116,29 @@ class Hotspot {
      * @param type $sid 场景id
      * @param type $nextPro
      */
-    public static function createHotspotXml($sid, $nextPro = '') {
-        global $_W;
+    public static function createHotspotXml($scene, $nextPro = '') {
+        global $_W, $_GPC;
         $xml = '';
+        $sid = $scene['id'];
         $hotspots = Hotspot::getAll($sid);
         foreach ($hotspots as $spotautokey => $spotrow) {
             $spotrow = array_merge($spotrow, $spotrow['config']);
             unset($spotrow['config']);
             $xml .= "<hotspot name=\"spot$spotautokey\" ";
             $xml .= "devices=\"{$spotrow['devicetype']}\" ";
+
             $onclickstring = "";
             $onhoverstring = "";
             $onoverstring = "";
             $onoutstring = "";
+
             if ($spotrow['openshowspotname'] == 1 && $spotrow['action'] != 4 && $spotrow['openinfo'] == 0) {
                 $onhoverstring .= "showtext('{$spotrow['name']}');";
             }
             if ($spotrow['action']) {
                 if ($spotrow['action'] == 1 && $spotrow['target_scene'] != 0) {
                     $movetoxml = "moveto({$spotrow['spoth']},{$spotrow['spotv']},smooth());";
-                    if ($spotrow['spottype'] == 1) {
+                    if ($spotrow['type'] == 1) {
                         if ($spotrow['screenchange'] == 1) {
                             $onclickstring .= "ifnot(device.html5,moveto({$spotrow['spoth']},{$spotrow['spotv']},smooth());loadscene(scene{$spotrow['target_scene']}, view.vlookat={$spotrow['target_spotv']}&amp;view.hlookat={$spotrow['target_spoth']}, MERGE,ZOOMBLEND(1,1));,{$movetoxml}loadscene(scene{$spotrow['target_scene']}, view.hlookat={$spotrow['target_spoth']}, MERGE,ZOOMBLEND(1,1)););";
                         } else if ($spotrow['screenchange'] == 2) {
@@ -163,15 +166,15 @@ class Hotspot {
                     if ($pid == -1) {
                         $pid = $nextPro['id'];
                     }
-                    $httplink = $this->createMobileUrl('quanjing', array('pid' => $pid));
+                    $httplink = "{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$pid}";
                     $http = str_replace("&", "&amp;", $httplink);
-                    $onclickstring .= "openurl($http,_blank);";
+                    $onclickstring .= "openurl($http,_self);";
                 }
             }
             if ($spotrow['openinfo'] == 1) {
                 $onhoverstring .= "set(hotspot[spot{$spotautokey}info].visible,true);";
             }
-            if ($spotrow['spottype'] == 1) {
+            if ($spotrow['type'] == 1) {
                 $spotname = tomedia($spotrow['img']);
                 $xml .= "url=\"{$spotname}\" ";
                 $xml .= "ath=\"{$spotrow['spoth']}\" atv=\"{$spotrow['spotv']}\" ";
@@ -187,7 +190,7 @@ class Hotspot {
                 $xml .= "<hotspot name=\"spot{$spotautokey}info\" ";
                 $xml .= "devices=\"{$spotrow['devicetype']}\" ";
                 $xml .= "url=\"%SWFPATH%/plugins/textfield.swf\" ";
-                if ($spotrow['spottype'] == 1) {
+                if ($spotrow['type'] == 1) {
                     $xml .= "ath=\"{$spotrow['spoth']}\" atv=\"{$spotrow['spotv']}\" ";
                 }
                 $xml .= "width=\"{$spotrow['infowidth']}\" height=\"50\" ";
@@ -202,6 +205,7 @@ class Hotspot {
                 $xml .= "autoheight=\"true\" align=\"left\" edge=\"left\" onout=\"set(hotspot[spot{$spotautokey}info].visible,false);\" ";
                 $xml .= "/>\r\n";
             }
+
             if ($spotrow['action'] == 2 && $spotrow['showpic'] != "") {
                 $spotrow['showpic'] = tomedia($spotrow['showpic']);
                 if ($spotrow['showpictype'] == 1) {

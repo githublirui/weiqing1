@@ -23,8 +23,8 @@ $projects = Project::getAll('id,name');
 if (checksubmit()) {
     $hotspotText = array(
         'openshowspotname' => (int) $_GPC['openshowspotname'],
-        'spoth' => (int) $_GPC['spoth'],
-        'spotv' => (int) $_GPC['spotv'],
+        'spoth' => (string) $_GPC['spoth'],
+        'spotv' => (string) $_GPC['spotv'],
     ); //热点配置，
     $data = array(
         'uniacid' => $_W['uniacid'],

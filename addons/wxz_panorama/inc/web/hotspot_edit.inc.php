@@ -26,8 +26,8 @@ $sid = $sceneInfo['id'];
 if (checksubmit()) {
     $hotspotText = array(
         'openshowspotname' => (int) $_GPC['openshowspotname'],
-        'spoth' => (int) $_GPC['spoth'],
-        'spotv' => (int) $_GPC['spotv'],
+        'spoth' => (string) $_GPC['spoth'],
+        'spotv' => (string) $_GPC['spotv'],
     ); //热点配置，
     $data = array(
         'type' => (int) $_GPC['type'],
@@ -55,11 +55,11 @@ if (checksubmit()) {
             break;
     }
 
-    $hotspotText['openinfo'] = (int) $hotspotText['openinfo']; //热点文字
-    $hotspotText['infowidth'] = (int) $hotspotText['infowidth'];
-    $hotspotText['textinfo'] = (string) $hotspotText['textinfo'];
-    $hotspotText['devicetype'] = (string) $hotspotText['devicetype']; //支持设备
-
+    $hotspotText['openinfo'] = (int) $_GPC['openinfo']; //热点文字
+    $hotspotText['infowidth'] = (string) $_GPC['infowidth'];
+    $hotspotText['textinfo'] = (string) $_GPC['textinfo'];
+    $hotspotText['devicetype'] = (string) $_GPC['devicetype']; //支持设备
+  
     $data['config'] = serialize($hotspotText);
     if (pdo_update('wxz_panorama_scene_hotspot', $data, array('id' => $id))) {
         message('修改成功', $this->createWebUrl('hotspot_list', array('sid' => $sid)));

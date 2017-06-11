@@ -57,7 +57,7 @@
                         <p class="form-control-static">
                             <a class='btn btn-primary' href='{php echo $this->createWebUrl("project_config",array("pid"=>$row["id"]))}'>全局配置</a>
                             <a class='btn btn-info' href='{php echo $this->createWebUrl("scene_list",array("pid"=>$row["id"]))}'>场景管理</a>
-                            <a class='btn btn-info' href='{php echo $this->createWebUrl("project_edit",array("id"=>$row["id"]))}'>编辑</a>
+                            <a class='btn btn-info' target="_blank" href="{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$row['id']}" >预览</a>
                             <a class='btn btn-danger' href="javascript:void(0)" onclick="del_project('{$row['id']}')">删除</a>
                         </p>
                     </td>

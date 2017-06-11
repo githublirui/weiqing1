@@ -124,7 +124,8 @@ foreach ($scenes as $i => $scene) {
     }
 
     //生成热点
-    $sceneElement .= Hotspot::createHotspotXml($sid, $next_project);
+    $hotspotElement = Hotspot::createHotspotXml($scene, $next_project);
+    $sceneElement .= $hotspotElement;
     //
     //
     //生成scene

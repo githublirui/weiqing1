@@ -65,9 +65,9 @@
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">适应设备</label>
                     <div class="col-sm-9 col-xs-12">
                         <select class="level form-control" name="devicetype">
-                            <option value="all" {if $hotspotInfo['config']['devicetype']!='all'}selected="selected"{/if}>全部</option>
-                            <option value="flash" {if $hotspotInfo['config']['devicetype']!='flash'}selected="selected"{/if}>PC(flash)</option>
-                            <option value="html5" {if $hotspotInfo['config']['devicetype']!='html5'}selected="selected"{/if}>Apple(html5)</option>
+                            <option value="all" {if $hotspotInfo['config']['devicetype']=='all'}selected="selected"{/if}>全部</option>
+                            <option value="flash" {if $hotspotInfo['config']['devicetype']=='flash'}selected="selected"{/if}>PC(flash)</option>
+                            <option value="html5" {if $hotspotInfo['config']['devicetype']=='html5'}selected="selected"{/if}>Apple(html5)</option>
                         </select>
                     </div>
                 </div>
@@ -114,8 +114,8 @@
                             <option value="0">项目跳转请选择</option>
                             <option value="-1">下一个项目</option>
                             <select class="level form-control" name="target_project">
-                                <option value="0" {if !$hotspotInfo['config']['target_project']}>项目跳转请选择</option>
-                                <option value="-1" {if $hotspotInfo['config']['target_project']==-1}>下一个项目</option>
+                                <option value="0" {if !$hotspotInfo['config']['target_project']}checked="checked"{/if}>项目跳转请选择</option>
+                                <option value="-1" {if $hotspotInfo['config']['target_project']==-1}checked="checked"{/if}>下一个项目</option>
                                 {php foreach($projects as $k=>$project) {}
                                 <option value="{$project['id']}" {if $hotspotInfo['config']['target_project']==$project['id']} checked="checked"{/if}>{$project['name']}</option>
                                 {php } }
