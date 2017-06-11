@@ -42,6 +42,22 @@ $element = "if(startscene === null, copy(startscene,scene[0].name));
         loadscene(get(startscene), null, MERGE);";
 $krpanoElement .= Scene::createTag('action', $attributes, $element, true);
 
+//皮肤
+if ($projectConfigInfo['skin']) {
+    $attributes = array(
+        "url" => "%SWFPATH%/skin/{$projectConfigInfo['skin']}/vtourskin.xml",
+    );
+    $krpanoElement .= Scene::createTag('include', $attributes);
+}
+
+//自动旋转
+if ($projectConfigInfo['autorotate']) {
+    $attributes = array(
+        "enabled" => 'true',
+    );
+    $krpanoElement .= Scene::createTag('autorotate', $attributes);
+}
+
 $treasureNum = $projectConfigInfo['treasure_num']; //宝藏数量
 $sceneNum = count($scenes); //场景数量
 $sceneTreasure = Scene::distribTreasure($sceneNum, $treasureNum);
@@ -93,7 +109,7 @@ foreach ($scenes as $i => $scene) {
                 'rz' => "",
                 'ry' => "",
                 'rx' => "",
-                'onclick' => "openurl(" . urldecode($_W['siteroot']) . "app/index.php?i=" . $_W['uniacid'] . "&amp;pid=" . $pid . "&amp;c=entry&amp;do=award&amp;m=wxz_quanjing,_blank);",
+                'onclick' => "openurl(" . urldecode($_W['siteroot']) . "app/index.php?i=" . $_W['uniacid'] . "&amp;pid=" . $pid . "&amp;c=entry&amp;do=award&amp;m=" . $_GPC['m'] . ",_blank);",
                 'url' => tomedia($projectConfigInfo['treasure']),
             );
             $sceneElement .= Scene::createTag('hotspot', $attributes);

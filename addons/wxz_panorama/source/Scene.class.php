@@ -123,7 +123,7 @@ class Scene {
             $fileInfo = pathinfo($filePath);
             $mobielFilename = 'mobile_' . $fileInfo['filename'] . '.' . $fileInfo['extension'];
             $mobilePath = $fileInfo['dirname'] . '/' . $mobielFilename;
-            UtilsImage::square_crop($filePath, $mobilePath, $thumbWidth);
+            UtilsImage::resize($filePath, $thumbWidth, $mobilePath);
             $result['mobile'] = str_replace($attachdir, '', $mobilePath);
             return $result;
         }
@@ -203,15 +203,14 @@ class Scene {
                 $imgElement .= self::createTag($img_column, $attributes);
                 //手机端
                 $attributes = array(
-                    'url' => tomedia($scene[$img_column]['pano']),
+                    'url' => tomedia($scene[$img_column]['mobile']),
                     'rotate' => '0',
                     'flip' => '0',
                 );
                 $mobileImgElement .= self::createTag($img_column, $attributes);
-                $imgElement .= self::createTag('mobile', array(), $mobileImgElement, true);
             }
         }
-
+        $imgElement .= self::createTag('mobile', array(), $mobileImgElement, true);
         //图片属性
         $attributes = array(
         );

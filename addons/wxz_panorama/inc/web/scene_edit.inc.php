@@ -6,6 +6,8 @@ require_once WXZ_PANORAMA . '/source/Scene.class.php';
 global $_W, $_GPC;
 
 $id = $_GPC['id'];
+$img_columns = array('front', 'back', 'up', 'down', 'left', 'right');
+
 $scene_info = Scene::getById($id);
 if (!$scene_info) {
     message('场景不存在', $this->createWebUrl('scene_list'));
