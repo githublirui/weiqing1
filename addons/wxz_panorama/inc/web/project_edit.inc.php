@@ -2,9 +2,10 @@
 
 global $_W, $_GPC;
 
+require_once WXZ_PANORAMA . '/source/Project.class.php';
+
 $id = $_GPC['id'];
-$project_info_sql = "SELECT * FROM " . tablename('wxz_panorama_project') . " WHERE id={$id}";
-$project_info = pdo_fetch($project_info_sql);
+$project_info = Project::getById($id);
 
 if (!$project_info) {
     message('项目不存在', $this->createWebUrl('project_list'));

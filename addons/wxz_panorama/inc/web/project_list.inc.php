@@ -18,7 +18,8 @@ $pars[':uniacid'] = $_W['uniacid'];
 $sql = "SELECT count(*) as num FROM " . tablename('wxz_panorama_project') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql, $pars);
 
-$sql = "SELECT * FROM " . tablename('wxz_panorama_project') . " WHERE {$condition} ORDER BY `id` DESC limit $start , $psize";
+$sql = "SELECT * FROM " . tablename('wxz_panorama_project') . " WHERE {$condition} ORDER BY `sort_order` desc limit $start , $psize";
+
 $list = pdo_fetchall($sql, $pars);
 $pager = pagination($total, $pindex, $psize);
 

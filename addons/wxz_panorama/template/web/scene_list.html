@@ -46,6 +46,7 @@
                     </td>
                     <td>
                         <p class="form-control-static">
+                            <a class='btn btn-info'  href='{php echo $this->createWebUrl("hotspot_list",array("sid"=>$row["id"]))}'>热点管理</a>
                             <a class='btn btn-info'  href='{php echo $this->createWebUrl("scene_edit",array("id"=>$row["id"]))}'>编辑</a>
                             <a  class='btn btn-danger' href="javascript:void(0)" onclick="del_scene('{$row['id']}')">删除</a>
                         </p>

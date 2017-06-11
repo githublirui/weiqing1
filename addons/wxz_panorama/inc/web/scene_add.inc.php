@@ -18,6 +18,8 @@ if (checksubmit()) {
         'uniacid' => $_W['uniacid'],
         'project_id' => $pid,
         'name' => (string) $_GPC['name'],
+        'preview' => (string) $_GPC['preview'], //预览图
+        'thumb' => (string) $_GPC['thumb'], //缩略图
         'create_time' => time(),
     );
 

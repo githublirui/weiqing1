@@ -121,8 +121,8 @@ CREATE TABLE `ims_wxz_panorama_scene` (
   `front` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片4',
   `left` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片5',
   `right` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片6',
-  `audio` varchar(1255) NOT NULL DEFAULT '' COMMENT '音频文件',
-  `treasures` varchar(255) NOT NULL DEFAULT '' COMMENT '宝藏图片',
+  `preview` varchar(255) NOT NULL DEFAULT '' COMMENT '预览图',
+  `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '缩略图',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   KEY `id` (`id`),
   KEY `uniacid` (`uniacid`)
@@ -146,11 +146,24 @@ CREATE TABLE `ims_wxz_panorama_project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '项目名称',
+  `sort_order` int(10) NOT NULL DEFAULT 0 COMMENT '排序',
   `update_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '修改时间',
   `create_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
-
+        
+CREATE TABLE `ims_wxz_panorama_project_config` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
+  `skin` varchar(20) NOT NULL DEFAULT '' COMMENT '皮肤',
+  `sound` varchar(255) NOT NULL DEFAULT '' COMMENT '背景音乐',
+  `treasure` varchar(255) NOT NULL DEFAULT '' COMMENT '宝藏图片',
+  `treasure_num` tinyint(1) NOT NULL DEFAULT 1 COMMENT '宝藏数量',
+  `autorotate` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否开启自动旋转',
+  `update_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
           
 ]]></install>
     <uninstall><![CDATA[

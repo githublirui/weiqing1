@@ -16,8 +16,11 @@ if (!pdo_fieldexists('wxz_panorama_award', 'max_money')) {
     pdo_query("ALTER TABLE " . tablename('wxz_panorama_award') . " ADD `max_money` int(11) DEFAULT '0';");
 }
 
-if (!pdo_fieldexists('wxz_panorama_scene', 'audio')) {
-    pdo_query("ALTER TABLE " . tablename('wxz_panorama_scene') . " ADD `audio` varchar(255) DEFAULT '';");
+if (!pdo_fieldexists('wxz_panorama_scene', 'preview')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_scene') . " ADD `preview` varchar(255) DEFAULT '';");
+}
+if (!pdo_fieldexists('wxz_panorama_scene', 'thumb')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_scene') . " ADD `thumb` varchar(255) DEFAULT '';");
 }
 
 //修改保存图片字段长度
@@ -49,9 +52,25 @@ if (!pdo_tableexists('wxz_panorama_project')) {
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '项目名称',
+  `sort_order` int(10) NOT NULL DEFAULT 0 COMMENT '设置为默认展示',
   `update_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '修改时间',
   `create_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;");
 }
 
+if (!pdo_tableexists('wxz_panorama_project_config')) {
+    pdo_query("CREATE TABLE " . tablename('wxz_panorama_project_config') . " (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
+  `skin` tinyint(1) NOT NULL DEFAULT '' COMMENT '皮肤',
+  `sound` varchar(255) NOT NULL DEFAULT '' COMMENT '背景音乐',
+  `treasure` varchar(255) NOT NULL DEFAULT '' COMMENT '宝藏图片',
+  `treasure_num` tinyint(1) NOT NULL DEFAULT 1 COMMENT '宝藏数量',
+  `autorotate` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否开启自动旋转',
+  `default` tinyint(1) NOT NULL DEFAULT 0 COMMENT '设置为默认展示',
+  `update_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;");
+}

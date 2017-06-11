@@ -5,18 +5,16 @@
  * 抽奖页面
  */
 require_once WXZ_PANORAMA . '/function/global.func.php';
+require_once WXZ_PANORAMA . '/source/Project.class.php';
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 
-$pano = $_GPC['pno'];
-$next_pano = 1;
-$scene_path = "$modulePath/template/mobile/scene/{$_GPC['i']}";
-$pano_count = getfilecounts($scene_path);
-if ($pano < $pano_count) {
-    $next_pano = $pano + 1;
-}
+$pid = $_GPC['pid'];
+$next_pano = Project::getNextProject($pid);
+$next_pano = $next_pano['id'];
+
 $redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}";
-if (!$pano) {
+if (!$pid) {
     message('场景参数不能为空！', $redirect);
 }
 include dirname(__FILE__) . '/permission.php';
@@ -43,7 +41,7 @@ if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
 
 //判断用户是否中过奖
 if ($user["award_num"] > 0) {
-    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pno={$next_pano}'>点击进入下一个场景</a></p>";
+    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
 }
@@ -109,7 +107,7 @@ if ($award_id) {
         "award_id" => $award_id,
         "award" => $award_name,
         "fee" => $fee,
-        "pano" => $pano,
+        "pano" => $pid,
         "create_time" => time(),
     );
     pdo_insert("wxz_panorama_win", $data);
@@ -122,7 +120,7 @@ if ($award_id) {
     //include $this->template('msg');
     die;
 } else {
-    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pno={$next_pano}'>点击进入下一个场景</a></p>";
+    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
 }

@@ -27,5 +27,19 @@ if ($do == 'del_page') {
     Project::delById($id);
     echo "ok";
     die;
+} elseif ($do == 'save_project_order') {
+    //保存商铺排序
+    $ids = $_GPC['ids'];
+    $orders = $_GPC['orders'];
+
+    foreach ($ids as $k => $id) {
+        $data = array(
+            'sort_order' => $orders[$k],
+        );
+        require_once WXZ_PANORAMA . '/source/Project.class.php';
+        Project::updateById($id, $data);
+    }
+    echo 'ok';
+    die;
 }
 ?>

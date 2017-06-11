@@ -6,15 +6,55 @@
 class Project {
 
     public static $table = 'wxz_panorama_project';
+    public static $config_table = 'wxz_panorama_project_config';
 
     /**
      * 获取所有项目
      */
-    public static function getAllScene($field = '*') {
+    public static function getAll($field = '*') {
         global $_W;
         $condition = "uniacid={$_W['uniacid']}";
-        $sql = "SELECT {$field} FROM " . tablename(self::$table) . " WHERE {$condition} order by id ASC";
+        $sql = "SELECT {$field} FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc";
         return pdo_fetchall($sql);
+    }
+
+    /**
+     * 获取第一个项目
+     */
+    public static function getFirstPro() {
+        global $_W;
+        $condition = "uniacid={$_W['uniacid']}";
+        $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc limit 1";
+        return pdo_fetch($sql);
+    }
+
+    /**
+     * 获取下一个项目id
+     * @param type $pid
+     */
+    public static function getNextProject($pid) {
+        global $_W;
+        $proInfo = self::getById($pid, 'sort_order');
+        if (!$proInfo) {
+            return self::getFirstPro();
+        }
+
+        $condition = "uniacid={$_W['uniacid']} AND sort_order<{$proInfo['sort_order']}";
+        $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc";
+        $nextInfo = pdo_fetch($sql);
+        if (!$nextInfo) {
+            return self::getFirstPro(); //没有下一个场景，返回第一个场景
+        }
+        return $nextInfo;
+    }
+
+    /**
+     * 通过id更新
+     * @param type $id
+     * @param type $data
+     */
+    public static function updateById($id, $data) {
+        return pdo_update(self::$table, $data, array('id' => $id));
     }
 
     /**
@@ -26,9 +66,53 @@ class Project {
      */
     public static function getById($id, $field = '*') {
         global $_W;
+        if (!$id) {
+            return false;
+        }
+
         $condition = "uniacid={$_W['uniacid']} AND id={$id}";
         $sql = "SELECT {$field} FROM " . tablename(self::$table) . " WHERE {$condition}";
         return pdo_fetch($sql);
+    }
+
+    /**
+     * 通过id获取场景配置信息
+     * @global type $_W
+     * @param type $pid
+     * @param type $field
+     * @return type
+     */
+    public static function getConfigById($pid, $field = '*') {
+        global $_W;
+        if (!$pid) {
+            return false;
+        }
+        $condition = "uniacid={$_W['uniacid']} AND project_id={$pid}";
+        $sql = "SELECT {$field} FROM " . tablename(self::$config_table) . " WHERE {$condition}";
+        return pdo_fetch($sql);
+    }
+
+    /**
+     * 更新配置信息
+     * @param type $pid
+     * @param type $data
+     */
+    public static function updateConfig($pid, $data) {
+        global $_W;
+
+        $data['update_at'] = time();
+
+        $condition = "uniacid={$_W['uniacid']} AND project_id={$pid}";
+        $sql = "SELECT id FROM " . tablename(self::$config_table) . " WHERE {$condition}";
+        $config = pdo_fetch($sql);
+        if (!$config) {
+            $data['uniacid'] = $_W['uniacid'];
+            $data['project_id'] = $pid;
+            pdo_insert(self::$config_table, $data);
+        } else {
+            pdo_update(self::$config_table, $data);
+        }
+        return true;
     }
 
     /**
@@ -44,6 +128,20 @@ class Project {
             Scene::delSceneByProId($id);
         }
         return true;
+    }
+
+    /**
+     * 设置默认项目
+     * @param type $pid
+     */
+    public static function setDefault($pid) {
+        global $_W;
+
+        $condition = "id={$pid} AND uniacid={$_W['uniacid']}";
+        $sql1 = "update " . tablename(self::$table) . " set `default`=0";
+        $sql2 = "update " . tablename(self::$table) . " set `default`=1 where $condition";
+        pdo_query($sql1);
+        pdo_query($sql2);
     }
 
 }

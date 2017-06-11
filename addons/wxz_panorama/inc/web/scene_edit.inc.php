@@ -6,20 +6,10 @@ require_once WXZ_PANORAMA . '/source/Scene.class.php';
 global $_W, $_GPC;
 
 $id = $_GPC['id'];
-$img_columns = array('front', 'back', 'up', 'down', 'left', 'right'); //六张图片
-$scene_info_sql = "SELECT * FROM " . tablename('wxz_panorama_scene') . " WHERE id={$id}";
-$scene_info = pdo_fetch($scene_info_sql);
+$scene_info = Scene::getById($id);
 if (!$scene_info) {
     message('场景不存在', $this->createWebUrl('scene_list'));
 }
-
-//格式化存储字段
-foreach ($scene_info as $column => $value) {
-    if (in_array($column, $img_columns) && $value) {
-        $scene_info[$column] = unserialize($value);
-    }
-}
-
 
 load()->web('tpl');
 if (checksubmit()) {
@@ -27,6 +17,8 @@ if (checksubmit()) {
     //字段验证, 并获得正确的数据$data
     $data = array(
         'name' => trim($_GPC['name']),
+        'preview' => (string) $_GPC['preview'], //预览图
+        'thumb' => (string) $_GPC['thumb'], //缩略图
         'create_time' => time(),
     );
 

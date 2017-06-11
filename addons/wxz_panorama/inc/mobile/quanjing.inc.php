@@ -6,26 +6,22 @@
  */
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Scene.class.php';
+require_once WXZ_PANORAMA . '/source/Project.class.php';
 
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 
-//获取所有全景
-$Scenes = Scene::getAllScene();
-
-if (!$Scenes) {
-    message('暂未上传场景，请耐心等待', $this->createMobileUrl('index'));
+$pid = $_GPC['pid']; //默认第一个项目
+if ($pid) {
+    $projectInfo = Project::getById($pid, 'id');
+} else {
+    $projectInfo = Project::getFirstPro();
 }
 
-$sid = $_GPC['sid'] ? $_GPC['sid'] : $Scenes[0]['id']; //默认第一个场景
-
-$SceneInfo = Scene::getById($sid);
-if (!$SceneInfo) {
+if (!$projectInfo) {
     message('场景不存在，或已删除', $this->createMobileUrl('index'));
 }
-
-$audioPath = tomedia($SceneInfo['audio']);
-
+$pid = $projectInfo['id'];
 $user = $this->auth();
 include dirname(__FILE__) . '/permission.php';
 
