@@ -27,6 +27,12 @@ if ($do == 'del_page') {
     Project::delById($id);
     echo "ok";
     die;
+} else if ($do == 'del_hotspot') {
+    require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
+    $id = $_GPC['id'];
+    Hotspot::delById($id);
+    echo "ok";
+    die;
 } elseif ($do == 'save_project_order') {
     //保存商铺排序
     $ids = $_GPC['ids'];

@@ -92,7 +92,12 @@ class Scene {
         if (!$id) {
             return false;
         }
-        return pdo_delete(self::$table, array('id' => $id, 'uniacid' => $_W['uniacid']));
+        $ret = pdo_delete(self::$table, array('id' => $id, 'uniacid' => $_W['uniacid']));
+        if ($ret) {
+            require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
+            Hotspot::delBySceneId($id);
+        }
+        return true;
     }
 
     /**

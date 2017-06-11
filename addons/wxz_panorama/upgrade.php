@@ -74,3 +74,21 @@ if (!pdo_tableexists('wxz_panorama_project_config')) {
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;");
 }
+
+
+if (!pdo_tableexists('wxz_panorama_scene_hotspot')) {
+    pdo_query("CREATE TABLE " . tablename('wxz_panorama_scene_hotspot') . " (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `uniacid` int(10) unsigned NOT NULL COMMENT '',
+    `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
+    `scene_id` int(10) unsigned NOT NULL COMMENT '场景id',
+    `type` tinyint(1) NOT NULL COMMENT '热点类型',
+    `name` varchar(20) NOT NULL DEFAULT '' COMMENT '热点名称',
+    `img` varchar(255) NOT NULL DEFAULT '' COMMENT '热点图片',
+    `action` tinyint(1)  NOT NULL COMMENT '热点动作',
+    `config` text COMMENT '配置详情',
+    `update_at` INT(11) NOT NULL,
+    `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;");
+}

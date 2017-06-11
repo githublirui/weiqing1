@@ -125,23 +125,11 @@ class Project {
         if ($ret) {
             //删除场景
             require_once WXZ_PANORAMA . '/source/Scene.class.php';
+            require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
             Scene::delSceneByProId($id);
+            Hotspot::delByProId($id);
         }
         return true;
-    }
-
-    /**
-     * 设置默认项目
-     * @param type $pid
-     */
-    public static function setDefault($pid) {
-        global $_W;
-
-        $condition = "id={$pid} AND uniacid={$_W['uniacid']}";
-        $sql1 = "update " . tablename(self::$table) . " set `default`=0";
-        $sql2 = "update " . tablename(self::$table) . " set `default`=1 where $condition";
-        pdo_query($sql1);
-        pdo_query($sql2);
     }
 
 }
