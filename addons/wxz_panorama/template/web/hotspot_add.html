@@ -9,6 +9,15 @@
             $(".action_btn" + action + "_div").show();
             $(".action").val(action);
         });
+
+        $(".openinfo").click(function () {
+            var openinfo = $(this).val();
+            if (openinfo) {
+                $(".openinfo_div").show();
+            } else {
+                $(".openinfo_div").hide();
+            }
+        })
     });
 </script>
 <div class="clearfix">
@@ -53,6 +62,16 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">适应设备</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <select class="level form-control" name="devicetype">
+                            <option value="all" selected="selected">全部</option>
+                            <option value="flash">PC(flash)</option>
+                            <option value="html5">Apple(html5)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点图片</label>
                     <div class="col-sm-9 col-xs-12">
                         {php echo tpl_form_field_image('img',$project_config_info['img'])}
@@ -80,18 +99,32 @@
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点动作</label>
                     <div class="col-sm-9 col-xs-12">
+                        <input type="button" checked="checked" class="action_btn btn btn-success" data-action="0"  value="无动作">
                         {php foreach($actions as $k=> $row) { }
-                        <input type="button" {if $k==1}checked="checked"{/if} class="action_btn btn {if $k==1}btn-success{else}btn-info{/if}" data-action="{$k}"  value="{$row}">
-                               {php } }
+                        <input type="button" class="action_btn btn btn-info" data-action="{$k}"  value="{$row}">
+                        {php } }
 
-                               <input type="hidden" name="action" class="action" value="1" />
+                        <input type="hidden" name="action" class="action" value="1" />
                     </div>
                 </div>
-                <div class="action_btn_div action_btn1_div">
+                <div class="action_btn_div action_btn1_div" style="display: none;">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标项目</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <select class="level form-control" name="target_project">
+                                <option value="0">项目跳转请选择</option>
+                                <option value="-1">下一个项目</option>
+                                {php foreach($projects as $k=>$project) {}
+                                <option value="{$project['id']}">{$project['name']}</option>
+                                {php } }
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景</label>
                         <div class="col-sm-9 col-xs-12">
                             <select class="level form-control" name="target_scene">
+                                <option value="0">场景跳转请选择</option>
                                 {php foreach($scenes as $k=>$scene) {}
                                 <option value="{$scene['id']}">{$scene['name']}</option>
                                 {php } }
@@ -182,6 +215,40 @@
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">外部超链接</label>
                         <div class="col-sm-9 col-xs-12">
                             <input type="text" id="scan_title" class="form-control span7" placeholder="" name="httplink" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否显示热点文字信息</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="openinfo" class="openinfo" value="1"> 是
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" checked="checked" name="openinfo" class="openinfo" value="0"> 否
+                            </label>
+                        </div>
+                        <span class="help-block">鼠标移至热点弹出一段文字框，可以添加链接，文字效果等</span>
+                    </div>
+                </div>
+
+                <div class="openinfo_div" style="display: none">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">宽度</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="infowidth" value="">
+                            <span class="help-block">推荐（200—350）</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点文字信息</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_ueditor('textinfo')}
                         </div>
                     </div>
                 </div>

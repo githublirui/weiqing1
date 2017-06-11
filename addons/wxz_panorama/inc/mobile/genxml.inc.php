@@ -6,6 +6,7 @@
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/source/Project.class.php';
 require_once WXZ_PANORAMA . '/source/Scene.class.php';
+require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
 
 //自定义参数
 $krpanoVersion = '1.16'; //krpano 版本号
@@ -13,6 +14,8 @@ $html = ''; //xml配置
 $krpanoElement = ''; //krpano内容
 //参数校验
 $pid = (int) $_GPC['pid'];
+$next_project = Project::getNextProject($pid); //下一个项目
+
 if (!$pid) {
     message('项目id错误');
 }
@@ -120,9 +123,13 @@ foreach ($scenes as $i => $scene) {
         }
     }
 
+    //生成热点
+    $sceneElement .= Hotspot::createHotspotXml($sid, $next_project);
+    //
+    //
     //生成scene
     $attributes = array(
-        'name' => "scene_{$scene['project_id']}-{$scene['id']}",
+        'name' => "scene{$scene['id']}",
         'title' => $scene['name'],
         'onstart' => '',
         'lat' => '',

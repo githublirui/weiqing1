@@ -17,6 +17,7 @@ $types = Hotspot::$types;
 $actions = Hotspot::$actions;
 $sceneInfo = Scene::getById($sid, 'id,name,project_id');
 $scenes = Scene::getScenesByProId($sceneInfo['project_id'], 'id,name');
+$projects = Project::getAll('id,name');
 
 //获取所有场景
 if (checksubmit()) {
@@ -37,6 +38,7 @@ if (checksubmit()) {
     );
     switch ($data['action']) {
         case 1:
+            $hotspotText['target_project'] = (int) $_GPC['target_project'];
             $hotspotText['target_scene'] = (int) $_GPC['target_scene'];
             $hotspotText['target_spoth'] = (string) $_GPC['target_spoth'];
             $hotspotText['target_spotv'] = (string) $_GPC['target_spotv'];
@@ -52,6 +54,11 @@ if (checksubmit()) {
             $hotspotText['httplink'] = (string) $_GPC['httplink'];
             break;
     }
+
+    $hotspotText['openinfo'] = (int) $hotspotText['openinfo'];
+    $hotspotText['infowidth'] = (int) $hotspotText['infowidth'];
+    $hotspotText['textinfo'] = (string) $hotspotText['textinfo'];
+    $hotspotText['devicetype'] = (string) $hotspotText['devicetype']; //支持设备
 
     $data['config'] = serialize($hotspotText);
     if (pdo_insert('wxz_panorama_scene_hotspot', $data)) {

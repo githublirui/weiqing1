@@ -11,6 +11,7 @@ require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
 $id = intval($_GPC['id']);
 
 $hotspotInfo = Hotspot::getById($id);
+$projects = Project::getAll('id,name');
 
 if (!$hotspotInfo) {
     message('热点不存在', $this->createWebUrl('project_list'));
@@ -37,6 +38,7 @@ if (checksubmit()) {
     );
     switch ($data['action']) {
         case 1:
+            $hotspotText['target_project'] = (int) $_GPC['target_project'];
             $hotspotText['target_scene'] = (int) $_GPC['target_scene'];
             $hotspotText['target_spoth'] = (string) $_GPC['target_spoth'];
             $hotspotText['target_spotv'] = (string) $_GPC['target_spotv'];
@@ -52,6 +54,11 @@ if (checksubmit()) {
             $hotspotText['httplink'] = (string) $_GPC['httplink'];
             break;
     }
+
+    $hotspotText['openinfo'] = (int) $hotspotText['openinfo']; //热点文字
+    $hotspotText['infowidth'] = (int) $hotspotText['infowidth'];
+    $hotspotText['textinfo'] = (string) $hotspotText['textinfo'];
+    $hotspotText['devicetype'] = (string) $hotspotText['devicetype']; //支持设备
 
     $data['config'] = serialize($hotspotText);
     if (pdo_update('wxz_panorama_scene_hotspot', $data, array('id' => $id))) {
