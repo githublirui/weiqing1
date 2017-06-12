@@ -228,7 +228,7 @@ class Scene {
      * @param type $treasureNum 宝藏数量
      */
     public static function distribTreasure($sceneNum, $treasureNum) {
-        $result = [];
+        $result = array();
         $disNum = ceil($treasureNum / $sceneNum); //可以分配的数量
         $disNum = $disNum == 0 ? 1 : $disNum; //可以分配的数量
         //场景数量大于宝藏数量，平均分配一个
