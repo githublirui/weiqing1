@@ -265,7 +265,7 @@ class Scene {
      */
     public static function getEffectXml($effect) {
         $funcName = 'getEffectXml' . strtolower($effect);
-        if (method_exists(self, $funcName)) {
+        if (method_exists(get_class(), $funcName)) {
             return call_user_func(array(get_class(), $funcName));
         }
     }

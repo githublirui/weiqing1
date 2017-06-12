@@ -39,7 +39,7 @@
         </menu>
     </bindings>
     <install><![CDATA[
-CREATE TABLE `ims_wxz_panorama_win` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_win` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
   `fans_id` int(11) NOT NULL COMMENT '粉丝id',
@@ -54,7 +54,7 @@ CREATE TABLE `ims_wxz_panorama_win` (
   KEY `uniacid` (`uniacid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `ims_wxz_panorama_fans` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_fans` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
   `openid` varchar(40) NOT NULL DEFAULT '',
@@ -79,7 +79,7 @@ CREATE TABLE `ims_wxz_panorama_fans` (
   KEY `nickname` (`nickname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `ims_wxz_panorama_payrecord` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_payrecord` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '微信',
   `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
@@ -94,7 +94,7 @@ CREATE TABLE `ims_wxz_panorama_payrecord` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发红包记录表';
 
-CREATE TABLE `ims_wxz_panorama_award` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_award` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '奖品类型1:现金 2实物',
@@ -110,7 +110,7 @@ CREATE TABLE `ims_wxz_panorama_award` (
   KEY `uniacid` (`uniacid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='奖品表';
 
-CREATE TABLE `ims_wxz_panorama_scene` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_scene` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_page` (
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;      
         
-CREATE TABLE `ims_wxz_panorama_project` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '项目名称',
@@ -152,7 +152,7 @@ CREATE TABLE `ims_wxz_panorama_project` (
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
         
-CREATE TABLE `ims_wxz_panorama_project_config` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_project_config` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
@@ -166,7 +166,7 @@ CREATE TABLE `ims_wxz_panorama_project_config` (
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
         
-CREATE TABLE `ims_wxz_panorama_scene_hotspot` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_scene_hotspot` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `uniacid` int(10) unsigned NOT NULL COMMENT '',
     `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
@@ -183,13 +183,13 @@ CREATE TABLE `ims_wxz_panorama_scene_hotspot` (
 
 ]]></install>
     <uninstall><![CDATA[
-DROP TABLE `ims_wxz_panorama_win`;
-DROP TABLE `ims_wxz_panorama_fans`; 
-DROP TABLE `ims_wxz_panorama_payrecord`;
-DROP TABLE `ims_wxz_panorama_award`;
-DROP TABLE `ims_wxz_panorama_page`;
-DROP TABLE `ims_wxz_panorama_scene`;
-DROP TABLE `ims_wxz_panorama_project`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_win`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_fans`; 
+DROP TABLE IF EXISTS `ims_wxz_panorama_payrecord`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_award`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_page`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_scene`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_project`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>
