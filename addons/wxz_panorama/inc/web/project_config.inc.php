@@ -3,6 +3,7 @@
 global $_W, $_GPC;
 
 require_once WXZ_PANORAMA . '/source/Project.class.php';
+require_once WXZ_PANORAMA . '/source/Scene.class.php';
 
 $pid = $_GPC['pid'];
 $project_info = Project::getById($pid);
@@ -12,6 +13,7 @@ if (!$project_info) {
 }
 
 $project_config_info = Project::getConfigById($pid);
+$effects = Scene::$effects;
 
 //获取皮肤列表
 $skinPath = WXZ_PANORAMA . '/template/mobile/scene/skin';
@@ -22,6 +24,7 @@ load()->web('tpl');
 if (checksubmit()) {
     $data = array(
         'skin' => (string) $_GPC['skin'], //皮肤
+        'effect' => (string) $_GPC['effect'], //特效
         'sound' => $_GPC['sound'], //背景音乐
         'treasure' => $_GPC['treasure'], //宝藏图片
         'treasure_num' => (int) $_GPC['treasure_num'], //宝藏数量

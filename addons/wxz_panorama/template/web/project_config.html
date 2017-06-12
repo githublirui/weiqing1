@@ -17,20 +17,25 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label for="award_type_label" class="col-xs-12 col-sm-3 col-md-2 control-label">皮肤</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">皮肤</label>
                     <div class="col-sm-9 col-xs-12">
-                        <div class="radio-inline">
-                            <label>
-                                <input type="radio" {if !$project_config_info['skin']}checked="checked"{/if} name="skin" value=""> 无
-                            </label>
-                        </div>
-                        {loop $skins $row}
-                        <div class="radio-inline">
-                            <label>
-                                <input type="radio" {if $project_config_info['skin']==$row}checked="checked"{/if} name="skin" value="{$row}"> {$row}
-                            </label>
-                        </div>
-                        {/loop}
+                        <select class="level form-control" name="skin">
+                            <option value="">无</option>
+                            {php foreach($skins as $k=>$skin) {}
+                            <option value="{$skin}" {if $project_config_info['skin']==$skin} selected="selected"{/if}>{$skin}</option>
+                            {php } }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="award_type_label" class="col-xs-12 col-sm-3 col-md-2 control-label">特效</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <select class="level form-control" name="effect">
+                            <option value="">无</option>
+                            {php foreach($effects as $k=>$effect) {}
+                            <option value="{$k}" {if $project_config_info['effect']==$k} selected="selected"{/if}>{$effect}</option>
+                            {php } }
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">

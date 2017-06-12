@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 生成xml控制器
+ * 生成前端xml
  */
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/source/Project.class.php';
@@ -174,6 +174,11 @@ if ($projectConfigInfo['sound']) {
     $soundPlugin .= Scene::createTag('plugin', $attributes);
 
     $krpanoElement.= $soundPlugin;
+}
+
+//添加特效xml
+if ($projectConfigInfo['effect']) {
+    $krpanoElement .= Scene::getEffectXml($projectConfigInfo['effect']);
 }
 
 //krpano 属性

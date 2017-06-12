@@ -2,10 +2,19 @@
 
 /**
  * 全景场景类
+ * @author lirui 649037629@qq.com
  */
 class Scene {
 
     public static $table = 'wxz_panorama_scene';
+
+    /**
+     * 支持全景特效
+     * @var type 
+     */
+    public static $effects = array(
+        'asteroid' => '小行星',
+    );
 
     /**
      * 获取项目下所有场景
@@ -249,6 +258,57 @@ class Scene {
                 }
             }
         }
+        return $result;
+    }
+
+    /**
+     * 获取特效xml
+     */
+    public static function getEffectXml($effect) {
+        $funcName = 'getEffectXml' . strtolower($effect);
+        if (method_exists(self, $funcName)) {
+            return call_user_func(array(get_class(), $funcName));
+        }
+    }
+
+    /**
+     * 小行星特效
+     */
+    public static function getEffectXmlAsteroid() {
+        $attributes = array(
+            'stereographic' => 'true',
+            'fisheye' => '1.0',
+            'fov' => '150',
+            'fovtype' => 'VFOV',
+            'fovmax' => '150',
+            'hlookat' => '-60',
+            'vlookat' => '70',
+            'maxpixelzoom' => '2.0',
+        );
+        $result = self::createTag('view', $attributes);
+
+        $attributes = array(
+            'flash10' => 'off',
+            'details' => '24',
+        );
+        $result .= self::createTag('display', $attributes);
+
+        $attributes = array(
+            'onloadcomplete' => 'delayedcall(2.0, normalview());',
+        );
+        $result .= self::createTag('events', $attributes);
+
+        $attributes = array(
+            'name' => 'normalview',
+        );
+        $element = " tween(view.hlookat, -10, 2.5, easeInOutQuad);
+		tween(view.vlookat, 0, 2.5, easeInOutQuad);
+		tween(view.fov,     70,  2.5, easeInOutQuad);
+		tween(view.fisheye, 0.0, 2.5, easeInOutQuad);
+		wait(2.7);
+		set(display.flash10, on);";
+
+        $result .= self::createTag('action', $attributes, $element, true);
         return $result;
     }
 

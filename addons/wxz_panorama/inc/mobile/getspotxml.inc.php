@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 抓取场景坐标 xml
+ */
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/source/Scene.class.php';
 
@@ -28,7 +31,7 @@ $xml .= '<view fov="80" fisheye="0" hlookat="' . $h . '" vlookat="' . $v . '" fo
 $xml .= '<preview url="' . tomedia($scenerow['preview']) . '" />' . "\r\n";
 $xml .= '<image type="CUBE">' . "\r\n";
 $xml .= '<left url="' . tomedia($scenerow['left']['pano']) . '" />' . "\r\n";
-$xml .= '<front url="' . tomedia($scenerow['front']['pano']). '" />' . "\r\n";
+$xml .= '<front url="' . tomedia($scenerow['front']['pano']) . '" />' . "\r\n";
 $xml .= '<right url="' . tomedia($scenerow['right']['pano']) . '" />' . "\r\n";
 $xml .= '<back url="' . tomedia($scenerow['back']['pano']) . '" />' . "\r\n";
 $xml .= '<up url="' . tomedia($scenerow['up']['pano']) . '" />' . "\r\n";

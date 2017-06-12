@@ -65,6 +65,7 @@ if (!pdo_tableexists('wxz_panorama_project_config')) {
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
   `skin` tinyint(1) NOT NULL DEFAULT '' COMMENT '皮肤',
+  `effect` varchar(10) NOT NULL DEFAULT '' COMMENT '特效',
   `sound` varchar(255) NOT NULL DEFAULT '' COMMENT '背景音乐',
   `treasure` varchar(255) NOT NULL DEFAULT '' COMMENT '宝藏图片',
   `treasure_num` tinyint(1) NOT NULL DEFAULT 1 COMMENT '宝藏数量',

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 抓取目标场景坐标 xml
+ */
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/source/Scene.class.php';
 

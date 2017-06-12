@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 抓取目标场景坐标
+ */
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 
