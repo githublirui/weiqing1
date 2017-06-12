@@ -119,8 +119,6 @@ class Scene {
             return;
         }
 
-        require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
-
         $result['pano'] = $src;
         $thumbZoon = 2; //手机图片缩小倍数
         $fileUrl = tomedia($src);
@@ -132,6 +130,7 @@ class Scene {
         $attachdir = IA_ROOT . '/' . $_W['config']['upload']['attachdir'] . '/';
         $type = $_W['setting']['remote']['type'];
         if (!$type) {
+            require_once WXZ_PANORAMA . '/source/UtilsImage.class.php';
             //本地处理,本地生成缩略图
             $filePath = $attachdir . $src;
             $fileInfo = pathinfo($filePath);
@@ -187,7 +186,7 @@ class Scene {
             $result .= "    " . $element;
         }
         if ($close) {
-            $result .= "\r\n" . self::creaeCloseTag($name);
+            $result .= "\r\n" . self::createCloseTag($name);
         }
         return $result;
     }
@@ -196,7 +195,7 @@ class Scene {
      * 创建关闭标签
      * @param type $name
      */
-    public static function creaeCloseTag($name) {
+    public static function createCloseTag($name) {
         return "</$name>\r\n";
     }
 
