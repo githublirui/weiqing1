@@ -23,7 +23,7 @@
         <div class="panel-heading">
             场景列表
             &nbsp;&nbsp;
-            <a class="btn btn-success" href='{php echo $this->createWebUrl("scene_add")}' id="export">新建场景</a>
+            <a class="btn btn-success" href='{php echo $this->createWebUrl("scene_add",array("pid"=>$pid))}' id="export">新建场景</a>
         </div>
         <div class="table-responsive panel-body" style="overflow:visible;">
             <table class="table table-hover">
@@ -46,8 +46,9 @@
                     </td>
                     <td>
                         <p class="form-control-static">
-                            <!--<a href='{php echo $this->createWebUrl("scene_edit",array("id"=>$row["id"]))}'>编辑</a>-->
-                            <a href="javascript:void(0)" onclick="del_scene('{$row['id']}')">删除</a>
+                            <a class='btn btn-info'  href='{php echo $this->createWebUrl("hotspot_list",array("sid"=>$row["id"]))}'>热点管理</a>
+                            <a class='btn btn-info'  href='{php echo $this->createWebUrl("scene_edit",array("id"=>$row["id"]))}'>编辑</a>
+                            <a  class='btn btn-danger' href="javascript:void(0)" onclick="del_scene('{$row['id']}')">删除</a>
                         </p>
                     </td>
                 </tr>
@@ -72,7 +73,6 @@
                 success: function (res) {
                     $(".submit").attr("disabled", false);
                     if (res == "ok") {
-                        alert("操作成功");
                         window.location.reload(true);
                     } else {
                         alert(res);

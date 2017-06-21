@@ -1,0 +1,130 @@
+{template 'common/header'}
+<style>
+    .l_tableWrap .l_table_tit .l_formBar {
+        border: 0;
+        float: left;
+        font-size: 0;
+    }
+    .y_sele {
+        display: inline-block;
+        padding: 5px 0 12px 12px;
+    }
+    .y_sele_tit {
+        font-size: 14px;
+        padding: 0 0 0 10px;
+    }
+    .l_table_search{
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+</style>
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            项目列表
+            &nbsp;&nbsp;
+            <a class="btn btn-success" href='{php echo $this->createWebUrl("project_add")}' id="export">添加项目</a>
+        </div>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+            <table class="table table-hover">
+                <tr>
+                    <th>
+                        <a class="btn btn-success save_order" href="javascript:void(0)" >保存排序</a>
+                    </th>
+                    <th>ID</th>
+                    <th>项目名称</th>
+                    <th>操作</th>
+                </tr>
+                {loop $list $row}
+                <tr data-id="{$row['id']}">
+                    <td>
+                        <p class="form-control-static">
+                            <input type="text" style="width:50px;"  value="{$row['sort_order']}" data-id="{$row['id']}" class="row_order"/>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['id']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['name']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            <a class='btn btn-primary' href='{php echo $this->createWebUrl("project_config",array("pid"=>$row["id"]))}'>全局配置</a>
+                            <a class='btn btn-info' href='{php echo $this->createWebUrl("scene_list",array("pid"=>$row["id"]))}'>场景管理</a>
+                            <a class='btn btn-info' target="_blank" href="{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$row['id']}" >预览</a>
+                            <a class='btn btn-danger' href="javascript:void(0)" onclick="del_project('{$row['id']}')">删除</a>
+                        </p>
+                    </td>
+                </tr>
+                {/loop}
+            </table>
+        </div>
+        <div class="panel-body text-right">
+            {$pager}
+        </div>
+    </div>
+</div>
+<script>
+
+    /**
+     * 删除项目
+     */
+    function del_project(id) {
+        if (confirm("删除项目会删除项目下的所有配置和场景！确定删除吗？")) {
+            var pars = {};
+            pars.id = id;
+            $.ajax({
+                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_project'))}",
+                type: "post",
+                dataType: "html",
+                data: pars,
+                success: function (res) {
+                    $(".submit").attr("disabled", false);
+                    if (res == "ok") {
+                        window.location.reload(true);
+                    } else {
+                        alert(res);
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * 保存项目排序
+     * @param {type} param
+     */
+    $(".save_order").click(function () {
+        var pars = {};
+        var id = 0;
+        var order = 0;
+        pars.ids = new Array();
+        pars.orders = new Array();
+        $(".row_order").each(function () {
+            id = $(this).attr('data-id');
+            order = $(this).val();
+            pars.ids.push(id);
+            pars.orders.push(order);
+        });
+        $.ajax({
+            url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'save_project_order'))}",
+            type: "post",
+            dataType: "html",
+            data: pars,
+            success: function (res) {
+                $(".submit").attr("disabled", false);
+                if (res == "ok") {
+                    window.location.reload(true);
+                } else {
+                    alert(res);
+                }
+            }
+        })
+    })
+</script>
+{template 'common/footer'}

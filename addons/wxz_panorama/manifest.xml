@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[1.7.0]]></version>
+        <version><![CDATA[2.0.0]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -32,15 +32,14 @@
         <menu>
             <entry title="粉丝列表" do="fans_list" state="" direct="false" />
             <entry title="中奖列表" do="win_list" state="" direct="false" />
-            <entry title="场景配置" do="scene_setting" state="" direct="false" />
-            <entry title="场景列表" do="scene_list" state="" direct="false" />
+            <entry title="项目列表" do="project_list" state="" direct="false" />
             <entry title="奖品设置" do="award_list" state="" direct="false" />
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
             <entry title="数据配置" do="page_list" state="" direct="false" />
         </menu>
     </bindings>
     <install><![CDATA[
-CREATE TABLE `ims_wxz_panorama_win` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_win` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
   `fans_id` int(11) NOT NULL COMMENT '粉丝id',
@@ -55,7 +54,7 @@ CREATE TABLE `ims_wxz_panorama_win` (
   KEY `uniacid` (`uniacid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `ims_wxz_panorama_fans` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_fans` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
   `openid` varchar(40) NOT NULL DEFAULT '',
@@ -80,7 +79,7 @@ CREATE TABLE `ims_wxz_panorama_fans` (
   KEY `nickname` (`nickname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `ims_wxz_panorama_payrecord` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_payrecord` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '微信',
   `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
@@ -95,7 +94,7 @@ CREATE TABLE `ims_wxz_panorama_payrecord` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发红包记录表';
 
-CREATE TABLE `ims_wxz_panorama_award` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_award` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '奖品类型1:现金 2实物',
@@ -111,18 +110,19 @@ CREATE TABLE `ims_wxz_panorama_award` (
   KEY `uniacid` (`uniacid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='奖品表';
 
-CREATE TABLE `ims_wxz_panorama_scene` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_scene` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '全景名称',
-  `up` varchar(255) NOT NULL DEFAULT '' COMMENT '图片1',
-  `back` varchar(255) NOT NULL DEFAULT '' COMMENT '图片2',
-  `down` varchar(255) NOT NULL DEFAULT '' COMMENT '图片3',
-  `front` varchar(255) NOT NULL DEFAULT '' COMMENT '图片4',
-  `left` varchar(255) NOT NULL DEFAULT '' COMMENT '图片5',
-  `right` varchar(255) NOT NULL DEFAULT '' COMMENT '图片6',
-  `audio` varchar(255) NOT NULL DEFAULT '' COMMENT '音频文件',
-  `treasures` varchar(200) NOT NULL DEFAULT '' COMMENT '宝藏图片',
+  `up` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片1',
+  `back` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片2',
+  `down` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片3',
+  `front` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片4',
+  `left` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片5',
+  `right` varchar(1255) NOT NULL DEFAULT '' COMMENT '图片6',
+  `preview` varchar(255) NOT NULL DEFAULT '' COMMENT '预览图',
+  `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '缩略图',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   KEY `id` (`id`),
   KEY `uniacid` (`uniacid`)
@@ -140,15 +140,56 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_page` (
   `update_at` INT(11) NOT NULL,
   `create_at` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;         
+) ENGINE=INNODB DEFAULT CHARSET=utf8;      
+        
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '项目名称',
+  `sort_order` int(10) NOT NULL DEFAULT 0 COMMENT '排序',
+  `update_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `create_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+        
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_project_config` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
+  `skin` varchar(20) NOT NULL DEFAULT '' COMMENT '皮肤',
+  `effect` varchar(10) NOT NULL DEFAULT '' COMMENT '特效',
+  `sound` varchar(255) NOT NULL DEFAULT '' COMMENT '背景音乐',
+  `treasure` varchar(255) NOT NULL DEFAULT '' COMMENT '宝藏图片',
+  `treasure_num` tinyint(1) NOT NULL DEFAULT 1 COMMENT '宝藏数量',
+  `autorotate` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否开启自动旋转',
+  `update_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+        
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_scene_hotspot` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `uniacid` int(10) unsigned NOT NULL COMMENT '',
+    `project_id` int(10) unsigned NOT NULL COMMENT '项目id',
+    `scene_id` int(10) unsigned NOT NULL COMMENT '场景id',
+    `type` tinyint(1) NOT NULL COMMENT '热点类型',
+    `name` varchar(20) NOT NULL DEFAULT '' COMMENT '热点名称',
+    `img` varchar(250) NOT NULL DEFAULT '' COMMENT '热点图片',
+    `action` tinyint(1)  NOT NULL COMMENT '热点动作',
+    `config` text COMMENT '配置详情',
+    `update_at` INT(11) NOT NULL,
+    `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
 ]]></install>
     <uninstall><![CDATA[
-DROP TABLE `ims_wxz_panorama_win`;
-DROP TABLE `ims_wxz_panorama_fans`; 
-DROP TABLE `ims_wxz_panorama_payrecord`;
-DROP TABLE `ims_wxz_panorama_award`;
-DROP TABLE `ims_wxz_panorama_page`;
-DROP TABLE `ims_wxz_panorama_scene`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_win`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_fans`; 
+DROP TABLE IF EXISTS `ims_wxz_panorama_payrecord`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_award`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_page`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_scene`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_project`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

@@ -5,27 +5,23 @@
  * 
  */
 require_once WXZ_PANORAMA . '/function/global.func.php';
+require_once WXZ_PANORAMA . '/source/Scene.class.php';
+require_once WXZ_PANORAMA . '/source/Project.class.php';
+
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
-$pano = $_GPC['pno'] ? $_GPC['pno'] : 1;
 
-$scene_path = "$modulePath/template/mobile/scene/{$_GPC['i']}";
-$pano_count = getfilecounts($scene_path);
-if (!$pano_count) {
-    message('暂未上传场景，请耐心等待', $this->createMobileUrl('index'));
+$pid = $_GPC['pid']; //默认第一个项目
+if ($pid) {
+    $projectInfo = Project::getById($pid, 'id');
+} else {
+    $projectInfo = Project::getFirstPro();
 }
 
-sort($pano_count);
-$pano = $pano_count <= 1 ? 1 : $pano;
-
-if (!isset($pano_count[$pano - 1])) {
-    $pano = 1;
+if (!$projectInfo) {
+    message('场景不存在，或已删除', $this->createMobileUrl('index'));
 }
-$panoFolder = $pano_count[$pano - 1];
-
-$siteroot_encode = urlencode($_W['siteroot']);
-
-$redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}";
+$pid = $projectInfo['id'];
 $user = $this->auth();
 include dirname(__FILE__) . '/permission.php';
 
@@ -34,7 +30,6 @@ $sql = "select * from " . tablename('wxz_panorama_win') . " where fans_id =" . $
 $is_win = pdo_fetch($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
-
 
 if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone'] == '') {
     include $this->template(get_real_tpl('input_msg'));
@@ -47,11 +42,5 @@ if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
     die();
 }
 
-//if ($is_win && $is_fans['share_num'] >= '1' && $is_fans['cellphone']) {
-//    $show_msg = "<p>恭喜你，已经获得了</p><p id='black'>" . $is_win['award'] . "</p><p>（您奖品ID为：" . $is_win['award_id'] . " ）</p>";
-//    include $this->template(get_real_tpl('msg'));
-//    die();
-//}
-
-include $this->template('scene/' . $_GPC['i'] . '/' . $panoFolder . '/index');
+include $this->template('scene/index');
 ?>

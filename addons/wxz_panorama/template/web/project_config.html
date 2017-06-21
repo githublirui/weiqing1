@@ -1,0 +1,89 @@
+{template 'common/header'}
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $(".award_type_radio").change(function () {
+            var type = $(this).val();
+
+            $(".award_switch").hide();
+            $(".award_type" + type).show();
+        });
+    });
+</script>
+<div class="clearfix">
+    <form id="theform" class="form form-horizontal" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                项目全局配置
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">皮肤</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <select class="level form-control" name="skin">
+                            <option value="">无</option>
+                            {php foreach($skins as $k=>$skin) {}
+                            <option value="{$skin}" {if $project_config_info['skin']==$skin} selected="selected"{/if}>{$skin}</option>
+                            {php } }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="award_type_label" class="col-xs-12 col-sm-3 col-md-2 control-label">特效</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <select class="level form-control" name="effect">
+                            <option value="">无</option>
+                            {php foreach($effects as $k=>$effect) {}
+                            <option value="{$k}" {if $project_config_info['effect']==$k} selected="selected"{/if}>{$effect}</option>
+                            {php } }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">宝藏数量</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="treasure_num" value="{$project_config_info['treasure_num']}">
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">宝藏图片</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_form_field_image('treasure',$project_config_info['treasure'])}
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">自动旋转</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" {if $project_config_info['autorotate']==1}checked="checked"{/if} name="autorotate" value="1"> 开
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" {if $project_config_info['autorotate']!=1}checked="checked"{/if} name="autorotate" value="0"> 关
+                            </label>
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">背景音乐</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_form_field_audio('sound',$project_config_info['sound'])}
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,296 @@
+{template 'common/header'}
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $(".action_btn").click(function () {
+            var action = $(this).attr('data-action');
+            $(this).parent().find('.btn-success').removeClass('btn-success').addClass('btn-info');
+            $(this).removeClass('btn-info').addClass('btn-success');
+            $(".action_btn_div").hide();
+            $(".action_btn" + action + "_div").show();
+            $(".action").val(action);
+        });
+
+        $(".openinfo").click(function () {
+            var openinfo = $(this).val();
+            if (openinfo) {
+                $(".openinfo_div").show();
+            } else {
+                $(".openinfo_div").hide();
+            }
+        })
+    });
+
+    //抓取场景hv
+    function getspot() {
+        var id = $(".scene_id").val();
+        var styleid = $("input[name='img']").val();
+        if (!styleid) {
+            alert('请先上传热点图片');
+            return;
+        }
+        var h = $("input[name='spoth']").val();
+        var v = $("input[name='spotv']").val();
+
+        var url = "{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=getspot&m={$_GPC['m']}&id=" + id + "&styleid=" + styleid + "&h=" + h + "&v=" + v;
+        window.open(url, "pano", "width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + ",top=0,left=0,scrollbars,toolbar=no,location=no;menubar=no,resizable=yes");
+    }
+    //抓取目标场景hv
+    function gettargethv() {
+        var id = $("#target_scene").val();
+        var h = $("input[name='target_spoth']").val();
+        var v = $("input[name='target_spotv']").val();
+        if (id == 0) {
+            alert("场景不存在！！！");
+        } else {
+            var url = "{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=targethv&m={$_GPC['m']}&id=" + id + "&h=" + h + "&v=" + v;
+            window.open(url, "width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + ",top=0,left=0,scrollbars,toolbar=no,location=no;menubar=no,resizable=yes");
+        }
+    }
+</script>
+<div class="clearfix">
+    <form id="theform" class="form form-horizontal" action="" method="post">
+        <input type="hidden" class="scene_id" value="{$sid}"/>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                编辑热点
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="award_type_label" class="col-xs-12 col-sm-3 col-md-2 control-label">热点类型</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php foreach($types as $k=> $row) { }
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" {if $hotspotInfo['type']==$k}checked="checked"{/if} name="type" value="{$k}"> {$row}
+                            </label>
+                        </div>
+                        {php } }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点名称</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="name" value="{$hotspotInfo['name']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否右键显示名称</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" {if $hotspotInfo['config']['openshowspotname']==1}checked="checked"{/if} name="openshowspotname" value="1"> 是
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" {if $hotspotInfo['config']['openshowspotname']!=1}checked="checked"{/if} name="openshowspotname" value="0"> 否
+                            </label>
+                        </div>
+                        <span class="help-block">在鼠标指向目标热点时，是否以文字形式显示热点的名称</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">适应设备</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <select class="level form-control" name="devicetype">
+                            <option value="all" {if $hotspotInfo['config']['devicetype']=='all'}selected="selected"{/if}>全部</option>
+                            <option value="flash" {if $hotspotInfo['config']['devicetype']=='flash'}selected="selected"{/if}>PC(flash)</option>
+                            <option value="html5" {if $hotspotInfo['config']['devicetype']=='html5'}selected="selected"{/if}>Apple(html5)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点图片</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_form_field_image('img',$hotspotInfo['img'])}
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点坐标H</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="spoth" value="{$hotspotInfo['config']['spoth']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点坐标V</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="spotv" value="{$hotspotInfo['config']['spotv']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点坐标抓取</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="button" id="scan_title" class="btn btn-info"  value="抓取" onclick="getspot()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点动作</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="button" checked="checked" {if !$hotspotInfo['action']}checked="checked"{/if} class="action_btn btn {if !$hotspotInfo['action']}btn-success{else}btn-info{/if}" data-action="0"  value="无动作">
+                               {php foreach($actions as $k=> $row) { }
+                               <input type="button" {if $k==$hotspotInfo['action']}checked="checked"{/if} class="action_btn btn {if $k==$hotspotInfo['action']}btn-success{else}btn-info{/if}" data-action="{$k}"  value="{$row}">
+                               {php } }
+
+                               <input type="hidden" name="action" class="action" value="{$hotspotInfo['action']}" />
+                    </div>
+                </div>
+                <div class="action_btn_div action_btn1_div" {if $hotspotInfo['action']!=1}style="display:none;"{/if}>
+                     <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标项目</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <option value="0">项目跳转请选择</option>
+                            <option value="-1">下一个项目</option>
+                            <select class="level form-control" name="target_project">
+                                <option value="0" {if !$hotspotInfo['config']['target_project']}selected="selected"{/if}>项目跳转请选择</option>
+                                <option value="-1" {if $hotspotInfo['config']['target_project']==-1}selected="selected"{/if}>下一个项目</option>
+                                {php foreach($projects as $k=>$project) {}
+                                <option value="{$project['id']}" {if $hotspotInfo['config']['target_project']==$project['id']} selected="selected"{/if}>{$project['name']}</option>
+                                {php } }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <select class="level form-control" name="target_scene" id="target_scene">
+                                <option value="0">场景跳转请选择</option>
+                                {php foreach($scenes as $k=>$scene) {}
+                                <option  {if $hotspotInfo['config']['target_scene']==$scene['id']}selected="selected"{/if} value="{$scene['id']}">{$scene['name']}</option>
+                                {php } }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景转场位置H</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="target_spoth" value="{$hotspotInfo['config']['target_spoth']}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景转场位置V</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="target_spotv" value="{$hotspotInfo['config']['target_spotv']}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">目标场景转场位置抓取</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="button" id="scan_title" class="btn btn-info"  value="抓取" onclick="gettargethv()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">场景转场效果</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="col-sm-9 col-xs-12">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" {if $hotspotInfo['config']['screenchange']!=2}checked="checked"{/if} name="screenchange" value="1"> 自然过度(推荐)
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" {if $hotspotInfo['config']['screenchange']==2}checked="checked"{/if} name="screenchange" value="2"> 镜头推进
+                                    </label>
+                                </div>
+                                <span class="help-block">鼠标拖拽模式</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="action_btn_div action_btn2_div" {if $hotspotInfo['action']!=2}style="display:none;"{/if}>
+                     <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">展示图片</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_form_field_image('showpic',$hotspotInfo['config']['showpic'])}
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">触发模式</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="col-sm-9 col-xs-12">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" {if $hotspotInfo['config']['showpictype']!=2}checked="checked"{/if} name="showpictype" value="1"> 鼠标点击
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" {if $hotspotInfo['config']['showpictype']==2}checked="checked"{/if} name="showpictype" value="2"> 鼠标经过
+                                    </label>
+                                </div>
+                                <span class="help-block">展示的图片弹出的触发模式</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图片边框属性：</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="col-sm-9 col-xs-12">
+                                颜色 - 
+                                <input style="display: inline;width:100px;" type="text" id="scan_title" class="form-control span7" placeholder="" name="showpicbordercolor" value="{$hotspotInfo['config']['showpicbordercolor']}">
+                                -- 透明度 -
+                                <input style="display: inline;width:100px;" type="text" id="scan_title" class="form-control span7" placeholder="" name="showpicborderalpha" value="{$hotspotInfo['config']['showpicborderalpha']}">
+                                -- 宽度 - 
+                                <input style="display: inline;width:100px;" type="text" id="scan_title" class="form-control span7" placeholder="" name="showpicborderwidth" value="{$hotspotInfo['config']['showpicborderwidth']}">
+                                <span class="help-block">图片边框属性</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action_btn_div action_btn3_div" {if $hotspotInfo['action']!=3}style="display:none;"{/if}>
+                     <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">外部超链接</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="httplink" value="{$hotspotInfo['config']['httplink']}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否显示热点文字信息</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="openinfo" {if $hotspotInfo['config']['openinfo']==1}checked="checked"{/if} name="openshowspotname" class="openinfo" value="1"> 是
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" checked="checked" name="openinfo" {if $hotspotInfo['config']['openinfo']!=1}checked="checked"{/if} name="openshowspotname" class="openinfo" value="0"> 否
+                            </label>
+                        </div>
+                        <span class="help-block">鼠标移至热点弹出一段文字框，可以添加链接，文字效果等</span>
+                    </div>
+                </div>
+
+                <div class="openinfo_div" {if $hotspotInfo['config']['openinfo']!=1}style="display: none"{/if}>
+                     <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">宽度</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="infowidth" value="{$hotspotInfo['config']['infowidth']}">
+                            <span class="help-block">推荐（200—350）</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">热点文字信息</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {php echo tpl_ueditor('textinfo',$hotspotInfo['config']['textinfo'])}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}
