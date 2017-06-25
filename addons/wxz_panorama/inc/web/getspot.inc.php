@@ -13,6 +13,6 @@ $id = (int) $_GPC['id'];
 $data = $id . '|' . $_GPC['styleid'] . '|' . $_GPC['h'] . '|' . $_GPC['v'];
 
 
-$xmlUrl = $this->createMobileUrl("getspotxml", array("data" => $data));
-include $this->template('scene/getspot');
+$xmlUrl = $this->createWebUrl("getspotxml", array("data" => $data));
+include $this->template('web/getspot');
 ?>

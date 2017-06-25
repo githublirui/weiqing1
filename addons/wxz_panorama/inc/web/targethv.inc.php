@@ -13,6 +13,6 @@ $id = (int) $_GPC['id'];
 $data = $id;
 
 
-$xmlUrl = $this->createMobileUrl("targethvxml", array("data" => $data));
-include $this->template('scene/targethv');
+$xmlUrl = $this->createWebUrl("targethvxml", array("data" => $data));
+include $this->template('web/targethv');
 ?>

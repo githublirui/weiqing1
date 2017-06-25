@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[2.0.0]]></version>
+        <version><![CDATA[2.0.2]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
