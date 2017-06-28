@@ -191,7 +191,7 @@ $attributes = array(
     'debugmode' => 'false',
 );
 //调试模式
-if ($_W['config']['setting']['development']) {
+if ($_W['config']['setting']['development'] || $_GPC['debug']==1) {
     $attributes['logkey'] = 'true';
     $attributes['showerrors'] = 'true';
     $attributes['debugmode'] = 'true';
