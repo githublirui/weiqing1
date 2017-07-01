@@ -15,10 +15,33 @@ $_W['module_setting'] = $this->module['config'];
 
 if ($do == 'regmsg') {
     require_once WXZ_SHOPPINGMALL . '/func/common.func.php';
+
     $result = array(
         'error_code' => 0,
         'error_msg' => '系统错误',
     );
+
+    $code = $_SESSION['wxz_shoppingmall_reg_invite_code'];
+    $sql = "SELECT id,isuse FROM " . tablename('wxz_shoppingmall_invite_code') . " WHERE uniacid='{$_W['uniacid']}' AND `code`='{$code}'";
+    $codeInfo = pdo_fetch($sql);
+    if (!$codeInfo) {
+        $result = array(
+            'error_code' => 3,
+            'error_msg' => '邀请码错误',
+        );
+        echo json_encode($result);
+        exit;
+    }
+
+    if ($codeInfo['isuse'] == 1) {
+        message('邀请码已使用', $this->createWebUrl('index'));
+        $result = array(
+            'error_code' => 3,
+            'error_msg' => '邀请码已使用,不能注册',
+        );
+        echo json_encode($result);
+        exit;
+    }
 
     if ($user['mobile'] && $user['birthday']) {
         $result = array(
@@ -93,8 +116,13 @@ if ($do == 'regmsg') {
     }
 
     $data['reg_time'] = time();
+    $data['invite_code'] = $code;
     $ret = pdo_update('wxz_shoppingmall_fans', $data, array('uniacid' => $_GPC['i'], 'uid' => $user['uid']));
     if ($ret) {
+        //更新邀请码状态
+        $codeData = ['isuse' => 1];
+        pdo_update('wxz_shoppingmall_invite_code', $codeData, array('id' => $codeInfo['id']));
+
         $result = array(
             'error_code' => 1,
             'error_msg' => '注册成功',

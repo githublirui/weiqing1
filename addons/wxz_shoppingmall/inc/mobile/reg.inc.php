@@ -15,6 +15,23 @@ if ($user['mobile']) {
     exit;
 }
 
+//是否有邀请码
+if (!$_GPC['code']) {
+    message('邀请码错误', $this->createWebUrl('index'));
+}
+
+$sql = "SELECT isuse FROM " . tablename('wxz_shoppingmall_invite_code') . " WHERE uniacid='{$_W['uniacid']}' AND `code`='{$_GPC['code']}'";
+$codeInfo = pdo_fetch($sql);
+
+if (!$codeInfo) {
+    message('邀请码错误', $this->createMobileUrl('index'));
+}
+if ($codeInfo['isuse'] == 1) {
+    message('邀请码已使用', $this->createMobileUrl('index'));
+}
+
+session_start();
+$_SESSION['wxz_shoppingmall_reg_invite_code'] = $_GPC['code'];
 require_once WXZ_SHOPPINGMALL . '/source/Page.class.php';
 $pageContents = Page::getPage(array(7));
 

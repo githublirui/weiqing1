@@ -33,6 +33,7 @@
             <entry title="首页配置" do="index_content" state="" direct="false" />
             <!--<entry title="首页配置" do="index_content" state="" direct="false" icon="fa fa-home" />-->
             <entry title="粉丝列表" do="fans_list" state="" direct="false" />
+            <entry title="邀请二维码" do="gen_reg_qrcode" state="" direct="false" />
             <!--<entry title="粉丝列表" do="fans_list" state="" direct="false" icon="fa fa-users"/>-->
             <entry title="积分奖品" do="award_manage" state="" direct="false"/>
             <entry title="积分日志" do="credit_get_list" state="" direct="false" />
@@ -79,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_fans` (
   `sex` varchar(10) NOT NULL DEFAULT '' COMMENT '性别',
   `plate_number` varchar(20) NOT NULL DEFAULT '' COMMENT '车牌号',
   `mobile` varchar(20) NOT NULL COMMENT '手机号',
+  `invite_code` varchar(20) NOT NULL COMMENT '邀请二维码',
   `mobile_verify` varchar(50) NOT NULL COMMENT '手机号验证',
   `share_num` int(11) NOT NULL DEFAULT '0' COMMENT '分享次数',
   `account` int(11) NOT NULL DEFAULT '0' COMMENT '用户账户',
@@ -352,7 +354,16 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_order` (
   KEY `fans_id` (`fans_id`),
   KEY `order_no` (`order_no`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;   
-                                           
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_invite_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL,
+  `code` varchar(8) NOT NULL COMMENT '邀请码',
+  `isuse` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否使用，1已使用',
+  `create_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                                                   
 ]]>
 
     </install>
@@ -374,6 +385,7 @@ DROP TABLE IF EXISTS `ims_wxz_shoppingmall_shop_good_record`;
 DROP TABLE IF EXISTS `ims_wxz_shoppingmall_page`;
 DROP TABLE IF EXISTS `ims_wxz_shoppingmall_order`;
 DROP TABLE IF EXISTS `ims_wxz_shoppingmall_reply_setting`;
+DROP TABLE IF EXISTS `ims_wxz_shoppingmall_invite_code`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>
