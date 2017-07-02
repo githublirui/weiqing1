@@ -29,7 +29,7 @@ if ($cache) {
         if ($cacheData['num'] <= 0) {
             $succ = "生成成功，共生成成功{$cacheData['total']}个邀请二维码,二维码目录{$cacheData['path']}";
             cache_delete($cacheKey);
-            $cacheData = [];
+            $cacheData = array();
         } else {
             cache_write($cacheKey, $cacheData);
             $succ = "生成成功{$runNum}个邀请二维码";

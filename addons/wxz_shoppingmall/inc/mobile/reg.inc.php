@@ -17,7 +17,7 @@ if ($user['mobile']) {
 
 //是否有邀请码
 if (!$_GPC['code']) {
-    message('邀请码错误', $this->createWebUrl('index'));
+    message('邀请码错误', $this->createMobileUrl('index'));
 }
 
 $sql = "SELECT isuse FROM " . tablename('wxz_shoppingmall_invite_code') . " WHERE uniacid='{$_W['uniacid']}' AND `code`='{$_GPC['code']}'";
