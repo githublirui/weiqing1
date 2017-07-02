@@ -31,7 +31,7 @@
         var h = $("input[name='spoth']").val();
         var v = $("input[name='spotv']").val();
 
-        var url = "{$_W['siteroot']}web/index.php?c=site&i={$_W['uniacid']}&c=entry&do=getspot&m={$_GPC['m']}&id=" + id + "&styleid=" + styleid + "&h=" + h + "&v=" + v;
+        var url = "{$_W['siteroot']}web/index.php?c=site&i={$_W['uniacid']}&a=entry&do=getspot&m={$_GPC['m']}&id=" + id + "&styleid=" + styleid + "&h=" + h + "&v=" + v;
         window.open(url, "pano", "width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + ",top=0,left=0,scrollbars,toolbar=no,location=no;menubar=no,resizable=yes");
     }
     //抓取目标场景hv
@@ -42,7 +42,7 @@
         if (id == 0) {
             alert("场景不存在！！！");
         } else {
-            var url = "{$_W['siteroot']}web/index.php?c=site&i={$_W['uniacid']}&c=entry&do=targethv&m={$_GPC['m']}&id=" + id + "&h=" + h + "&v=" + v;
+            var url = "{$_W['siteroot']}web/index.php?c=site&i={$_W['uniacid']}&a=entry&do=targethv&m=targethv&m={$_GPC['m']}&id=" + id + "&h=" + h + "&v=" + v;
             window.open(url, "width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + ",top=0,left=0,scrollbars,toolbar=no,location=no;menubar=no,resizable=yes");
         }
     }
