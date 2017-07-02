@@ -40,7 +40,7 @@ if ($cache) {
 if (checksubmit()) {
     $num = (int) $_GPC['num'];
     $path = $_GPC['path'];
-    $cacheData = ['num' => $num, 'total' => $num, 'path' => $path];
+    $cacheData = array('num' => $num, 'total' => $num, 'path' => $path);
     cache_write($cacheKey, $cacheData);
     header('Location: ' . $this->createWebUrl('gen_reg_qrcode'));
     exit;

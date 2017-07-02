@@ -24,5 +24,17 @@ $shop_info = pdo_fetch($shop_info_sql);
 
 $shopingMallAdd = Page::getPage(1);
 $config = $this->module['config'];
+
+//获取用户评论
+$shop_comment_sql = "SELECT * FROM " . tablename('wxz_shoppingmall_comment') . " WHERE uniacid={$_W['uniacid']} AND shop_id={$id} order by id desc";
+$shopComments = pdo_fetchall($shop_comment_sql);
+
+foreach ($shopComments as $i => $shopComment) {
+    $fans_info_sql = "SELECT * FROM " . tablename('wxz_shoppingmall_fans') . " WHERE uid={$shopComment['fans_id']}";
+    $fans_info = pdo_fetch($fans_info_sql);
+    $shopComments[$i]['fans_info'] = $fans_info;
+    $shopComments[$i]['create_date_time'] = date('Y-m-d H:i', $shopComment['create_at']);
+}
+
 include $this->template('shop_detail');
 ?>

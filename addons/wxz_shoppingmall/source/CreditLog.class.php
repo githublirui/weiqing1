@@ -19,6 +19,7 @@ class CreditLog {
         7 => '后台积分操作',
         8 => '微信扫码停车抵用',
         9 => '停车抵用',
+        10 => '评论添加积分',
     );
 
     /**
@@ -142,7 +143,7 @@ class CreditLog {
         if (!$data) {
             return;
         }
-        
+
         pdo_insert('wxz_shoppingmall_credit_log', $data);
         return pdo_insertid();
     }

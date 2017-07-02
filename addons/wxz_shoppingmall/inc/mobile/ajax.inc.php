@@ -499,6 +499,56 @@ if ($do == 'regmsg') {
     );
     pdo_insert('wxz_shoppingmall_shop_good_record', $insertData);
     myAjaxReturn(1, '点赞成功');
+} elseif ($do == 'shop_comment') {
+    $date = date('Y-m-d');
+    $uid = (int) $user['uid'];
+    $shopId = (int) $_GPC['shop_id'];
+    //用户一天只能评论一次
+    $sql = "SELECT COUNT(*) FROM " . tablename('wxz_shoppingmall_comment') . " WHERE `uniacid`={$_W['uniacid']} AND fans_id={$uid} AND shop_id={$shopId} AND create_date='{$date}'";
+    $exist = pdo_fetchcolumn($sql);
+    if ($exist) {
+        myAjaxReturn(0, '一天只能评论一次');
+    }
+    //商户添加评论
+    $comment = $_GPC['content'];
+    //添加评论
+    $inserData = array(
+        'uniacid' => $_W['uniacid'],
+        'shop_id' => $shopId,
+        'fans_id' => $uid,
+        'content' => $comment,
+        'create_date' => $date,
+        'create_at' => time(),
+    );
+
+    pdo_insert('wxz_shoppingmall_comment', $inserData);
+    $commentId = pdo_insertid();
+    $credit = 100; //评论添加积分数量
+    //评论添加积分
+    $update_fans = "UPDATE  " . tablename('wxz_shoppingmall_fans') . " set credit=credit+{$credit},left_credit=left_credit+{$credit} where uid='{$uid}'"; //添加积分
+    $ret1 = pdo_query($update_fans);
+
+    if ($ret1) {
+        //添加日志
+        //插入日志
+        $credit_log_data = array(
+            'uniacid' => $_W['uniacid'],
+            'fans_id' => $uid,
+            'pass_fans_id' => $commentId,
+            'type' => 1,
+            'operate' => 2,
+            'event_type' => 10,
+            'event_desc' => '评论添加积分',
+            'num' => $credit,
+            'status' => 2,
+            'send_time' => time(),
+            'create_at' => time(),
+        );
+        $ret = pdo_insert('wxz_shoppingmall_credit_log', $credit_log_data);
+        //添加积分
+    }
+
+    myAjaxReturn(1, $comment);
 }
 
 /**

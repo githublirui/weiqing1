@@ -363,7 +363,16 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_invite_code` (
   `create_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-                                                   
+
+ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL COMMENT '公众号id',
+  `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商铺id',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `content` varchar(2000)  NOT NULL COMMENT '评论内容',
+  `create_at` int(11) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                                                   
 ]]>
 
     </install>
