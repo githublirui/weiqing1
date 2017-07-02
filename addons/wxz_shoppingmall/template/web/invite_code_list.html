@@ -47,120 +47,61 @@
 <div class="clearfix">
     <div class="panel panel-default">
         <div class="panel-heading">
-            用户列表
+            邀请码列表&nbsp;&nbsp;
+            <a class="btn btn-success" href='{php echo $this->createWebUrl("gen_reg_qrcode")}' id="export">批量生成二维码</a>
         </div>
         <div class="table-responsive panel-body" style="overflow:visible;">
             <div class="l_table_tit clearfix">
                 <form method="get" action="" name="frm" class="l_formBar" id="frm1">
                     <span class="y_sele_tit">卡号:</span>
                     <div class="y_sele y_size02">
-                        <input type="text" class="form-control" name="invite_code" value="{$_GPC['invite_code']}">
+                        <input type="text" class="form-control" name="code" value="{$_GPC['code']}">
                     </div>
-                    <span class="y_sele_tit">手机号:</span>
+                    <span class="y_sele_tit">是否使用:</span>
                     <div class="y_sele y_size02">
-                        <input type="text" class="form-control" name="mobile" value="{$_GPC['mobile']}">
-                    </div>
-                    <span class="y_sele_tit">注册时间:</span>
-                    <div class="y_sele y_size02">
-                        <input type="text" class="form-control" id="rg_time_start" name="rg_time_start" value="{$_GPC['rg_time_start']}">
+                        <select class="level form-control"  name='isuse'>
+                            <option value="0" >不限</option>
+                            <option value="2" {if $_GPC['code']==2}selected="selected"{/if}>是</option>
+                            <option value="1" {if $_GPC['code']==1}selected="selected"{/if}>否</option>
+                        </select>
                     </div>
                     <input type="hidden" name="c" value="{$_GPC['c']}" />
                     <input type="hidden" name="a" value="{$_GPC['a']}" />
                     <input type="hidden" name="eid" value="{$_GPC['eid']}" />
-                    <div class="y_sele y_size02">
-                        <input type="text" class="form-control" id="rg_time_end" name="rg_time_end" value="{$_GPC['rg_time_end']}">
-                    </div>
                     <div class="btn-group l_table_search">
                         <button type="submit" class="btn btn-success">搜 索</button>
                     </div>
                 </form>
             </div>
-            <div class="l_table_tit clearfix">
-                <span class="y_sele_tit">会员数</span>
-                <div class="y_sele y_size02">
-                    {$userNum}
-                </div>
-                <span class="y_sele_tit">完善资料数</span>
-                <div class="y_sele y_size02">
-                    {$reg2Num}
-                </div>
-                <span class="y_sele_tit">登记车牌数</span>
-                <div class="y_sele y_size02">
-                    {$reg2PlateNum}
-                </div>
-            </div>
             <table class="table table-hover">
                 <tr>
                     <th>ID</th>
-                    <th>昵称</th>
-                    <th>城市</th>
-                    <th>用户名</th>
-                    <th>手机</th>
-                    <th>余额</th>
-                    <th>会员等级</th>
-                    <th>使用积分</th>
-                    <th>剩余积分</th>
-                    <th>注册时间</th>
-                    <th>操作</th>
+                    <th>卡号</th>
+                    <th>使用时间</th>
+                    <th>二维码</th>
                 </tr>
                 {loop $list $row}
                 <tr>
                     <td>
                         <p class="form-control-static">
-                            {$row['uid']}
+                            {$row['id']}
                         </p>
                     </td>
                     <td>
                         <p class="form-control-static">
-                            {$row['nickname']}
+                            {$row['code']}
                         </p>
                     </td>
                     <td>
                         <p class="form-control-static">
-                            {$row['city']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['username']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['mobile']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {php echo $row['account'];}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {php echo $levels[$row['level']]}  
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['use_credit']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['left_credit']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {if $row['reg_time']}  
-                            {php echo date("Y年m月d日",$row['reg_time']);}
+                            {if $row['use_time']}  
+                            {php echo date("Y-m-d H:i",$row['use_time']);}
                             {/if}
                         </p>
                     </td>
                     <td>
                         <p class="form-control-static">
-                            <a href='{php echo $this->createWebUrl("fans_edit",array("id"=>$row["uid"]))}'>编辑</a>
-                            <a href="javascript:void(0)" onclick="del_fans('{$row['uid']}')">删除</a>
+                            <img src="{php echo $this->createWebUrl('invite_qrcode_img',array('code'=>$row['code']))}" />
                         </p>
                     </td>
                 </tr>

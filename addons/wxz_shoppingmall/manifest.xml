@@ -33,7 +33,7 @@
             <entry title="首页配置" do="index_content" state="" direct="false" />
             <!--<entry title="首页配置" do="index_content" state="" direct="false" icon="fa fa-home" />-->
             <entry title="粉丝列表" do="fans_list" state="" direct="false" />
-            <entry title="邀请二维码" do="gen_reg_qrcode" state="" direct="false" />
+            <entry title="邀请二维码" do="invite_code_list" state="" direct="false" />
             <!--<entry title="粉丝列表" do="fans_list" state="" direct="false" icon="fa fa-users"/>-->
             <entry title="积分奖品" do="award_manage" state="" direct="false"/>
             <entry title="积分日志" do="credit_get_list" state="" direct="false" />
@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_fans` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `openid` (`openid`) USING BTREE,
   KEY `uniacid` (`uniacid`),
+  KEY `idx_invite_code` (`invite_code`),
   KEY `mobile` (`mobile`),
   KEY `reg_time` (`reg_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -359,12 +360,13 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_invite_code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL,
   `code` varchar(8) NOT NULL COMMENT '邀请码',
-  `isuse` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否使用，1已使用',
+  `isuse` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否使用，1未使用，2已使用',
+  `use_time` int(11) NOT NULL DEFAULT '0' COMMENT '使用时间',
   `create_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
- CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_comment` (
+CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` INT(11) NOT NULL COMMENT '公众号id',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商铺id',
@@ -395,6 +397,7 @@ DROP TABLE IF EXISTS `ims_wxz_shoppingmall_page`;
 DROP TABLE IF EXISTS `ims_wxz_shoppingmall_order`;
 DROP TABLE IF EXISTS `ims_wxz_shoppingmall_reply_setting`;
 DROP TABLE IF EXISTS `ims_wxz_shoppingmall_invite_code`;
+DROP TABLE IF EXISTS `ims_wxz_shoppingmall_comment`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

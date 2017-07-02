@@ -120,7 +120,7 @@ if ($do == 'regmsg') {
     $ret = pdo_update('wxz_shoppingmall_fans', $data, array('uniacid' => $_GPC['i'], 'uid' => $user['uid']));
     if ($ret) {
         //更新邀请码状态
-        $codeData = ['isuse' => 1];
+        $codeData = ['isuse' => 2, 'use_time' => time()];
         pdo_update('wxz_shoppingmall_invite_code', $codeData, array('id' => $codeInfo['id']));
 
         $result = array(

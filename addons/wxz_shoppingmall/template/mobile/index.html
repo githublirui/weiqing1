@@ -49,7 +49,7 @@
                 </a>
                 <div class="ui-text1" style="left:10px;top:10px;color:white;font-size: 10px;">姓名: {php echo $user['username'];} </div>
                 <div class="ui-text1" style="left:80px;top:10px;color:white;font-size: 10px;">级别: {php echo $levels[$user['level']];} </div>
-                <div class="ui-text1" style="left:150px;top:10px;color:white;font-size: 10px;">卡号: {php echo sprintf('%05d',$user['uid']);} </div>
+                <div class="ui-text1" style="left:150px;top:10px;color:white;font-size: 10px;">卡号: {php echo $user['invite_code'];} </div>
             </div>
     </header>
     {/if}

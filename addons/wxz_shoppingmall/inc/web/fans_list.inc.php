@@ -17,20 +17,23 @@ $levels = Fans::getLevels();
 $start = ($pindex - 1) * $psize;
 $condition = "`uniacid` = {$_W['uniacid']}";
 
+if ($_GPC['invite_code']) {
+    $condition .= " AND invite_code='{$_GPC['invite_code']}'";
+}
+
 if ($_GPC['mobile']) {
     $condition .= " AND mobile='{$_GPC['mobile']}'";
-    $url .="&mobile={$_GPC['mobile']}";
 }
 
 //开始时间，结束时间
 $conditionRegTime = ' AND 1=1';
 if ($_GPC['rg_time_start']) {
-    $reg_time_start = strtotime($_GPC['rg_time_start'].' 00:00:00');
+    $reg_time_start = strtotime($_GPC['rg_time_start'] . ' 00:00:00');
     $conditionRegTime .= " AND reg_time>='{$reg_time_start}'";
 }
 //结束时间
 if ($_GPC['rg_time_end']) {
-    $reg_time_end = strtotime($_GPC['rg_time_end'].' 23:59:59');
+    $reg_time_end = strtotime($_GPC['rg_time_end'] . ' 23:59:59');
     $conditionRegTime .= " AND reg_time<='{$reg_time_end}'";
 }
 
@@ -46,7 +49,6 @@ $pager = pagination($total, $pindex, $psize);
 
 /* * ************************** */
 //统计
-
 //完善资料
 $condition = "`uniacid`={$_W['uniacid']} AND mobile!='' AND birthday!='0000-00-00'";
 $condition .= $conditionRegTime;
