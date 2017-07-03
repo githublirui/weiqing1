@@ -33,7 +33,7 @@ if ($do == 'regmsg') {
         exit;
     }
 
-    if ($codeInfo['isuse'] == 1) {
+    if ($codeInfo['isuse'] == 2) {
         message('邀请码已使用', $this->createWebUrl('index'));
         $result = array(
             'error_code' => 3,

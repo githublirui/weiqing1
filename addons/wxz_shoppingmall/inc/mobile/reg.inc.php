@@ -26,7 +26,7 @@ $codeInfo = pdo_fetch($sql);
 if (!$codeInfo) {
     message('邀请码错误', $this->createMobileUrl('index'));
 }
-if ($codeInfo['isuse'] == 1) {
+if ($codeInfo['isuse'] == 2) {
     message('邀请码已使用', $this->createMobileUrl('index'));
 }
 
