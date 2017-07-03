@@ -11,4 +11,6 @@ oqlmortv8.bkt.clouddn.com
 * 阿里云OSS
 ukyp0cxUs1DrH4vR
 apD35VSHYJHzWf5ETuWlfqOWfuAA5o
-liruiweixin.oss-cn-qingdao.aliyuncs.com
+http://liruiweixin.oss-cn-qingdao.aliyuncs.com
+
+* 腾讯云

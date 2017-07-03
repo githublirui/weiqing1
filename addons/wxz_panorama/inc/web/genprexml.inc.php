@@ -100,7 +100,7 @@ foreach ($scenes as $i => $scene) {
     if (isset($sceneTreasure[$i])) {
         for ($k = 0; $k < $sceneTreasure[$i]; $k++) {
             $attributes = array(
-                'name' => "spot{$k}",
+                'name' => "spot_treasure{$k}",
                 'devices' => "all",
                 'capture' => "False",
                 'enabled' => "True",
