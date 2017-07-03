@@ -125,7 +125,9 @@ class Hotspot {
             $spotrow = array_merge($spotrow, $spotrow['config']);
             unset($spotrow['config']);
             $xml .= "<hotspot name=\"spot$spotautokey\" ";
-            $xml .= "devices=\"{$spotrow['devicetype']}\" ";
+            if($spotrow['devicetype']) {
+                $xml .= "devices=\"{$spotrow['devicetype']}\" ";
+            }
 
             $onclickstring = "";
             $onhoverstring = "";
