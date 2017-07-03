@@ -116,7 +116,7 @@ foreach ($scenes as $i => $scene) {
                 'rz' => "",
                 'ry' => "",
                 'rx' => "",
-                'onclick' => "openurl(" . urldecode($_W['siteroot']) . "app/index.php?i=" . $_W['uniacid'] . "&amp;pid=" . $pid . "&amp;c=entry&amp;do=award&amp;m=" . $_GPC['m'] . ",_blank);",
+                'onclick' => "openurl(" . urldecode($_W['siteroot'] . "app/index.php?i=" . $_W['uniacid'] . "&amp;pid=" . $pid . "&amp;c=entry&amp;do=award&amp;m=" . $_GPC['m']) . ",_blank);",
                 'url' => tomedia($projectConfigInfo['treasure']),
             );
             $sceneElement .= Scene::createTag('hotspot', $attributes);
