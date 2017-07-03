@@ -223,7 +223,7 @@ class Scene {
                 $mobileImgElement .= self::createTag($img_column, $attributes);
             }
         }
-        $imgElement .= self::createTag('mobile', array(), $mobileImgElement, true);
+//        $imgElement .= self::createTag('mobile', array(), $mobileImgElement, true);
         //图片属性
         $attributes = array(
         );
