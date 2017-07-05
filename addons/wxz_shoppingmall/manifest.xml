@@ -359,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_order` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_invite_code` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL,
-  `code` varchar(8) NOT NULL COMMENT '邀请码',
+  `code` varchar(20) NOT NULL COMMENT '邀请码',
   `isuse` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否使用，1未使用，2已使用',
   `use_time` int(11) NOT NULL DEFAULT '0' COMMENT '使用时间',
   `create_at` int(11) NOT NULL,

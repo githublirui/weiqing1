@@ -177,6 +177,9 @@
                                     case 3: //已经注册并且绑定资料，跳转到首页
                                         window.location.href = "{php echo $this->createMobileUrl('index')}";
                                         break;
+                                    case 4: //邀请码已注册，重新输入邀请码
+                                        window.location.href = "{php echo $this->createMobileUrl('reg_invite')}";
+                                        break;
                                     case 0:
                                         layer.open({
                                             content: msg.error_msg,

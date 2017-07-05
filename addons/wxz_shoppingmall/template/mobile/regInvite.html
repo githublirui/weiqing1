@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8"> 
+    <title>会员注册</title>
+    <meta name="keywords" content=""> 
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta content="telephone=no" name="format-detection">
+    <link rel="stylesheet" type="text/css" href="{$modulePublic}skin2016/css/frozen.css" />
+    <link rel="stylesheet" type="text/css" href="{$modulePublic}skin2016/css/register.css" />
+    <link rel="stylesheet" type="text/css" href="{$modulePublic}skin2016/css/base.css" />
+</head>
+<body>
+    <header>
+        {if $pageContents[7]['img']}
+        <img src="{php echo $attach_url . '/'.$pageContents[7]['img']}" />
+        {else}
+        <img src="{$modulePublic}skin2016/img/top.png" />
+        {/if}
+    </header> 
+    <section>
+        <p class="ui-font-purple ui-font-form-t">验证邀请码</p>
+        <div class="ui-form ui-border-t">
+            <form action="" method="post" id="form" >
+                <div class="ui-form-item ui-border-b">
+                    <label>
+                        <img src="{$modulePublic}skin2016/img/icon-ren.png" class="ui-icon-img" />邀请码
+                    </label>
+                    <input type="text"  name="invitecode" value=""  placeholder="请输入邀请码" >
+                    <a href="#" class="ui-icon-close"></a>
+                </div><div class="hint"></div>
+                <div class="hint"></div>
+                <div class="ui-btn-wrap">
+                    <button type="button" id="but" onclick="return checkfrom()" class="ui-btn-lg ui-btn-primary ui-bgcolor-purple">
+                        下一步
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <!--<script type="text/javascript" src="{$modulePublic}skin2016/lib/zepto.min.js"></script>
+    <script type="text/javascript" src="{$modulePublic}skin2016/js/frozen.js"></script>-->
+    <script src="{$modulePublic}skin2016/js/jquery.min.js"></script>
+    <script src="{$modulePublic}skin2016/js/layer.m.js"></script>
+    <script>
+                        function loading() {
+                            layer.open({
+                                type: 2,
+                                content: '加载中...',
+                                shadeClose: false
+                            });
+                        }
+                        function alert(msg) {
+                            layer.open({
+                                content: msg,
+                                style: 'background-color:#09C1FF; color:#fff; border:none;text-align:center',
+                                time: 2
+                            });
+                        }
+
+                        //表单验证
+                        function checkfrom() {
+                            var invitecode = $('input[name="invitecode"]').val();
+                            if (invitecode == '') {
+                                layer.open({
+                                    content: '邀请码不能为空',
+                                    btn: ['确定']
+                                });
+                                return false;
+                            }
+                            loading();
+                            $.post("{php echo $this->createMobileUrl('ajax',array('sdo'=>'regInvite'))}", {"invitecode": invitecode}, function (msg) {
+                                layer.closeAll();
+                                var status = msg.error_code;
+                                var url = "{php echo $this->createMobileUrl('reg')}";
+                                switch (status) {
+                                    case 1: // 新会员注册
+                                        window.location.href = url;
+                                        break;
+                                    case 0:
+                                        layer.open({
+                                            content: msg.error_msg,
+                                            btn: ['确定']
+                                        });
+                                        break;
+                                }
+                                /* if(msg.status){
+                                 var uniacid = "4";
+                                 layer.msg(msg.msg, 2, -1);
+                                 setTimeout("location.href='http://wx.cnsaga.com/app/index.php?i="+uniacid+"&c=entry&eid=1&wxref=mp.weixin.qq.com#wechat_redirect';",2000);
+                                 }else{
+                                 layer.msg(msg.msg, 2, -1);
+                                 }*/
+                            }, 'json');
+                            //            $('#form').submit();
+
+                        }
+    </script>
+    {template 'share'}
+</body>
+</html>

@@ -1,9 +1,9 @@
 {template 'common/header'}
 <script>
     require(['jquery', 'util', 'datetimepicker'], function ($, u) {
-        {if $cacheData['num'] >0}
-            setTimeout(location.href="{php echo $this->createWebUrl('gen_reg_qrcode');}",1000);
-        {/if}
+    {if $cacheData['num'] > 0}
+    setTimeout(location.href = "{php echo $this->createWebUrl('gen_reg_qrcode');}", 1000);
+    {/if}
     });
 </script>
 <div class="clearfix">
@@ -15,18 +15,26 @@
             <div class="panel-body">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">生成邀请二维码码数量</label>
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">邀请注册二维码</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="help-block" style='padding-top:0px;margin-top: -5px;'>
+                                <img src="{php echo $this->createWebUrl('invite_qrcode_img')}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">生成邀请码数量</label>
                         <div class="col-sm-9 col-xs-12">
                             <input type="text" id="scan_title" class="form-control span7" placeholder="" name="num" value="{$cacheData['num']}">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">二维码生成目录</label>
-                        <div class="col-sm-9 col-xs-12">
-                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="path" value="{$cacheData['path']}">
-                            <span class="help-block">确保目录有写入权限</span>
-                        </div>
-                    </div>
+                    <!--                    <div class="form-group">
+                                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">二维码生成目录</label>
+                                            <div class="col-sm-9 col-xs-12">
+                                                <input type="text" id="scan_title" class="form-control span7" placeholder="" name="path" value="{$cacheData['path']}">
+                                                <span class="help-block">确保目录有写入权限</span>
+                                            </div>
+                                        </div>-->
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
                         <div class="col-sm-9 col-xs-12">
