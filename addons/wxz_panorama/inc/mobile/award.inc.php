@@ -8,7 +8,7 @@ require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Project.class.php';
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
-
+$_W['module_config'] = $this->module['config'];
 $pid = $_GPC['pid'];
 $next_pano = Project::getNextProject($pid);
 $next_pano = $next_pano['id'];

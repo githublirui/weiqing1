@@ -10,6 +10,7 @@ require_once WXZ_PANORAMA . '/source/Project.class.php';
 
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
+$_W['module_config'] = $this->module['config'];
 
 $pid = $_GPC['pid']; //默认第一个项目
 if ($pid) {

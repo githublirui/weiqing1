@@ -9,6 +9,7 @@ require_once WXZ_PANORAMA . '/source/Page.class.php';
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 unset($_SESSION['__:proxy:WXZ_PANORAMA_VIEW_SCENES']); //删除浏览场景记录
+$_W['module_config'] = $this->module['config'];
 //获取图片域名
 setting_load('remote');
 if ($_W['setting']['remote']['type']) {
