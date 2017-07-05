@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[2.0.4]]></version>
+        <version><![CDATA[2.0.5]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -190,6 +190,8 @@ DROP TABLE IF EXISTS `ims_wxz_panorama_award`;
 DROP TABLE IF EXISTS `ims_wxz_panorama_page`;
 DROP TABLE IF EXISTS `ims_wxz_panorama_scene`;
 DROP TABLE IF EXISTS `ims_wxz_panorama_project`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_project_config`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_scene_hotspot`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>
