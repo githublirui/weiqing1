@@ -31,7 +31,10 @@ if (checksubmit()) {
         'autorotate' => (int) $_GPC['autorotate'], //自动旋转
         'update_at' => time(),
     );
-
+    
+    $config['bottombanner'] = (int)$_GPC['bottombanner'];//是否展示底部banner
+    $data['config'] = serialize($config);
+            
     if (Project::updateConfig($pid, $data)) {
         message('更新成功', $this->createWebUrl('project_list'));
     } else {

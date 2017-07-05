@@ -93,3 +93,7 @@ if (!pdo_tableexists('wxz_panorama_scene_hotspot')) {
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;");
 }
+
+if (!pdo_fieldexists('wxz_panorama_project_config', 'config')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_project_config') . " ADD `config` text COMMENT '配置详情';");
+}

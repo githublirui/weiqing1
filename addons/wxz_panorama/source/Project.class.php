@@ -89,7 +89,11 @@ class Project {
         }
         $condition = "uniacid={$_W['uniacid']} AND project_id={$pid}";
         $sql = "SELECT {$field} FROM " . tablename(self::$config_table) . " WHERE {$condition}";
-        return pdo_fetch($sql);
+        $info = pdo_fetch($sql);
+        if ($info['config']) {
+            $info['config'] = unserialize($info['config']);
+        }
+        return $info;
     }
 
     /**
