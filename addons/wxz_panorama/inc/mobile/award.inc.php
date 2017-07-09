@@ -28,19 +28,19 @@ $sql = "select * from " . tablename('wxz_panorama_win') . " where fans_id =" . $
 $is_win = pdo_fetch($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
-if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
-    $award_msg = $is_win['award'];
-    if ($is_win['award'] == '现金') {
-        $fee = $is_win['fee'] / 100;
-        $award_msg = "现金{$fee}元";
-    }
-    $show_msg = "<p>恭喜您获得了</p><p id='black'>" . $award_msg . " （您奖品ID为：" . $is_win['award_id'] . " ）</p><p>分享后可以领取</p>";
-    include $this->template(get_real_tpl('msg'));
-}
+//if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
+//    $award_msg = $is_win['award'];
+//    if ($is_win['award'] == '现金') {
+//        $fee = $is_win['fee'] / 100;
+//        $award_msg = "现金{$fee}元";
+//    }
+//    $show_msg = "<p>恭喜您获得了</p><p id='black'>" . $award_msg . " （您奖品ID为：" . $is_win['award_id'] . " ）</p><p>分享后可以领取</p>";
+//    include $this->template(get_real_tpl('msg'));
+//}
 
-
+$settings = $this->module['config'];
 //判断用户是否中过奖
-if ($user["award_num"] > 0) {
+if ($user["award_num"] >= $settings['max_award_num']) {
     $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
@@ -71,7 +71,20 @@ $award_list = pdo_fetchall($sql, $pars);
 foreach ($award_list as $award) {
     $prize_arr[] = array('id' => $award['id'], 'type' => $award['type'], 'min_money' => $award['min_money'], 'max_money' => $award['max_money'], 'left_num' => $award['left_num'], 'prize' => $award['name'], 'pro' => $award['probability']);
 }
-$prize_arr[] = array('id' => 0, 'left_num' => 0, 'prize' => '未中奖', 'pro' => '50');
+
+//计算未中奖概率
+$totalProbability = array_sum(array_column($award_list, 'probability'));
+$probabilityNum = array();
+$probabilityNum = array_pad($probabilityNum, strlen($totalProbability) - 1, 0);
+$probabilityN0 = '1' . implode('', $probabilityNum);
+if ($probabilityN0 == $totalProbability) {
+    $noPrizePro = 0;
+} else {
+    $probabilityN0 = '1' . implode('', $probabilityNum) . '0';
+    $noPrizePro = $probabilityN0 - $totalProbability;
+}
+
+$prize_arr[] = array('id' => 0, 'left_num' => 0, 'prize' => '未中奖', 'pro' => $noPrizePro);
 foreach ($prize_arr as $key => $val) {
     $probability[$key] = $val["pro"];
 }

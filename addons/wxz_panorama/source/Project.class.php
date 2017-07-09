@@ -39,8 +39,8 @@ class Project {
             return self::getFirstPro();
         }
 
-        $condition = "uniacid={$_W['uniacid']} AND sort_order<{$proInfo['sort_order']}";
-        $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc";
+        $condition = "uniacid={$_W['uniacid']} AND sort_order<={$proInfo['sort_order']} AND id !={$pid}";
+        $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc,id desc";
         $nextInfo = pdo_fetch($sql);
         if (!$nextInfo) {
             return self::getFirstPro(); //没有下一个场景，返回第一个场景

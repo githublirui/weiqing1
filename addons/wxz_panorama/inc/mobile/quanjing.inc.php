@@ -37,11 +37,11 @@ if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone'] == '') {
     die();
 }
 
-if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
-    $show_msg = "<p>恭喜你，获得了</p><p id='black'>" . $is_win['award'] . "</p><p>分享后可以领取，实物奖品需到售楼处领取</p>";
-    include $this->template(get_real_tpl('msg'));
-    die();
-}
+//if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
+//    $show_msg = "<p>恭喜你，获得了</p><p id='black'>" . $is_win['award'] . "</p><p>分享后可以领取，实物奖品需到售楼处领取</p>";
+//    include $this->template(get_real_tpl('msg'));
+//    die();
+//}
 
 include $this->template('scene/index');
 ?>

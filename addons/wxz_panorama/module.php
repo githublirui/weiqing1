@@ -45,6 +45,8 @@ class Wxz_panoramaModule extends WeModule {
                 ),
                 //活动名称
                 'active_name' => $_GPC['active_name'],
+                'max_award_num' => $_GPC['max_award_num'], //单个用户最大中奖次数
+                'verification_code' => $_GPC['verification_code'], //核销码
                 //强制关注
                 'force_follow' => (int) $_GPC['force_follow'],
                 'force_follow_url' => (string) $_GPC['force_follow_url'], //强制关注链接

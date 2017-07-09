@@ -73,12 +73,12 @@
                     <div class="col-sm-9 col-xs-12">
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" {if $project_config_info['config']['bottombanner']==1}checked="checked"{/if} name="bottombanner" value="1"> 是
+                                <input type="radio" {if $project_config_info['config']['bottombanner']===null || $project_config_info['config']['bottombanner']==1}checked="checked"{/if} name="bottombanner" value="1"> 是
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" {if $project_config_info['config']['bottombanner']!=1}checked="checked"{/if} name="bottombanner" value="0"> 否
+                                <input type="radio" {if $project_config_info['config']['bottombanner']!==null && $project_config_info['config']['bottombanner']==0}checked="checked"{/if} name="bottombanner" value="0"> 否
                             </label>
                         </div>
                     </div>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{php echo $this->module['config']['active_name'];}</title>
+        <link href="{$modulePath}static/css/css.css" rel="stylesheet"/>
+        <meta name="viewport" id="viewport" content="width=device-width,user-scalable=no">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="{$modulePath}static/css/swiper.3.1.7.min.css">
+        <link rel="stylesheet" href="{$modulePath}static/css/animate.min.css">
+        <script src="{$modulePath}static/js/jquery-1.8.3.min.js"></script>
+    </head>
+    <body>
+        <section class="page4 " id="bg" style="border: 1px solid red;">
+            <div class="page4-img" style="padding-top: 7%">
+                <img src="{$modulePath}static/img/page4/img4.png" width="100%">
+            </div>
+            <div class="page4_text" style="padding-top: 5px;">
+                {if $wins}
+                <p>恭喜你，获得了</p>
+                {php foreach($wins as $win) { }
+                <p id='black'>{$win['award']}
+                    {if $win['is_send'] == 1}
+                    <span style="color:green">已发放</span>
+                    {else}
+                    <span>
+                        <button class="verification" data-id="{$win['id']}">确认核销</button>
+                    </span>
+                    {/if}
+                </p>
+                {php } }
+                {if $is_fans['share_num']==0}
+                <p>分享后可以领取</p>
+                {/if}
+                {else}
+                <p>【 亲，你还没有中奖哦，快去全景里找宝箱吧。（<a href="{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}">进入全景寻宝</a>）】</p>
+                {/if}
+                <br />
+                <!--<br />-->
+                <!--<a href="https://720yun.com/t/a8b27qpvx1s?pano_id=861586">我还想去逛逛华盛BBB</a>-->
+                <!--<br />-->
+                领奖时间：{$pageContents[4]['title']}
+                <br />
+                领奖电话：{$pageContents[5]['title']}
+                <br />
+                领奖地址：{$pageContents[6]['title']}
+            </div>
+            <!-- <div class="page4_logo"><img src="{$modulePath}static/img/page4/logo.png" width="60%"></div>-->
+            <footer><!--<a href="tel:13956993061">©微小智技术支持</a></footer>-->
+        </section>
+        <script>
+            $(".verification").click(function () {
+                var pars = {};
+                pars.id = $(this).attr('data-id');
+                pars.code = prompt("请输入核销码");
+                $.ajax({
+                    url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=verification",
+                    type: "post",
+                    dataType: "html",
+                    data: pars,
+                    success: function (dat) {
+                        if (dat == 'ok') {
+                            alert('核销成功');
+                            location.href = location.href;
+                        } else {
+                            alert(dat);
+                        }
+                    }
+                });
+            })
+//            $("section").height($(window).height());
+        </script>
+        {template 'share'}
+    </body>
+</html>
+

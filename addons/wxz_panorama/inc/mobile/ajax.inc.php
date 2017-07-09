@@ -91,5 +91,20 @@ if ($do == 'share') {
     } else {
         echo 'error';
     }
+} else if ($do == 'verification') {
+    $settings = $this->module['config'];
+    $id = $_GPC['id'];
+    $code = $_GPC['code'];
+    if ($code != $settings['verification_code']) {
+        echo '核销码错误';
+        die;
+    }
+
+    $ret = pdo_update('wxz_panorama_win', array('is_send' => 1), array('uniacid' => $_GPC['i'], 'id' => $id, 'fans_id' => $fans['uid']));
+    if ($ret) {
+        echo 'ok';
+    } else {
+        echo '核销失败';
+    }
 }
 ?>
