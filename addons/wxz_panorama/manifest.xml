@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[2.0.6]]></version>
+        <version><![CDATA[2.0.7]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -162,6 +162,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_project_config` (
   `treasure` varchar(255) NOT NULL DEFAULT '' COMMENT '宝藏图片',
   `treasure_num` tinyint(1) NOT NULL DEFAULT 1 COMMENT '宝藏数量',
   `autorotate` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否开启自动旋转',
+  `config` text COMMENT '配置详情',
   `update_at` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
