@@ -24,6 +24,12 @@ $wins = pdo_fetchall($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
 
+//没有填写手机号，填写手机号
+if ($wins && $is_fans['cellphone'] == '') {
+    include $this->template(get_real_tpl('input_msg'));
+    die();
+}
+
 if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
     $show_msg = "<p>恭喜你，获得了</p><p id='black'>" . $is_win['award'] . "</p><p>分享后可以领取</p>";
 }
