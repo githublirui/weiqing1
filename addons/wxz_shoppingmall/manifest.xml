@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_shoppingmall_fans` (
   `username` varchar(255) NOT NULL COMMENT '用户姓名',
   `birthday` date NOT NULL DEFAULT '0000-00-00' COMMENT '生日',
   `idcard` varchar(255) NOT NULL COMMENT '身份证',
+  `address` varchar(255) NOT NULL COMMENT '地区',
   `sex` varchar(10) NOT NULL DEFAULT '' COMMENT '性别',
   `plate_number` varchar(20) NOT NULL DEFAULT '' COMMENT '车牌号',
   `mobile` varchar(20) NOT NULL COMMENT '手机号',

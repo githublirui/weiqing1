@@ -39,7 +39,6 @@ if ($do == 'regInvite') {
         exit;
     }
     if ($codeInfo['isuse'] == 2) {
-        message('邀请码已使用', $this->createWebUrl('index'));
         $result = array(
             'error_code' => 0,
             'error_msg' => '邀请码已使用',
@@ -75,7 +74,6 @@ if ($do == 'regInvite') {
     }
 
     if ($codeInfo['isuse'] == 2) {
-        message('邀请码已使用', $this->createWebUrl('index'));
         $result = array(
             'error_code' => 4,
             'error_msg' => '邀请码已使用,不能注册',
@@ -104,6 +102,7 @@ if ($do == 'regInvite') {
 
     $data['username'] = $_GPC['username'];
     $data['mobile'] = $_GPC['mobile'];
+    $data['address'] = (string)$_GPC['address'];
     $verify_code = $_GPC['verify_code'];
 
     $pattern = "/^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/";

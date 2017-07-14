@@ -31,3 +31,7 @@ if (pdo_fieldexists('wxz_shoppingmall_order', 'park_pay_type')) {
 if (pdo_fieldexists('wxz_shoppingmall_fans', 'level')) {
     pdo_query("ALTER TABLE " . tablename('wxz_shoppingmall_fans') . " CHANGE `level` `level` TINYINT(2) DEFAULT 0 NOT NULL COMMENT '会员等级';");
 }
+
+if (!pdo_fieldexists('wxz_shoppingmall_fans', 'address')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_shoppingmall_fans') . " ADD `address` varchar(255) DEFAULT '';");
+}
