@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+    <application setting="true">
+        <name><![CDATA[微小智]]></name>
+        <identifie><![CDATA[wxz_payment]]></identifie>
+        <version><![CDATA[1.0.0]]></version>
+        <type><![CDATA[activity]]></type>
+        <ability><![CDATA[wxz_payment]]></ability>
+        <description><![CDATA[wxz_payment]]></description>
+        <author><![CDATA[wxz_lirui：QQ1478043077]]></author>
+        <url><![CDATA[http://bbs.we7.cc/]]></url>
+    </application>
+    <platform>
+        <subscribes>
+        </subscribes>
+        <handles>
+            <message type="image" />
+            <message type="voice" />
+            <message type="video" />
+            <message type="location" />
+            <message type="link" />
+            <message type="subscribe" />
+            <message type="qr" />
+            <message type="trace" />
+            <message type="click" />
+            <message type="enter" />
+            <message type="text" />
+        </handles>
+        <rule embed="true" />
+    </platform>
+    <bindings>
+        <menu>
+            <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
+            <entry title="支付记录" do="fans_list" state="" direct="false" />
+        </menu>
+    </bindings>
+    <install><![CDATA[
+CREATE TABLE IF NOT EXISTS `ims_wxz_payment_fans` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `openid` varchar(40) NOT NULL DEFAULT '',
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是管理员,0否,1是',
+  PRIMARY KEY (`uid`),
+  KEY `uniacid` (`uniacid`),
+  KEY `openid` (`openid`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_payment_payrecord` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(10) unsigned NOT NULL COMMENT '微信',
+  `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
+  `openid` varchar(200) NOT NULL DEFAULT '' COMMENT 'openid',
+  `fee` int(10) NOT NULL COMMENT '支付金额',
+  `created` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `pay_time` int(10) unsigned NOT NULL COMMENT '支付时间',
+  KEY `id` (`id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='支付记录表';
+
+]]></install>
+    <uninstall><![CDATA[
+DROP TABLE IF EXISTS `ims_wxz_payment_fans`; 
+DROP TABLE IF EXISTS `ims_wxz_payment_payrecord`;
+]]></uninstall>
+    <upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>
