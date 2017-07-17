@@ -36,20 +36,13 @@ class Wxz_paymentModule extends WeModule {
         if (checksubmit()) {
             //字段验证, 并获得正确的数据$dat
             $data = array(
-                'quanjin' => array(
-                    'start_time' => $_GPC['start_time'],
-                    'end_time' => $_GPC['end_time'],
-                    'title' => $_GPC['title'],
-                    'img' => $_GPC['img'],
-                    'desc' => $_GPC['desc'],
-                ),
-                //活动名称
-                'active_name' => $_GPC['active_name'],
-                //强制关注
-                'force_follow' => (int) $_GPC['force_follow'],
-                'force_follow_url' => (string) $_GPC['force_follow_url'], //强制关注链接
+                'merchant_name' => $_GPC['merchant_name'],
             );
             if ($this->saveSettings($data)) {
+                if (function_exists('cache_system_key')) {
+                    $setting_cachekey = cache_system_key($_W['uniacid'] . "module_setting:" . $this->modulename);
+                    cache_delete($setting_cachekey);
+                }
                 message('保存成功', 'refresh');
             }
         }

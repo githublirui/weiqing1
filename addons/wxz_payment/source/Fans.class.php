@@ -89,6 +89,22 @@ class Fans {
         }
     }
 
+    /**
+     * 获取所有管理员列表
+     */
+    public function getAllAdmin() {
+        global $_W;
+        $pars = array();
+        $pars[':uniacid'] = $_W['uniacid'];
+        $sql = 'SELECT * FROM ' . tablename('wxz_payment_fans') . ' WHERE `uniacid`=:uniacid AND is_admin=1';
+        $ret = pdo_fetchall($sql, $pars);
+        if (!empty($ret)) {
+            return $ret;
+        } else {
+            return array();
+        }
+    }
+
     public function getAll($filters = array(), $pindex = 0, $psize = 15, &$total = 0) {
         global $_W;
         $condition = '`f`.`uniacid`=:uniacid';

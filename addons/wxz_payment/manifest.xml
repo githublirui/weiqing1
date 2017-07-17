@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns="http://www.we7.cc" versionCode="0.6">
     <application setting="true">
-        <name><![CDATA[微小智]]></name>
+        <name><![CDATA[微小智支付]]></name>
         <identifie><![CDATA[wxz_payment]]></identifie>
         <version><![CDATA[1.0.0]]></version>
         <type><![CDATA[activity]]></type>
@@ -31,7 +31,8 @@
     <bindings>
         <menu>
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
-            <entry title="支付记录" do="fans_list" state="" direct="false" />
+            <entry title="用户列表" do="fans_list" state="" direct="false" />
+            <entry title="支付记录" do="order_list" state="" direct="false" />
         </menu>
     </bindings>
     <install><![CDATA[
@@ -40,27 +41,34 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_payment_fans` (
   `uniacid` int(11) unsigned NOT NULL,
   `openid` varchar(40) NOT NULL DEFAULT '',
   `is_admin` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是管理员,0否,1是',
+  `created` int(10) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`uid`),
   KEY `uniacid` (`uniacid`),
-  KEY `openid` (`openid`),
+  KEY `openid` (`openid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `ims_wxz_payment_payrecord` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uniacid` int(10) unsigned NOT NULL COMMENT '微信',
-  `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
-  `openid` varchar(200) NOT NULL DEFAULT '' COMMENT 'openid',
-  `fee` int(10) NOT NULL COMMENT '支付金额',
-  `created` int(10) unsigned NOT NULL COMMENT '创建时间',
-  `pay_time` int(10) unsigned NOT NULL COMMENT '支付时间',
-  KEY `id` (`id`),
-  KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='支付记录表';
-
+CREATE TABLE IF NOT EXISTS `ims_wxz_payment_order` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `order_no` varchar(50) NOT NULL DEFAULT 0 COMMENT '订单编号',
+  `fans_id` INT(11) NOT NULL DEFAULT 0 COMMENT '1.粉丝id',
+  `money` INT(11) NOT NULL DEFAULT 0 COMMENT '订单金额分计算',
+  `pay_money` INT(11) NOT NULL DEFAULT 0 COMMENT '实际支付金额',
+  `fail_reason` varchar(255) NOT NULL DEFAULT '' COMMENT '失败原因',
+  `trade_no` varchar(50) NOT NULL COMMENT '微信流水号',
+  `status` INT(11) NOT NULL DEFAULT 1 COMMENT '订单状态1待处理,2成功，3失败',
+  `success_at` INT(11) NOT NULL,
+  `update_at` INT(11) NOT NULL,
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fans_id` (`fans_id`),
+  KEY `order_no` (`order_no`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;   
 ]]></install>
     <uninstall><![CDATA[
 DROP TABLE IF EXISTS `ims_wxz_payment_fans`; 
 DROP TABLE IF EXISTS `ims_wxz_payment_payrecord`;
+DROP TABLE IF EXISTS `ims_wxz_payment_order`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

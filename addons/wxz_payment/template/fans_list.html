@@ -10,6 +10,7 @@
                     <th>ID</th>
                     <th>OpenId</th>
                     <th>管理员</th>
+                    <th>操作</th>
                 </tr>
                 {loop $list $row}
                 <tr>
@@ -26,10 +27,15 @@
                     <td>
                         <p class="form-control-static">
                             {if $row['is_admin'] ==1}
-                                是
+                            是
                             {else}
-                                否
+                            否
                             {/if}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            <a href="javascript:void(0)" onclick="del_fans('{$row['uid']}')">删除</a>
                         </p>
                     </td>
                 </tr>
@@ -41,4 +47,28 @@
         </div>
     </div>
 </div>
+<script>
+    function del_fans(id) {
+        if (confirm("确定删除吗？")) {
+            var pars = {};
+            pars.id = id;
+            $.ajax({
+                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_fans'))}",
+                type: "post",
+                dataType: "html",
+                data: pars,
+                success: function (res) {
+                    $(".submit").attr("disabled", false);
+                    if (res == "ok") {
+                        alert("操作成功");
+                        window.location.reload(true);
+                    } else {
+                        alert(res);
+                    }
+                }
+            })
+        }
+    }
+
+</script>
 {template 'common/footer'}
