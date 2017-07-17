@@ -23,7 +23,7 @@ if ($do == 'regInvite') {
     if (!$code) {
         $result = array(
             'error_code' => 0,
-            'error_msg' => '请输入邀请码',
+            'error_msg' => '请输入卡号',
         );
         echo json_encode($result);
         exit;
@@ -33,7 +33,7 @@ if ($do == 'regInvite') {
     if (!$codeInfo) {
         $result = array(
             'error_code' => 0,
-            'error_msg' => '邀请码错误',
+            'error_msg' => '卡号错误',
         );
         echo json_encode($result);
         exit;
@@ -41,7 +41,7 @@ if ($do == 'regInvite') {
     if ($codeInfo['isuse'] == 2) {
         $result = array(
             'error_code' => 0,
-            'error_msg' => '邀请码已使用',
+            'error_msg' => '卡号已使用',
         );
         echo json_encode($result);
         exit;
@@ -67,7 +67,7 @@ if ($do == 'regInvite') {
     if (!$codeInfo) {
         $result = array(
             'error_code' => 0,
-            'error_msg' => '邀请码错误',
+            'error_msg' => '卡号错误',
         );
         echo json_encode($result);
         exit;
@@ -76,7 +76,7 @@ if ($do == 'regInvite') {
     if ($codeInfo['isuse'] == 2) {
         $result = array(
             'error_code' => 4,
-            'error_msg' => '邀请码已使用,不能注册',
+            'error_msg' => '卡号已使用,不能注册',
         );
         echo json_encode($result);
         exit;
@@ -102,7 +102,7 @@ if ($do == 'regInvite') {
 
     $data['username'] = $_GPC['username'];
     $data['mobile'] = $_GPC['mobile'];
-    $data['address'] = (string)$_GPC['address'];
+    $data['address'] = (string) $_GPC['addresslv1'] . '-' . (string) $_GPC['addresslv2'];
     $verify_code = $_GPC['verify_code'];
 
     $pattern = "/^((\d{3}-\d{8}|\d{4}-\d{7,8})|(1[3|5|7|8][0-9]{9}))$/";
@@ -159,7 +159,7 @@ if ($do == 'regInvite') {
     $data['invite_code'] = $code;
     $ret = pdo_update('wxz_shoppingmall_fans', $data, array('uniacid' => $_GPC['i'], 'uid' => $user['uid']));
     if ($ret) {
-        //更新邀请码状态
+        //更新卡号状态
         $codeData = array('isuse' => 2, 'use_time' => time());
         pdo_update('wxz_shoppingmall_invite_code', $codeData, array('id' => $codeInfo['id']));
         $_SESSION['wxz_shoppingmall_reg_invite_code'] = '';
@@ -589,6 +589,10 @@ if ($do == 'regInvite') {
     }
 
     myAjaxReturn(1, $comment);
+} elseif ($do == 'get_address_lv2') {
+    $addresslv1 = $_GPC['addresslv1'];
+    $addresses = Fans::$addresses;
+    echo json_encode($addresses[$addresslv1]);
 }
 
 /**

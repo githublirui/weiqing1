@@ -47,23 +47,21 @@
                     <input type="button" value="获取验证码" style="width:30%;padding-left: 5px;" id="timer"/>
                     <a href="#" class="ui-icon-close"></a>
                 </div><div class="hint"></div>
-                
+
                 <div class="ui-form-item ui-border-b" style="">
                     <label>
                         <img src="{$modulePublic}skin2016/img/icon-ren.png" class="ui-icon-img" />地区
                     </label>
-                      <select name="address" class="address" style="padding-left: 5px;;margin-left:110px;">
+                    <select name="addresslv1" class="addresslv1" style="width: 15%;padding-left: 5px;;margin-left:110px;">
                         <option value="">请选择地区</option>
-                        {php foreach($addresses as $addLv1=>$address) {}
-                            <optgroup label="{$addLv1}">
-                            {php foreach($address as $addLv2) {}
-                                <option value="{$addLv2}">{$addLv2}</option>
-                            {php } }
-                            </optgroup>
+                        {php foreach($addressesLv1 as $address) {}
+                        <option value="{$address}">{$address}</option>
                         {php } }
                     </select>
+                    <select name="addresslv2" class="addresslv2" style="width: 15%;padding-left: 5px;;margin-left:110px;">
+                    </select>
                 </div><div class="hint"></div>
-                
+
                 <div class="ui-btn-wrap">
                     <button type="button" id="but" onclick="return checkfrom()" class="ui-btn-lg ui-btn-primary ui-bgcolor-purple">
                         下一步
@@ -77,6 +75,23 @@
     <script src="{$modulePublic}skin2016/js/jquery.min.js"></script>
     <script src="{$modulePublic}skin2016/js/layer.m.js"></script>
     <script>
+                        $(".addresslv1").change(function () {
+                            var pars = {};
+                            pars.addresslv1 = $(this).val();
+                            $.ajax({
+                                url: "{php echo $this->createMobileUrl('ajax',array('sdo'=>'get_address_lv2'))}",
+                                type: "post",
+                                dataType: "json",
+                                data: pars,
+                                success: function (res) {
+                                    $(".addresslv2").html('<option value="">请选择地区</option>');
+                                    $.each(res, function (i, n) {
+                                        $(".addresslv2").append("<option value='" + res[i] + "'>" + res[i] + "</option>");
+                                    });
+
+                                }
+                            })
+                        })
                         //短信验证码
                         var time = function (obj) {
                             if (wait == 0) {
@@ -135,7 +150,8 @@
                         function checkfrom() {
                             var username = $('input[name="username"]').val();
                             var mobile = $('input[name="mobile"]').val();
-                            var address = $('.address').val();
+                            var addresslv1 = $('.addresslv1').val();
+                            var addresslv2 = $('.addresslv2').val();
                             var verify_code = $('input[name="verify_code"]').val();
 //                            var mobileReg = /^0?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
                             var mobileReg = /^1\d{10}$/;
@@ -155,7 +171,7 @@
                                 });
                                 return false;
                             }
-                            if (address == '') {
+                            if (addresslv2 == '') {
                                 layer.open({
                                     content: '请选择地区',
                                     btn: ['确定']
@@ -179,7 +195,7 @@
                             }
 
                             loading();
-                            $.post("{php echo $this->createMobileUrl('ajax',array('sdo'=>'regmsg'))}", {"username": username, "mobile": mobile,"address":address, "verify_code": verify_code}, function (msg) {
+                            $.post("{php echo $this->createMobileUrl('ajax',array('sdo'=>'regmsg'))}", {"username": username, "mobile": mobile, "addresslv1": addresslv1, "addresslv2": addresslv2, "verify_code": verify_code}, function (msg) {
                                 layer.closeAll();
                                 alert(msg.error_msg);
                                 var status = msg.error_code;
