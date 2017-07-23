@@ -22,5 +22,5 @@ $sql = "SELECT * FROM " . tablename('wxz_payment_fans') . " WHERE {$condition} O
 $list = pdo_fetchall($sql, $pars);
 $pager = pagination($total, $pindex, $psize);
 
-include $this->template('fans_list');
+include $this->template('web/fans_list');
 ?>

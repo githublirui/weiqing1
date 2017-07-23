@@ -36,7 +36,7 @@ class Wxz_paymentModule extends WeModule {
         if (checksubmit()) {
             //字段验证, 并获得正确的数据$dat
             $data = array(
-                'merchant_name' => $_GPC['merchant_name'],
+                'tpl' => $_GPC['tpl'],
             );
             if ($this->saveSettings($data)) {
                 if (function_exists('cache_system_key')) {

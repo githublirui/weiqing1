@@ -41,6 +41,9 @@ class JsApiPay {
      * @return 用户的openid
      */
     public function GetOpenid() {
+        if (getip() == '127.0.0.1') {
+            return 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';
+        }
         //通过code获得openid
         if (!isset($_GET['code'])) {
             //触发微信返回code码

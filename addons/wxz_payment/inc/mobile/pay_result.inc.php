@@ -66,7 +66,7 @@ class PayNotifyCallBack extends WxPayNotify {
         Order::updateById($orderInfo['id'], $update);
         Order::doSuccess($orderInfo);
         $_W['account'] = uni_fetch($_W['uniacid']);
-      
+
         //发送模版消息
         $fans = new Fans();
         $account_obj = WeAccount::create($_W['account']);
@@ -75,15 +75,22 @@ class PayNotifyCallBack extends WxPayNotify {
                 'value' => ''
             ),
         );
+
+        $shop_info_sql = "SELECT * FROM " . tablename('wxz_payment_shop') . " WHERE id={$orderInfo['shop_id']}";
+        $shop_info = pdo_fetch($shop_info_sql);
+
         $payMoney = number_format($orderInfo['pay_money'] / 100, 2);
         $wxData['first']['value'] = "用户付款成功";
         $wxData['keyword1']['value'] = $orderInfo['order_no'];
-        $wxData['keyword2']['value'] = $_W['module_setting']['merchant_name'];
+        $wxData['keyword2']['value'] = $shop_info['name'];
         $wxData['keyword3']['value'] = "{$payMoney}元";
         $admins = $fans->getAllAdmin();
+        #YfQWKrVZy14qAArYX1w_s7-nlYDxL_szG7gWk39NrkA
         foreach ($admins as $admin) {
-           $account_obj->sendTplNotice($admin['openid'], 'YfQWKrVZy14qAArYX1w_s7-nlYDxL_szG7gWk39NrkA', $wxData, '');
+            $account_obj->sendTplNotice($admin['openid'], $_W['module_setting']['tpl'], $wxData, '');
         }
+
+        //更新店面信息，银行打款
         return true;
     }
 

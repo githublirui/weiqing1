@@ -13,34 +13,26 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">支付链接</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">设置管理员链接</label>
                     <div class="col-sm-9 col-xs-12">
                         <span class="help-block">
-                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=pay&m={$_GPC['m']}
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">支付二维码</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <span class="help-block">
-                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=index&m={$_GPC['m']}
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=set_admin&m={$_GPC['m']}
                         </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">设置管理员二维码</label>
                     <div class="col-sm-9 col-xs-12">
-                        <span class="help-block">
-                            {$_W['siteroot']}web/index.php?c=site&a=entry&do=set_admin&m={$_GPC['m']}
+                        <span class="help-block" style='margin-top: -15px;'>
+                            <img src='{php echo $this->createWebUrl('qrcode', array('url' => urlencode($_W['siteroot']."app/index.php?i=".$_W['uniacid']."&c=entry&do=set_admin&m=".$_GPC['m'])));}' />
                         </span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商户名称</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">模版ID</label>
                     <div class="col-sm-9 col-xs-12">
                         <span class="help-block">
-                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="merchant_name" value="{$settings['merchant_name']}">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="tpl" value="{$settings['tpl']}">
                         </span>
                     </div>
                 </div>

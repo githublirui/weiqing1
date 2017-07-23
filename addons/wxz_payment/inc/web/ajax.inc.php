@@ -8,5 +8,15 @@ if ($do == 'del_fans') {
     $del = pdo_delete('wxz_payment_fans', array('uid' => $id));
     echo "ok";
     die;
+} else if ($do == 'set_admin_fans') {
+    $id = $_GPC['id'];
+    $isCheck = $_GPC['is_check'];
+    $uodateData = [
+        'is_check' => $isCheck,
+    ];
+    if ($isCheck == 2) {
+        $uodateData['is_admin'] = 1;
+    }
+    pdo_update('wxz_payment_fans', $uodateData, array('uid' => $id));
 }
 ?>

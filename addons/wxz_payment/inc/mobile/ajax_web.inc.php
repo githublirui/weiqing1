@@ -63,6 +63,7 @@ class ControllerAjaxWeb extends WXZ_PAYMENTModuleSite {
         $orderData = array(
             'order_no' => Order::getOrderNo(),
             'status' => 1,
+            'shop_id' => $_GPC['shop_id'],
             'money' => $money_fen,
             'pay_money' => $money_fen, // 
         ); //创建订单信息

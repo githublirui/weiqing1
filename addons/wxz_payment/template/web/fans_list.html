@@ -36,6 +36,11 @@
                     <td>
                         <p class="form-control-static">
                             <a href="javascript:void(0)" onclick="del_fans('{$row['uid']}')">删除</a>
+                            {if $row['is_check'] ==1}
+                            &nbsp;  &nbsp;
+                                <input type="button" onclick="checkAdmin('{$row['uid']}',2)" class="btn btn-info" value="审核通过" />  &nbsp;
+                                <input type="button" onclick="checkAdmin('{$row['uid']}',3)" class="btn btn-info" value="审核不通过" />
+                            {/if}
                         </p>
                     </td>
                 </tr>
@@ -48,6 +53,27 @@
     </div>
 </div>
 <script>
+    
+    /**
+     * 审核管理员
+     */
+    function checkAdmin(uid,is_check) {
+        if (confirm("确定该操作吗？")) {
+            var pars = {};
+            pars.id = uid;
+            pars.is_check = is_check;
+            $.ajax({
+                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'set_admin_fans'))}",
+                type: "post",
+                dataType: "html",
+                data: pars,
+                success: function (res) {
+                    window.location.reload();
+                }
+            })
+        }
+    }
+    
     function del_fans(id) {
         if (confirm("确定删除吗？")) {
             var pars = {};

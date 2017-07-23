@@ -32,6 +32,7 @@
         <menu>
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
             <entry title="用户列表" do="fans_list" state="" direct="false" />
+            <entry title="店面管理" do="shop_list" state="" direct="false" />
             <entry title="支付记录" do="order_list" state="" direct="false" />
         </menu>
     </bindings>
@@ -41,17 +42,35 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_payment_fans` (
   `uniacid` int(11) unsigned NOT NULL,
   `openid` varchar(40) NOT NULL DEFAULT '',
   `is_admin` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是管理员,0否,1是',
+  `is_check` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否审核0.未审核,1 待审核，2.审核通过 3审核不通过',
   `created` int(10) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`uid`),
   KEY `uniacid` (`uniacid`),
   KEY `openid` (`openid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `ims_wxz_payment_shop` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `name` varchar(40) NOT NULL DEFAULT '' COMMENT '店面名称',
+  `openid` varchar(40) NOT NULL DEFAULT '',
+  `balance` INT(11) NOT NULL DEFAULT 0 COMMENT '余额',
+  `charges_percent` varchar(11) NOT NULL DEFAULT 0 COMMENT '手续费百分比',
+  `total_money` INT(11) NOT NULL DEFAULT 0 COMMENT '总支付金额',
+  `charges` INT(11) NOT NULL DEFAULT 0 COMMENT '总支出手续费',
+  `created` int(10) unsigned NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`),
+  KEY `openid` (`openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        
 CREATE TABLE IF NOT EXISTS `ims_wxz_payment_order` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `uniacid` INT(11) NOT NULL,
+  `pay_type` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1.用户支付,2.给店面打款',
   `order_no` varchar(50) NOT NULL DEFAULT 0 COMMENT '订单编号',
-  `fans_id` INT(11) NOT NULL DEFAULT 0 COMMENT '1.粉丝id',
+  `fans_id` INT(11) NOT NULL DEFAULT 0 COMMENT '粉丝id',
+  `shop_id` INT(11) NOT NULL DEFAULT 0 COMMENT '店面id',
   `money` INT(11) NOT NULL DEFAULT 0 COMMENT '订单金额分计算',
   `pay_money` INT(11) NOT NULL DEFAULT 0 COMMENT '实际支付金额',
   `fail_reason` varchar(255) NOT NULL DEFAULT '' COMMENT '失败原因',
@@ -67,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_payment_order` (
 ]]></install>
     <uninstall><![CDATA[
 DROP TABLE IF EXISTS `ims_wxz_payment_fans`; 
-DROP TABLE IF EXISTS `ims_wxz_payment_payrecord`;
+DROP TABLE IF EXISTS `ims_wxz_payment_shop`;
 DROP TABLE IF EXISTS `ims_wxz_payment_order`;
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>

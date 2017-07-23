@@ -57,10 +57,10 @@ if ($_GPC['order_time_end']) {
 $pars = array();
 $pars[':uniacid'] = $_W['uniacid'];
 
-$sql = "SELECT count(*) as num FROM " . tablename('WXZ_PAYMENT_order') . " WHERE {$condition}";
+$sql = "SELECT count(*) as num FROM " . tablename('wxz_payment_order') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql, $pars);
 
-$sql = "SELECT * FROM " . tablename('WXZ_PAYMENT_order') . " WHERE {$condition} ORDER BY `create_at` DESC limit $start , $psize";
+$sql = "SELECT * FROM " . tablename('wxz_payment_order') . " WHERE {$condition} ORDER BY `create_at` DESC limit $start , $psize";
 $list = pdo_fetchall($sql, $pars);
 $pager = pagination($total, $pindex, $psize);
 

@@ -12,6 +12,18 @@ $_W['module_setting'] = $this->module['config'];
 require_once WXZ_PAYMENT . "/lib/wxpay/example/WxPay.JsApiPay.php";
 require_once WXZ_PAYMENT . '/source/Fans.class.php';
 
+$shopId = $_GPC['shop_id'];
+if (!$shopId) {
+    message('店面参数错误');
+}
+$shop_info_sql = "SELECT * FROM " . tablename('wxz_payment_shop') . " WHERE id={$shopId}";
+$shop_info = pdo_fetch($shop_info_sql);
+if (!$shop_info) {
+    message('店面不存在');
+}
+if (!$shop_info['openid']) {
+    message('店面未认证');
+}
 $tools = new JsApiPay();
 $openId = $tools->GetOpenid();
 if (!$openId) {

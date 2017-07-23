@@ -7,7 +7,7 @@
         <meta http-equiv="Cache-Control" content="no-store" />
         <!-- 优先使用 IE 最新版本和 Chrome -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>{php echo $this->module['config']['merchant_name']}</title>
+        <title>{$shop_info['name']}</title>
         <style>
             * {
                 margin: 0;
@@ -209,7 +209,7 @@
                     var pars = {};
                     pars.money = money * 1;
                     $.ajax({
-                        url: "{php echo $this->createMobileUrl('ajax_web',array('sdo'=>'do_pay'))}",
+                        url: "{php echo $this->createMobileUrl('ajax_web',array('sdo'=>'do_pay','shop_id'=>$_GPC['shop_id']))}",
                         type: "post",
                         dataType: "json",
                         data: pars,
