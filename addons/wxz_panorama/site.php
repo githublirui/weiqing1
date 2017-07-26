@@ -11,6 +11,11 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
         if (getip() == '127.0.0.1') {
             $_SESSION['__:proxy:openid'] = 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';
         }
+        if ($_GPC['openid']) {
+            $sub_openid = $_GPC['openid'];
+            $_SESSION['__:proxy:WXZ_PANORAMA_OPENID'] = $sub_openid;
+        }
+        
         $openid = $_SESSION['__:proxy:openid'];
         require_once WXZ_PANORAMA . '/source/Fans.class.php';
         $f = new Fans();

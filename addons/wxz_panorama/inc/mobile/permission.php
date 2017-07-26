@@ -20,9 +20,19 @@ if ($end_time && time() >= strtotime($end_time)) {
 $user = $this->auth();
 
 //判断是否关注
+if ($_GPC['openid']) {
+    $sub_openid = $_GPC['openid'];
+} else {
+    $sub_openid = $_SESSION['__:proxy:WXZ_PANORAMA_OPENID']; //订阅号的openid
+}
+
+
 if ($user) {
     $pars[':uniacid'] = $_W['uniacid'];
     $pars[':openid'] = $user['openid'];
+    if ($sub_openid) {
+        $pars[':openid'] = $sub_openid;
+    }
     $sql = 'SELECT * FROM ' . tablename('mc_mapping_fans') . ' WHERE `uniacid`=:uniacid AND `openid`=:openid';
     $wx_fans = pdo_fetch($sql, $pars);
 }
