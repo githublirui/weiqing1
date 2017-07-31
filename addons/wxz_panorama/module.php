@@ -52,6 +52,16 @@ class Wxz_panoramaModule extends WeModule {
                 'force_follow_url' => (string) $_GPC['force_follow_url'], //强制关注链接
             );
             if ($this->saveSettings($data)) {
+                if (function_exists('cache_build_module_info')) {
+                    cache_build_module_info($this->modulename);
+                }
+                if (function_exists('cache_build_account_modules')) {
+                    cache_build_account_modules($_W['uniacid']);
+                }
+                if (function_exists('cache_system_key')) {
+                    $setting_cachekey = cache_system_key($_W['uniacid'] . "module_setting:" . $this->modulename);
+                    cache_delete($setting_cachekey);
+                }
                 message('保存成功', 'refresh');
             }
         }
