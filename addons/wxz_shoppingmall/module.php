@@ -95,6 +95,16 @@ class Wxz_shoppingmallModule extends WeModule {
             $data = array_merge($settings, $data);
 
             if ($this->saveSettings($data)) {
+                if (function_exists('cache_build_module_info')) {
+                    cache_build_module_info($this->modulename);
+                }
+                if (function_exists('cache_build_account_modules')) {
+                    cache_build_account_modules($_W['uniacid']);
+                }
+                if (function_exists('cache_system_key')) {
+                    $setting_cachekey = cache_system_key($_W['uniacid'] . "module_setting:" . $this->modulename);
+                    cache_delete($setting_cachekey);
+                }
                 message('保存成功', 'refresh');
             }
         }

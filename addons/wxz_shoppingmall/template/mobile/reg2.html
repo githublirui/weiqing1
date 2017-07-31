@@ -51,24 +51,6 @@
                         <option value="f" {if $user['sex'] == 'f'}selected="selected"{/if}>女</option>
                     </select>
                 </div><div class="hint"></div>
-                <div class="ui-form-item ui-border-b">
-                    <label>
-                        车牌号
-                    </label>
-                    <select name="plate_number0" style="width: 10%;padding-left: 5px;margin-left:110px;">
-                        <option value="">选择</option>
-                        {loop $plateNumbers $row}
-                        <option value="{$row}" {if $userPlateNumbers[0] == $row}selected="selected"{/if}>{$row}</option>
-                        {/loop}
-                    </select>
-                    <select name="plate_number1" style="width: 10%;padding-left: 5px;margin-left:5px;">
-                        <option value="">选择</option>
-                        {loop $alphabets $row}
-                        <option value="{$row}" {if $userPlateNumbers[1] == $row}selected="selected"{/if}>{$row}</option>
-                        {/loop}
-                    </select>
-                    <input type="text"  style="width: 30%;padding-left:5px;" name="plate_number2" value="{$userPlateNumbers['2']}"  placeholder="请输入车牌号" >
-                </div><div class="hint"></div>
                 <div class="ui-btn-wrap">
                     <button type="button" id="but" onclick="return checkfrom()" class="ui-btn-lg ui-btn-primary ui-bgcolor-purple">
                         确定
@@ -128,9 +110,6 @@
                         function checkfrom() {
                             var birthday = $('input[name="birthday"]').val();
                             var sex = $('select[name="sex"]').val();
-                            var plate_number0 = $('select[name="plate_number0"]').val();
-                            var plate_number1 = $('select[name="plate_number1"]').val();
-                            var plate_number2 = $('input[name="plate_number2"]').val();
 
                             if (birthday == '') {
                                 layer.open({
@@ -150,7 +129,7 @@
 
 
                             loading();
-                            $.post("{php echo $this->createMobileUrl('ajax',array('sdo'=>'regmsg2'))}", {"birthday": birthday, "sex": sex, "plate_number0": plate_number0, "plate_number1": plate_number1, "plate_number2": plate_number2}, function (msg) {
+                            $.post("{php echo $this->createMobileUrl('ajax',array('sdo'=>'regmsg2'))}", {"birthday": birthday, "sex": sex}, function (msg) {
                                 layer.closeAll();
                                 alert(msg.error_msg);
                                 var status = msg.error_code;

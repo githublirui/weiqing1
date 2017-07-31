@@ -19,7 +19,17 @@ if (checksubmit()) {
     $pars = array('module' => $this->modulename, 'uniacid' => $_W['uniacid']);
     $row = array();
     $row['settings'] = iserializer($settings);
-    cache_build_account_modules($_W['uniacid']);
+    if (function_exists('cache_build_module_info')) {
+        cache_build_module_info($this->modulename);
+    }
+    if (function_exists('cache_build_account_modules')) {
+        cache_build_account_modules($_W['uniacid']);
+    }
+
+    if (function_exists('cache_system_key')) {
+        $setting_cachekey = cache_system_key($_W['uniacid'] . "module_setting:" . $this->modulename);
+        cache_delete($setting_cachekey);
+    }
     if (pdo_fetchcolumn("SELECT module FROM " . tablename('uni_account_modules') . " WHERE module = :module AND uniacid = :uniacid", array(':module' => $this->modulename, ':uniacid' => $_W['uniacid']))) {
         $ret = pdo_update('uni_account_modules', $row, $pars) !== false;
     } else {

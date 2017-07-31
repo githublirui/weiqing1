@@ -549,6 +549,7 @@ if ($do == 'regInvite') {
     if ($exist) {
         myAjaxReturn(0, '一天只能评论一次');
     }
+
     //商户添加评论
     $comment = $_GPC['content'];
     //添加评论
@@ -563,7 +564,13 @@ if ($do == 'regInvite') {
 
     pdo_insert('wxz_shoppingmall_comment', $inserData);
     $commentId = pdo_insertid();
-    $credit = 100; //评论添加积分数量
+    //1天评论100家也是1分
+    $sql = "SELECT COUNT(*) FROM " . tablename('wxz_shoppingmall_comment') . " WHERE `uniacid`={$_W['uniacid']} AND fans_id={$uid} AND create_date='{$date}'";
+    $exist = pdo_fetchcolumn($sql);
+    if ($exist) {
+        myAjaxReturn(1, $comment);
+    }
+    $credit = 1; //评论添加积分数量
     //评论添加积分
     $update_fans = "UPDATE  " . tablename('wxz_shoppingmall_fans') . " set credit=credit+{$credit},left_credit=left_credit+{$credit} where uid='{$uid}'"; //添加积分
     $ret1 = pdo_query($update_fans);
@@ -593,6 +600,41 @@ if ($do == 'regInvite') {
     $addresslv1 = $_GPC['addresslv1'];
     $addresses = Fans::$addresses;
     echo json_encode($addresses[$addresslv1]);
+} elseif ($do == 'sign') {
+    $uid = (int) $user['uid'];
+    //查看今天是否签到
+    $dateStart = strtotime(date('Y-m-d 00:00:00'));
+    $dateEnd = strtotime(date('Y-m-d 23:59:59'));
+    $sql = "select id from " . tablename('wxz_shoppingmall_credit_log') . " where event_type=11 AND create_at>={$dateStart} AND create_at<={$dateEnd}";
+    $totalSign = pdo_fetch($sql);
+    if ($totalSign) {
+        myAjaxReturn(0, '已签到');
+    }
+
+    $credit = $_W['module_setting']['credit_signin']; //评论添加积分数量
+    //评论添加积分
+    $update_fans = "UPDATE  " . tablename('wxz_shoppingmall_fans') . " set credit=credit+{$credit},left_credit=left_credit+{$credit} where uid='{$uid}'"; //添加积分
+    $ret1 = pdo_query($update_fans);
+
+    if ($ret1) {
+        //添加日志
+        //插入日志
+        $credit_log_data = array(
+            'uniacid' => $_W['uniacid'],
+            'fans_id' => $uid,
+            'type' => 1,
+            'operate' => 2,
+            'event_type' => 11,
+            'event_desc' => '签到添加积分',
+            'num' => $credit,
+            'status' => 2,
+            'send_time' => time(),
+            'create_at' => time(),
+        );
+        $ret = pdo_insert('wxz_shoppingmall_credit_log', $credit_log_data);
+        //添加积分
+    }
+    myAjaxReturn(1, '签到成功');
 }
 
 /**
