@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+    <application setting="true">
+        <name><![CDATA[微小智每日开眼]]></name>
+        <identifie><![CDATA[wxz_openeye]]></identifie>
+        <version><![CDATA[1.0.0]]></version>
+        <type><![CDATA[activity]]></type>
+        <ability><![CDATA[wxz_openeye]]></ability>
+        <description><![CDATA[wxz_openeye]]></description>
+        <author><![CDATA[wxz_lirui：QQ1478043077]]></author>
+        <url><![CDATA[http://bbs.we7.cc/]]></url>
+    </application>
+    <platform>
+        <subscribes>
+        </subscribes>
+        <handles>
+            <message type="image" />
+            <message type="voice" />
+            <message type="video" />
+            <message type="location" />
+            <message type="link" />
+            <message type="subscribe" />
+            <message type="qr" />
+            <message type="trace" />
+            <message type="click" />
+            <message type="enter" />
+            <message type="text" />
+        </handles>
+        <rule embed="true" />
+    </platform>
+    <bindings>
+        <menu>
+            <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
+            <entry title="用户列表" do="fans_list" state="" direct="false" />
+        </menu>
+    </bindings>
+    <install><![CDATA[
+CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_fans` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `openid` varchar(40) NOT NULL DEFAULT '',
+  `proxy` varchar(40) NOT NULL DEFAULT '',
+  `unionid` varchar(40) NOT NULL DEFAULT '',
+  `nickname` varchar(20) NOT NULL DEFAULT '',
+  `gender` varchar(2) DEFAULT '',
+  `state` varchar(20) NOT NULL DEFAULT '',
+  `city` varchar(20) NOT NULL DEFAULT '',
+  `country` varchar(20) NOT NULL DEFAULT '',
+  `avatar` varchar(500) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  KEY `uniacid` (`uniacid`),
+  KEY `openid` (`openid`),
+  KEY `proxy` (`proxy`),
+  KEY `nickname` (`nickname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        
+]]></install>
+    <uninstall><![CDATA[
+DROP TABLE IF EXISTS `ims_wxz_openeye_fans`; 
+]]></uninstall>
+    <upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

@@ -1,0 +1,72 @@
+{template 'common/header'}
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $(function () {
+        });
+    });
+</script>
+<div class="clearfix">
+    <form id="theform" class="form form-horizontal" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                系统参数
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">首页</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=index&m={$_GPC['m']}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">发现页</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=find&m={$_GPC['m']}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel-heading">
+                入口
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文标题</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="title" value="{$settings['share']['title']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文图片</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_form_field_image('img',$settings['share']['img'])}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文描述</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <textarea style="height:60px;" name="desc" class="form-control span7" cols="60">{$settings['share']['desc']}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}
