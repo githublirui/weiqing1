@@ -203,7 +203,7 @@
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">用户充值入口</label>
                     <div class="col-sm-9 col-xs-12">
@@ -220,7 +220,14 @@
                         </span>
                     </div>
                 </div>
-                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">签到入口</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=signin&m={$_GPC['m']}
+                        </span>
+                    </div>
+                </div>
                 <br/>
                 <div class="panel-heading">
                     系统参数
@@ -332,6 +339,14 @@
 
                 <div class="panel-heading">
                     积分配置
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">签到一次获取积分</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="credit_signin" value="{$settings['credit_signin']}">
+                        </span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">会员生日积分倍数</label>

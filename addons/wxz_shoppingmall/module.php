@@ -69,7 +69,7 @@ class Wxz_shoppingmallModule extends WeModule {
                 $retFansLevels = implode(',', $retFansLevels);
             }
 
-//字段验证, 并获得正确的数据$dat
+            //字段验证, 并获得正确的数据$dat
             $data = array(
                 'name' => $_GPC['name'],
                 'logo_system' => $_GPC['logo_system'],
@@ -86,8 +86,9 @@ class Wxz_shoppingmallModule extends WeModule {
                 'reg2_credit_coupon_start_date' => $_GPC['reg2_credit_coupon_start_date'], //从何时注册的新会员送优惠券
                 'reg2_credit_coupon_end_date' => $_GPC['reg2_credit_coupon_end_date'], //
                 'credit_birth_credit' => (int) $_GPC['credit_birth_credit'],
+                'credit_signin' => (int) $_GPC['credit_signin'], //签到一次获取的积分
                 'fans_levels' => $retFansLevels, //粉丝等级
-//强制关注
+                //强制关注
                 'force_follow' => (int) $_GPC['force_follow'],
                 'force_follow_url' => (string) $_GPC['force_follow_url'], //强制关注链接
             );
