@@ -42,6 +42,23 @@ $condition .= $conditionRegTime;
 $sql = "SELECT count(*) as num FROM " . tablename('wxz_shoppingmall_fans') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql);
 
+if ($_GPC['sub_type'] == 'export') {
+    require_once WXZ_SHOPPINGMALL . '/lib/WxzCsv.class.php';
+    $WxzCsv = new WxzCsv();
+    $sql = "SELECT * FROM " . tablename('wxz_shoppingmall_fans') . " WHERE {$condition} ORDER BY `credit` DESC";
+    $list = pdo_fetchall($sql);
+    $header = array('ID', '手机号');
+    $WxzCsv->createRow($header);
+    foreach ($list as $row) {
+        $data = array(
+            $row['uid'],
+            $row['mobile'],
+        );
+        $WxzCsv->createRow($data);
+    }
+    $WxzCsv->download();
+}
+
 $sql = "SELECT * FROM " . tablename('wxz_shoppingmall_fans') . " WHERE {$condition} ORDER BY `credit` DESC limit $start , $psize";
 
 $list = pdo_fetchall($sql);

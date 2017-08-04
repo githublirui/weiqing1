@@ -67,11 +67,15 @@
                     <input type="hidden" name="c" value="{$_GPC['c']}" />
                     <input type="hidden" name="a" value="{$_GPC['a']}" />
                     <input type="hidden" name="eid" value="{$_GPC['eid']}" />
+                    <input type="hidden" name="sub_type" class="sub_type" value="" />
                     <div class="y_sele y_size02">
                         <input type="text" class="form-control" id="rg_time_end" name="rg_time_end" value="{$_GPC['rg_time_end']}">
                     </div>
                     <div class="btn-group l_table_search">
                         <button type="submit" class="btn btn-success">搜 索</button>
+                    </div>
+                   <div class="btn-group l_table_search">
+                        <button type="button" name="" class="btn btn-success btn-export" value="导出">导出</button>
                     </div>
                 </form>
             </div>
@@ -174,6 +178,11 @@
 </div>
 
 <script>
+    $(".btn-export").click(function () {
+        $(".sub_type").val('export');
+        $("#frm1").submit();
+    })
+        
     function del_fans(id) {
         if (confirm("确定删除吗？")) {
             var pars = {};

@@ -6,6 +6,10 @@
 global $_W, $_GPC;
 include dirname(__FILE__) . '/permission.php';
 
+if (!$user['mobile']) {
+    header('Location: ' . $this->createMobileUrl('reg'));
+    exit;
+}
 $modulePublic = '../addons/' . $_GPC['m'] . '/static/';
 
 $firstday = date('Y-m-d 00:00:00', mktime(0, 0, 0, date('m'), 1));
