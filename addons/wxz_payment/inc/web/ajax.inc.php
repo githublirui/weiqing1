@@ -11,9 +11,9 @@ if ($do == 'del_fans') {
 } else if ($do == 'set_admin_fans') {
     $id = $_GPC['id'];
     $isCheck = $_GPC['is_check'];
-    $uodateData = [
+    $uodateData = array(
         'is_check' => $isCheck,
-    ];
+    );
     if ($isCheck == 2) {
         $uodateData['is_admin'] = 1;
     }
