@@ -15,6 +15,7 @@ if (checksubmit()) {
         'page_type' => $_GPC['page_type'],
         'group' => $_GPC['group'],
         'name' => $_GPC['name'],
+        'pic' => $_GPC['pic'],
         'time' => $_GPC['time'],
         'author' => $_GPC['author'],
         'category' => $_GPC['category'],

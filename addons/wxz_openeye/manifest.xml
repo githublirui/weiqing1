@@ -55,10 +55,30 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_fans` (
   KEY `nickname` (`nickname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-        
+CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_page` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `page` varchar(40) NOT NULL DEFAULT '' COMMENT 'index首页,hot热门,category分类,ad 广告',
+  `page_type` varchar(40) NOT NULL DEFAULT '' COMMENT 'banner轮播 list 列表 horizontal横向列表 ad广告',
+  `group` varchar(40) NOT NULL DEFAULT '' COMMENT '分组名称',
+  `pic` varchar(255) NOT NULL DEFAULT '' COMMENT '视频图片',
+  `name` varchar(40) NOT NULL DEFAULT '' COMMENT '视频名称',
+  `time` varchar(40) NOT NULL DEFAULT '' COMMENT '视频时长',
+  `author` varchar(40) NOT NULL DEFAULT '' COMMENT '视频作者',
+  `category` varchar(40) NOT NULL DEFAULT '' COMMENT '视频分类',
+  `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '作者头像',
+  `upload_date` varchar(40) NOT NULL DEFAULT '' '视频上传日期',
+  `address` varchar(255) NOT NULL DEFAULT '' '视频地址',
+  `order` int(10) NOT NULL DEFAULT 0  COMMENT '排序',
+  `create_time` int(10) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                
 ]]></install>
     <uninstall><![CDATA[
 DROP TABLE IF EXISTS `ims_wxz_openeye_fans`; 
+DROP TABLE IF EXISTS `ims_wxz_openeye_page`; 
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

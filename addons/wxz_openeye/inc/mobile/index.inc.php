@@ -17,6 +17,15 @@ if ($_W['setting']['remote']['type']) {
 
 $user = $this->auth();
 
+//获取视频列表
+$condition = "`uniacid`={$_W['uniacid']} AND page='index'";
+$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition} ORDER BY `order` DESC";
+$list = pdo_fetchall($sql, $pars);
+$result = array();
+
+foreach ($list as $row) {
+    $result[$row['page_type']][] = $row; //列表类型
+}
 
 include $this->template('index');
 ?>
