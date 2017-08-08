@@ -32,6 +32,7 @@
         <menu>
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
             <entry title="用户列表" do="fans_list" state="" direct="false" />
+            <entry title="视频列表" do="page_list" state="" direct="false" />
         </menu>
     </bindings>
     <install><![CDATA[
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_page` (
   `group` varchar(40) NOT NULL DEFAULT '' COMMENT '分组名称',
   `pic` varchar(255) NOT NULL DEFAULT '' COMMENT '视频图片',
   `name` varchar(40) NOT NULL DEFAULT '' COMMENT '视频名称',
+  `desc` varchar(500) NOT NULL DEFAULT '' COMMENT '视频说明',
   `time` varchar(40) NOT NULL DEFAULT '' COMMENT '视频时长',
   `author` varchar(40) NOT NULL DEFAULT '' COMMENT '视频作者',
   `category` varchar(40) NOT NULL DEFAULT '' COMMENT '视频分类',

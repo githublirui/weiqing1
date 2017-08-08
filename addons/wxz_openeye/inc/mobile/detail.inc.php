@@ -17,15 +17,15 @@ if ($_W['setting']['remote']['type']) {
 
 $user = $this->auth();
 
-//获取视频列表
-$condition = "`uniacid`={$_W['uniacid']} AND page='index'";
-$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition} ORDER BY `order` DESC";
-$list = pdo_fetchall($sql, $pars);
-$result = array();
+//获取视频详情
+$id = $_GPC['id'];
+$condition = "`uniacid`={$_W['uniacid']} AND id='{$id}'";
+$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition}";
+$info = pdo_fetch($sql);
 
-foreach ($list as $row) {
-    $result[$row['page_type']][] = $row; //列表类型
-}
+//随机取三个视频
+$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " order by rand() limit 3";
+$list = pdo_fetchall($sql);
 
-include $this->template('index');
+include $this->template('detail');
 ?>

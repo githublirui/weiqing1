@@ -477,3 +477,169 @@ a,input,button,img,textarea{outline:none;}
 #classifyLists .swiper-container{
 	height: 5.6rem;
 }
+
+/**************播放页面*************/
+.kyt-player {
+    background: #000;
+    height: 4.25rem;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+.video-meta{
+	padding: 0 0.25rem;
+}
+.kyt-player a, .kyt-player div, .kyt-player video {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    left: 0;
+}
+.kyt-player .play-button {
+    background-color: rgba(0,0,0,.15);
+    background-image: url('../images/icon_play@2x.3b9f9ba5.png');
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    cursor: pointer;
+    -webkit-transition: background-color .5s;
+    transition: background-color .5s;
+}
+.kyt-player .cover {
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.video-info {
+    position: relative;
+    background-size: corver;
+
+}
+.video-meta-positioner {
+    background: rgba(0,0,0,.2);
+    color: #fff;
+    border-bottom: 1px solid #fff;
+}
+.video-meta h1 {
+    font-size: 0.34rem;
+    line-height: 0.9rem;
+   	text-overflow:ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.video-meta p {
+    margin: 0;
+    margin-bottom: 12px;
+    text-overflow:ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.relate-video-list {
+    background: rgba(0,0,0,.4);
+    padding: 0.25rem 0.25rem 0 0.25rem;
+    border-bottom: 1px solid #fff;
+}
+.relate-video-list .relate-video {
+    margin-bottom: 0.25rem;
+    position: relative;
+}
+.relate-video-list .relate-video .cover {
+    background-position: 50%;
+    background-size: cover;
+    border: 1px solid hsla(0,0%,100%,.3);
+    padding-top: 25%;
+    width: 40%;
+}
+.relate-video-list .relate-video .meta {
+    left: 40%;
+    margin-left: 15px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #fff;
+}
+.relate-video-list .relate-video .meta .title {
+    font-size: 0.28rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+.relate-video-list .relate-video .meta .category {
+    font-size: 0.24rem;
+    opacity: .85;
+}
+.kyt-footer {
+    background: rgba(0,0,0,.4);
+    padding: 40px 0 60px;
+}
+.kyt-footer img {
+    display: block;
+    margin: 0 auto 0.2rem;
+    width: 1.2rem;
+}
+.kyt-footer .bottom-logo {
+    background-image: url('../images/bottom_logo@3x.556cae6b.png');
+    height: 0.94rem;
+    width: 0.9rem;
+}
+.kyt-footer div {
+    background-size: cover;
+    display: block;
+    margin: 0 auto 0.4rem;
+}
+.kyt-footer .qr-tips {
+    background: transparent;
+    color: #fff;
+    font-size: 0.24rem;
+    letter-spacing: 1px;
+    text-align: center;
+    display: block;
+    margin: 0 auto 0.2rem;
+}
+.icoLists{
+	height: 1rem;
+}
+.icoLists li{
+	float: left;
+	width: 22%;
+}
+.icoLists li a{
+	display: block;
+	line-height: 1.1rem;
+	color: #fff;
+}
+.icoLists .video-ico{
+	width: 0.45rem;
+	height: 0.45rem;
+	background: #333;
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 0.25rem;
+}
+.video-mess{
+	height: 0.6rem;
+	line-height: 0.6rem;
+	padding:0.1rem 0.25rem 0.25rem;
+}
+.video-mess .messages{
+	box-sizing:border-box;
+	height: 0.6rem;
+	background: #fff;
+	border:0;
+	border-radius: 0.06rem;
+	padding: 0 0.05rem;
+	font-size: 0.26rem;
+	color: #444;
+	width: 5.8rem;
+}
+.video-mess a{
+	border-radius: 0.06rem;
+	height: 0.6rem;
+	background: #fff;
+	font-size: 0.26rem;
+	width: 1rem;
+	display: inline-block;
+	float: right;
+	color: #444;
+	text-align: center;
+}

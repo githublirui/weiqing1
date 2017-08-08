@@ -17,124 +17,118 @@
             <div class="swiper-container swiper1" id="swiper1">
                 <span class="search-ico"></span>
                 <div class="swiper-wrapper">
+                    {php foreach($result['banner'] as $row) { }
                     <div class="swiper-slide">
-                        <a href="javascript:;">
-                            <img src="{$modulePath}images/swiper.png" />
+                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                            <img src="{$attach_url}/{$row['pic']}" />
                         </a>
                     </div>
-                    <div class="swiper-slide">
-                        <a href="javascript:;">
-                            <img src="{$modulePath}images/swiper.png" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="javascript:;">
-                            <img src="{$modulePath}images/swiper.png" />
-                        </a>
-                    </div>
+                    {php } }
                 </div>
                 <!-- 分页器 -->
                 <div class="swiper-pagination"></div>
             </div>
             <a href="javascript:;" class="more-video">更多开眼编辑精选 <span class="right-arrow"></span></a>
             <ul class="imgLists">
+                {php foreach($result['list1'] as $row) { }
                 <li>
-                    <a href="javascript:;">
-                        <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
+                    <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                        <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                     </a>
                     <div class="bigImg-bottom">
-                        <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
+                        <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
                         <div class="image-center">
-                            <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                            <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
+                            <h2 class="text-over">{$row['name']}</h2>
+                            <p class="text-over">{$row['desc']}</p>
                         </div>
-                        <div class="image-right text-over">5天前</div>
+                        <div class="image-right text-over">{$row['upload_date']}</div>
                     </div>
                 </li>
-                <li>
-                    <a href="javascript:;">
-                        <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
-                    </a>
-                    <div class="bigImg-bottom">
-                        <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
-                        <div class="image-center">
-                            <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                            <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
-                        </div>
-                        <div class="image-right text-over">5天前</div>
-                    </div>
-                </li>
+                {php } }
             </ul>
             <!-- 中间滑动 -->
             <div class="imgLists-middle">
-                <a href="javascript:;">
-                    <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
+                {php foreach($result['ad'] as $row) { }
+                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                    <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                 </a>
+                {php } }
                 <div class="swiper2-wrap">
                     <div class="swiper-container swiper2" id="swiper2">
                         <div class="swiper-wrapper">
+                            {php foreach($result['horizontal'] as $row) { }
                             <div class="swiper-slide">
-                                <a href="javascript:;" class="image">
-                                    <img src="{$modulePath}images/swiper.png" />
+                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}" class="image">
+                                    <img src="{$attach_url}/{$row['pic']}" />
                                 </a>
                                 <div class="image-bottom">
-                                    <h2 class="text-over">特条 | 雷神大战CC雷神大战 SDCC</h2>
-                                    <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
+                                    <h2 class="text-over">{$row['name']}</h2>
+                                    <p class="text-over">{$row['desc']}</p>
                                 </div>
                             </div>
-                            <div class="swiper-slide">
-                                <a href="javascript:;" class="image">
-                                    <img src="{$modulePath}images/swiper.png" />
-                                </a>
-                                <div class="image-bottom">
-                                    <h2 class="text-over">特条 | 雷神大战 SCC</h2>
-                                    <p class="text-over">雷雷神大战 SDCC</p>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="javascript:;" class="image">
-                                    <img src="{$modulePath}images/swiper.png" />
-                                </a>
-                                <div class="image-bottom">
-                                    <h2 class="text-over">特条 | 雷神大战 SDCC雷</h2>
-                                    <p class="text-over">雷神大战 S大战 SDCC雷神大战 SDCC</p>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                            </div>
+                            {php } }
+                            <!--                            <div class="swiper-slide">
+                                                            <a href="javascript:;" class="image"><span>查看全部<span></a>
+                                                                        </div>-->
                         </div>
                     </div>		
                 </div>
             </div>
             <ul class="imgLists">
+                {php foreach($result['horizontal'] as $row) { }
                 <li>
-                    <a href="javascript:;">
-                        <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
+                    <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                        <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                     </a>
                     <div class="bigImg-bottom">
-                        <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
+                        <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
                         <div class="image-center">
-                            <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                            <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
+                            <h2 class="text-over">{$row['name']}</h2>
+                            <p class="text-over">{$row['desc']}</p>
                         </div>
-                        <div class="image-right text-over">5天前</div>
+                        <div class="image-right text-over">{$row['upload_date']}</div>
                     </div>
                 </li>
-                <li>
-                    <a href="javascript:;">
-                        <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
-                    </a>
-                    <div class="bigImg-bottom">
-                        <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
-                        <div class="image-center">
-                            <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                            <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
-                        </div>
-                        <div class="image-right text-over">5天前</div>
-                    </div>
-                </li>
+                {php } }
             </ul>
             <!-- 热门分类 -->
+<!--            <div class="imgLists-hot">
+                <h1>热门分类 <a class="right-arrow"></a></h1>
+                <div class="swiper3-wrap">
+                    <div class="swiper-container swiper3" id="swiper3">
+                        <div class="swiper-wrapper">
+                            {php foreach($result['category'] as $row) { }
+                            <div class="swiper-slide">
+                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}" class="image">
+                                    <img src="{$attach_url}/{$row['pic']}" />
+                                    <p>{$row['name']}</p>
+                                </a>
+                            </div>
+                            {php } }
+                                                        <div class="swiper-slide">
+                                                            <a href="javascript:;" class="image"><span>查看全部<span></a>
+                                                                        </div>
+                        </div>
+                    </div>
+                </div>			
+            </div>-->
+            <ul class="imgLists" id="hotLists">
+                {php foreach($result['list3'] as $row) { }
+                <li>
+                    <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                        <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
+                    </a>
+                    <div class="bigImg-bottom">
+                        <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
+                        <div class="image-center">
+                            <h2 class="text-over">{$row['name']}</h2>
+                            <p class="text-over">{$row['desc']}</p>
+                        </div>
+                        <div class="image-right text-over">{$row['upload_date']}</div>
+                    </div>
+                </li>
+                {php } }
+            </ul>
         </div>
         <ul id="footer">
             <li>

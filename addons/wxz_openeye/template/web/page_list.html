@@ -35,7 +35,6 @@
                     <th>视频页面</th>
                     <th>列表类型</th>
                     <th>视频分类</th>
-                    <th>视频分组</th>
                     <th>创建日期</th>
                     <th>操作</th>
                 </tr>
@@ -66,11 +65,6 @@
                             {$row['category']}
                         </p>
                     </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['group']}
-                        </p>
-                    </td> 
                     <td>
                         <p class="form-control-static">
                             {php echo date('Y-m-d',$row['create_time'])}

@@ -42,7 +42,7 @@ var findPage = (function () {
 		scrollSelect: 0,
 		init: function () {
 			this.hotSwiperInit();
-//			this.lazyImgInit();
+			this.lazyImgInit();
 //			this.eventHandler();
 		},
 		eventHandler: function () {

@@ -25,6 +25,7 @@ class Page {
         'banner' => '轮播图片',
         'list' => '竖向列表',
         'horizontal' => '横向列表',
+        'ad' => '广告',
     );
 
     /**

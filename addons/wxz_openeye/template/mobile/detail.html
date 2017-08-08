@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
+        <title>视频详情页</title>
+        <link href="{$modulePath}css/style.css" rel="stylesheet" type="text/css">
+        <link href="{$modulePath}css/swiper.css" rel="stylesheet" type="text/css">
+        <script src="{$modulePath}js/jquery-1.11.1.min.js"></script>
+        <script src="{$modulePath}js/common.js"></script>
+        <script src="{$modulePath}js/jquery.lazyload.min.js"></script>
+        <script src="{$modulePath}js/swiper.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $("#play-button").on("touchstart mousedown", function () {
+                    $(".kyt-player .cover, #play-button").hide();
+                    $("#video")[0].play();
+                });
+            });
+        </script>
+    </head>
+    <body class="videoPage">
+        <div class="kyt-player">
+            <video id="video" playsinline="true" preload="none" src="{$info['address']}" controls=""></video>
+            <div class="cover" style="background-image: url(&quot;{$attach_url}/{$info['pic']}&quot;);"></div>
+            <div class="play-button" id="play-button"></div>
+        </div>
+        <div class="video-info" style="background-image: url(images/078b8ad2e9514d847c949909533bcdf4.jpeg);">
+            <div class="video-meta-positioner">
+                <div class="video-meta">
+                    <h1>{$info['name']}</h1>
+                    <div class="kyt-divider kyt-divider-short"></div>
+                    <p>{$info['category']} / {$info['time']}</p>
+                    <p class="description">{$info['desc']}</p>
+                </div>
+                <ul class="icoLists">
+                    <li>
+                        <a href="javascript:;">
+                            <span class="video-ico"></span>
+                            <span class="video-text">点赞</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <span class="video-ico"></span>
+                            <span class="video-text">分享</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="video-mess">
+                    <input type="text" class="messages">
+                    <a href="javascript:;">评论</a>
+                </div>
+            </div>
+            <div class="relate-video-list-positioner">
+                <div class="relate-video-list">  
+                    {php foreach($list as $row) { }
+                    <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                        <div class="relate-video">
+                            <div class="cover" style="background-image: url({$attach_url}/{$row['pic']})"></div>
+                            <div class="meta">
+                                <div class="title">{$row['name']}</div>
+                                <div class="category">#{$row['category']} / {$row['time']}</div>
+                            </div>
+                        </div>
+                    </a>
+                    {php } }
+                </div>
+            </div>
+            <div class="kyt-footer">
+                <a href="/"><div class="bottom-logo"></div></a>
+                <img src="{$modulePath}images/eyepetizer-wx-qr.243f15a2.png" >
+                <div class="qr-tips">长按二维码关注「开眼 Eyepetizer」微信公众号</div>
+            </div>
+        </div>
+    </body>
+</html>

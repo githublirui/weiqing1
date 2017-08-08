@@ -22,7 +22,7 @@ $pars[':uniacid'] = $_W['uniacid'];
 $sql = "SELECT count(*) as num FROM " . tablename('wxz_openeye_page') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql, $pars);
 
-$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition} ORDER BY `id` DESC limit $start , $psize";
+$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition} ORDER BY `order` DESC limit $start , $psize";
 $list = pdo_fetchall($sql, $pars);
 $pager = pagination($total, $pindex, $psize);
 
