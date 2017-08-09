@@ -5,7 +5,7 @@
  */
 class Order {
 
-    public static $table = 'WXZ_PAYMENT_order';
+    public static $table = 'wxz_payment_order';
 
     /**
      * 订单分类
