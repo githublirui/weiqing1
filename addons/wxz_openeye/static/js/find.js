@@ -42,26 +42,26 @@ var findPage = (function () {
 		scrollSelect: 0,
 		init: function () {
 			this.hotSwiperInit();
-			this.lazyImgInit();
-//			this.eventHandler();
+//			this.lazyImgInit();
+			this.eventHandler();
 		},
 		eventHandler: function () {
 			//滚动条到底部追加数据
-			$(window).scroll(function () {
-				var scroll_top = document.body.scrollTop || document.documentElement.scrollTop;
-				var scroll_height = document.body.scrollHeight || document.documentElement.scrollHeight;
-				var client_height = document.documentElement.clientHeight;
-				if ((scroll_top + client_height) > (scroll_height - 20)) {
-					/*热门加载数据*/
-					if (findPage.scrollSelect == 0) {
-						findPage.scrollAppendInit(scrollData);
-					} 
-					/*分类加载数据*/
-					else if (findPage.scrollSelect == 1) {
-						findPage.scrollClassifyInit(Classifydata)
-					}
-				}
-			});
+//			$(window).scroll(function () {
+//				var scroll_top = document.body.scrollTop || document.documentElement.scrollTop;
+//				var scroll_height = document.body.scrollHeight || document.documentElement.scrollHeight;
+//				var client_height = document.documentElement.clientHeight;
+//				if ((scroll_top + client_height) > (scroll_height - 20)) {
+//					/*热门加载数据*/
+//					if (findPage.scrollSelect == 0) {
+//						findPage.scrollAppendInit(scrollData);
+//					} 
+//					/*分类加载数据*/
+//					else if (findPage.scrollSelect == 1) {
+//						findPage.scrollClassifyInit(Classifydata)
+//					}
+//				}
+//			});
 
 			//导航点击事件
 			$(".tabs a").on('touchstart mousedown',function(e){

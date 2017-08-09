@@ -19,6 +19,16 @@ $condition = '`uniacid`=:uniacid';
 $pars = array();
 $pars[':uniacid'] = $_W['uniacid'];
 
+if ($_GPC['vpage']) {
+    $condition .= " AND page='{$_GPC['vpage']}'";
+}
+if ($_GPC['page_type']) {
+    $condition .= " AND page_type='{$_GPC['page_type']}'";
+}
+if ($_GPC['category']) {
+    $condition .= " AND category='{$_GPC['category']}'";
+}
+
 $sql = "SELECT count(*) as num FROM " . tablename('wxz_openeye_page') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql, $pars);
 

@@ -41,7 +41,7 @@ var indexPage = (function () {
 	return {
 		init: function () {
 			this.swiperInit();
-			this.lazyImgInit();
+//			this.lazyImgInit();
 //			this.eventHandler();
 		},
 		eventHandler: function () {

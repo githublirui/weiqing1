@@ -19,6 +19,7 @@ if (checksubmit()) {
         'time' => $_GPC['time'],
         'author' => $_GPC['author'],
         'category' => $_GPC['category'],
+        'category_desc' => $_GPC['category_desc'],
         'avatar' => $_GPC['avatar'],
         'upload_date' => $_GPC['upload_date'],
         'address' => $_GPC['address'],

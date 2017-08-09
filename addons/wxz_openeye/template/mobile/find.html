@@ -30,267 +30,147 @@
                 <div id="hotTab">
                     <div class="swiper-container swiper1" id="swiper1">
                         <div class="swiper-wrapper">
+                            {php foreach($resultHot['banner'] as $row) { }
                             <div class="swiper-slide">
-                                <a href="javascript:;">
-                                    <img src="{$modulePath}images/swiper.png" />
+                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                                    <img src="{$attach_url}/{$row['pic']}" />
                                 </a>
                             </div>
-                            <div class="swiper-slide">
-                                <a href="javascript:;">
-                                    <img src="{$modulePath}images/swiper.png" />
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="javascript:;">
-                                    <img src="{$modulePath}images/swiper.png" />
-                                </a>
-                            </div>
+                            {php } }
                         </div>
                         <!-- 分页器 -->
                         <div class="swiper-pagination" id="pagination1"></div>
                     </div>
                     <!-- 热门分类 -->
-                    <h1 class="hot-title">近 期 热 门</h1>
+                    {php foreach($resultHot['list1'] as $k=>$list) { }
+                    <h1 class="hot-title">{$k}</h1>
                     <ul class="imgLists">
+                        {php foreach($list as $row) { }
                         <li>
-                            <a href="javascript:;">
-                                <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
+                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                                <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                             </a>
                             <div class="bigImg-bottom">
-                                <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
+                                <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
                                 <div class="image-center">
-                                    <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                                    <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
+                                    <h2 class="text-over">{$row['name']}</h2>
+                                    <p class="text-over">{$row['desc']}</p>
                                 </div>
-                                <div class="image-right text-over">5天前</div>
+                                <div class="image-right text-over">{$row['upload_date']}</div>
                             </div>
                         </li>
-                        <li>
-                            <a href="javascript:;">
-                                <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
-                            </a>
-                            <div class="bigImg-bottom">
-                                <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
-                                <div class="image-center">
-                                    <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                                    <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
-                                </div>
-                                <div class="image-right text-over">5天前</div>
-                            </div>
-                        </li>
+                        {php } }
                     </ul>
+                    {php } }
 
                     <!-- 热门排行 -->
+                    {php foreach($resultHot['horizontal'] as $k=>$list) { }
                     <div class="imgLists-hot">
-                        <h1>热 门 排 行 <a class="right-arrow"></a></h1>
+                        <h1>{$k}<a class="right-arrow"></a></h1>
                         <div class="swiper3-wrap">
                             <div class="swiper-container swiper3" id="swiper3">
                                 <div class="swiper-wrapper">
+                                    {php foreach($list as $row) { }
                                     <div class="swiper-slide">
-                                        <a href="javascript:;" class="image">
-                                            <img src="{$modulePath}images/index_img.png" />
-                                            <p>#创业</p>
+                                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}" class="image">
+                                            <img src="{$attach_url}/{$row['pic']}" />
+                                            <p>{$row['name']}</p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
-                                        <a href="javascript:;" class="image">
-                                            <img src="{$modulePath}images/index_img.png" />
-                                            <p>#运动</p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="javascript:;" class="image">
-                                            <img src="{$modulePath}images/index_img.png" />
-                                            <p>#音乐</p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="javascript:;" class="image">
-                                            <img src="{$modulePath}images/index_img.png" />
-                                            <p>#开胃</p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="javascript:;" class="image">
-                                            <img src="{$modulePath}images/index_img.png" />
-                                            <p>#萌宠</p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="javascript:;" class="image"><span>查看全部<span></a>
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </div>			
-                                                    </div>
-
-                                                    <!-- 最 新 发 布 -->
-                                                    <h1 class="hot-title">最 新 发 布</h1>
-                                                    <ul class="imgLists" id="hotLists">
-                                                        <li>
-                                                            <a href="javascript:;">
-                                                                <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
-                                                            </a>
-                                                            <div class="bigImg-bottom">
-                                                                <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
-                                                                <div class="image-center">
-                                                                    <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                                                                    <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
-                                                                </div>
-                                                                <div class="image-right text-over">5天前</div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:;">
-                                                                <img class="bigImg lazy" src="{$modulePath}images/index_img.png" />
-                                                            </a>
-                                                            <div class="bigImg-bottom">
-                                                                <div class="image"><img class="lazy" src="{$modulePath}images/index_img.png" /></div>
-                                                                <div class="image-center">
-                                                                    <h2 class="text-over">特条 | 雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</h2>
-                                                                    <p class="text-over">雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC雷神大战 SDCC</p>
-                                                                </div>
-                                                                <div class="image-right text-over">5天前</div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    </div>
-                                                    <!-- 分类 -->
-                                                    <div id="classifyTab"  style="display:none">
-                                                        <div class="imgLists-hot">
-                                                            <h1>热 门 分 类 <a class="right-arrow"></a></h1>
-                                                            <div class="swiper3-wrap">
-                                                                <div class="swiper-container swiper3">
-                                                                    <div class="swiper-wrapper">
-                                                                        <div class="swiper-slide">
-                                                                            <a href="javascript:;" class="image">
-                                                                                <img src="{$modulePath}images/index_img.png" />
-                                                                                <p>#创业</p>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="swiper-slide">
-                                                                            <a href="javascript:;" class="image">
-                                                                                <img src="{$modulePath}images/index_img.png" />
-                                                                                <p>#运动</p>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="swiper-slide">
-                                                                            <a href="javascript:;" class="image">
-                                                                                <img src="{$modulePath}images/index_img.png" />
-                                                                                <p>#音乐</p>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="swiper-slide">
-                                                                            <a href="javascript:;" class="image">
-                                                                                <img src="{$modulePath}images/index_img.png" />
-                                                                                <p>#开胃</p>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="swiper-slide">
-                                                                            <a href="javascript:;" class="image">
-                                                                                <img src="{$modulePath}images/index_img.png" />
-                                                                                <p>#萌宠</p>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="swiper-slide">
+                                    {php } }
+                                    <!--                                    <div class="swiper-slide">
                                                                             <a href="javascript:;" class="image"><span>查看全部<span></a>
-                                                                                        </div>
-                                                                                        </div>
-                                                                                        </div>
-                                                                                        </div>			
-                                                                                        </div>
-                                                                                        <!-- 热门专题 -->
-                                                                                        <div class="hotSpecial">
-                                                                                            <h1 class="hot-title">热 门 专 题 <a class="right-arrow"></a></h1>
-                                                                                            <div class="swiper-container swipers" id="swiper2">
-                                                                                                <div class="swiper-wrapper">
-                                                                                                    <div class="swiper-slide">
-                                                                                                        <a href="javascript:;">
-                                                                                                            <img src="{$modulePath}images/swiper.png" />
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                    <div class="swiper-slide">
-                                                                                                        <a href="javascript:;">
-                                                                                                            <img src="{$modulePath}images/swiper.png" />
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                    <div class="swiper-slide">
-                                                                                                        <a href="javascript:;">
-                                                                                                            <img src="{$modulePath}images/swiper.png" />
-                                                                                                        </a>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <!-- 分页器 -->
-                                                                                                <div class="swiper-pagination paginations" id="pagination2"></div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <!-- 滚动条到底部加载 -->
-                                                                                        <ul id="classifyLists">
-                                                                                            <li class="classifyList">
-                                                                                                <div class="classifyList-top">
-                                                                                                    <h2>开 胃</h2>
-                                                                                                    <p>眼球和味蕾，一个都不放过</p>
-                                                                                                    <a href="#" class="concern">+关注</a>
-                                                                                                </div>
-                                                                                                <div class="swiper-container swipers" id="swipers0">
-                                                                                                    <div class="swiper-wrapper">
-                                                                                                        <div class="swiper-slide">
-                                                                                                            <a href="javascript:;">
-                                                                                                                <img src="{$modulePath}images/swiper.png" />
-                                                                                                                <h4>一分钟学烹饪：美味佳肴</h4>
-                                                                                                                <p>#开胃/4.0</p>
-                                                                                                            </a>
-                                                                                                        </div>
-                                                                                                        <div class="swiper-slide">
-                                                                                                            <a href="javascript:;">
-                                                                                                                <img src="{$modulePath}images/swiper.png" />
-                                                                                                                <h4>一分钟学烹饪：美味佳肴</h4>
-                                                                                                                <p>#开胃/4.0</p>
-                                                                                                            </a>
-                                                                                                        </div>
-                                                                                                        <div class="swiper-slide">
-                                                                                                            <a href="javascript:;">
-                                                                                                                <img src="{$modulePath}images/swiper.png" />
-                                                                                                                <h4>一分钟学烹饪：美味佳肴</h4>
-                                                                                                                <p>#开胃/4.0</p>
-                                                                                                            </a>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                    <!-- 分页器 -->
-                                                                                                    <div class="swiper-pagination paginations" id="paginations0"></div>
-                                                                                                </div>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                        </div>
-                                                                                        </div>	
-                                                                                        </div>
+                                                                                        </div>-->
+                                </div>
+                            </div>
+                        </div>			
+                    </div>
+                    {php } }
+
+                    <!-- 最 新 发 布 -->
+                    {php foreach($resultHot['list2'] as $k=>$list) { }
+                    <h1 class="hot-title">{$k}</h1>
+                    <ul class="imgLists" id="hotLists">
+                        {php foreach($list as $row) { }
+                        <li>
+                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                                <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
+                            </a>
+                            <div class="bigImg-bottom">
+                                <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}"/></div>
+                                <div class="image-center">
+                                    <h2 class="text-over">{$row['name']}</h2>
+                                    <p class="text-over">{$row['desc']}</p>
+                                </div>
+                                <div class="image-right text-over">{$row['upload_date']}</div>
+                            </div>
+                        </li>
+                        {php } }
+                    </ul>
+                    {php } }
+
+                </div>
+
+                <div id="classifyTab"  style="display:none">
+                    <!-- 滚动条到底部加载 -->
+                    {php foreach($resultCategory['horizontal'] as $k=>$list) { }
+                    <ul id="classifyLists">
+                        <li class="classifyList">
+                            <div class="classifyList-top">
+                                <h2>{$k}</h2>
+                                <p>{$category_descs[$k]}</p>
+                                <!--<a href="#" class="concern">+关注</a>-->
+                            </div>
+                            <div class="swiper-container swipers" id="swipers0">
+                                <div class="swiper-wrapper">
+                                    {php foreach($list as $row) { }
+                                    <div class="swiper-slide">
+                                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                                            <img src="{$attach_url}/{$row['avatar']}" />
+                                            <h4>{$row['name']}</h4>
+                                            <p>#{$k}/{$row['upload_date']}</p>
+                                        </a>
+                                    </div>
+                                    {php } }
+                                </div>
+                                <!-- 分页器 -->
+                                <div class="swiper-pagination paginations" id="paginations0"></div>
+                            </div>
+                        </li>
+                    </ul>
+                    {php } }
+
+                </div>
+
+            </div>	
+        </div>
 
 
-                                                                                        <ul id="footer">
-                                                                                            <li>
-                                                                                                <a href="index.html" >
-                                                                                                    <div class="foot-ico"></div>
-                                                                                                    <p>首页</p>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a href="find.html" class="active">
-                                                                                                    <div class="foot-ico"></div>
-                                                                                                    <p>发现</p>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a href="javascript:;">
-                                                                                                    <div class="foot-ico"></div>
-                                                                                                    <p>关注</p>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a href="javascript:;">
-                                                                                                    <div class="foot-ico"></div>
-                                                                                                    <p>我的</p>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                        </body>
-                                                                                        </html>
+        <ul id="footer">
+            <li>
+                <a href="index.html" >
+                    <div class="foot-ico"></div>
+                    <p>首页</p>
+                </a>
+            </li>
+            <li>
+                <a href="find.html" class="active">
+                    <div class="foot-ico"></div>
+                    <p>发现</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <div class="foot-ico"></div>
+                    <p>关注</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <div class="foot-ico"></div>
+                    <p>我的</p>
+                </a>
+            </li>
+        </ul>
+    </body>
+</html>

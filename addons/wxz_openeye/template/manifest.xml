@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_page` (
   `time` varchar(40) NOT NULL DEFAULT '' COMMENT '视频时长',
   `author` varchar(40) NOT NULL DEFAULT '' COMMENT '视频作者',
   `category` varchar(40) NOT NULL DEFAULT '' COMMENT '视频分类',
+  `category_desc` varchar(100) NOT NULL DEFAULT '' COMMENT '分类说明',
   `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '作者头像',
   `upload_date` varchar(40) NOT NULL DEFAULT '' '视频上传日期',
   `address` varchar(255) NOT NULL DEFAULT '' '视频地址',
