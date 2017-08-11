@@ -33,6 +33,7 @@
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
             <entry title="用户列表" do="fans_list" state="" direct="false" />
             <entry title="视频列表" do="page_list" state="" direct="false" />
+            <entry title="评论列表" do="comment_list" state="" direct="false" />
         </menu>
     </bindings>
     <install><![CDATA[
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_fans` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
+  `like` int(11) NOT NULL DEFAULT 0 COMMENT '点赞数',
   `page` varchar(40) NOT NULL DEFAULT '' COMMENT 'index首页,hot热门,category分类,ad 广告',
   `page_type` varchar(40) NOT NULL DEFAULT '' COMMENT 'banner轮播 list 列表 horizontal横向列表 ad广告',
   `group` varchar(40) NOT NULL DEFAULT '' COMMENT '分组名称',
@@ -77,11 +79,34 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_page` (
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-                
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `page_id` int(11) unsigned NOT NULL,
+  `fans_id` int(11) unsigned NOT NULL,
+  `create_time` int(10) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `page_id` int(11) unsigned NOT NULL,
+  `fans_id` int(11) unsigned NOT NULL,
+  `content` varchar(500) NOT NULL DEFAULT '' COMMENT '评论内容',
+  `create_time` int(10) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;      
+                  
 ]]></install>
     <uninstall><![CDATA[
 DROP TABLE IF EXISTS `ims_wxz_openeye_fans`; 
 DROP TABLE IF EXISTS `ims_wxz_openeye_page`; 
+DROP TABLE IF EXISTS `ims_wxz_openeye_comment`; 
+DROP TABLE IF EXISTS `ims_wxz_openeye_like`; 
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

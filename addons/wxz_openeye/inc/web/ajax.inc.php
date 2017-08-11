@@ -19,7 +19,7 @@ if ($do == 'del_fans') {
     }
     pdo_update('wxz_openeye_fans', $uodateData, array('uid' => $id));
 } elseif ($do == 'save_page_order') {
-    //保存商铺排序
+    //保存排序
     $ids = $_GPC['ids'];
     $orders = $_GPC['orders'];
 
@@ -30,6 +30,18 @@ if ($do == 'del_fans') {
         pdo_update('wxz_openeye_page', $data, array('id' => $id));
     }
     echo 'ok';
+    die;
+} else if ($do == 'del_page') {
+    //删除视频
+    $id = $_GPC['id'];
+    $del = pdo_delete('wxz_openeye_page', array('id' => $id));
+    echo "ok";
+    die;
+} else if ($do == 'del_comment') {
+    //删除评论
+    $id = $_GPC['id'];
+    $del = pdo_delete('wxz_openeye_comment', array('id' => $id));
+    echo "ok";
     die;
 }
 ?>

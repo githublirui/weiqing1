@@ -21,55 +21,18 @@
 <div class="clearfix">
     <div class="panel panel-default">
         <div class="panel-heading">
-            视频列表
-            &nbsp;&nbsp;
-            <a class="btn btn-success" href='{php echo $this->createWebUrl("page_add")}' id="export">添加视频</a>
+            评论列表
         </div>
         <div class="table-responsive panel-body" style="overflow:visible;">
-
-            <div class="l_table_tit clearfix">
-                <form method="get" action="" name="frm" class="l_formBar" id="frm1">
-                    <span class="y_sele_tit">页面:</span>
-                    <div class="y_sele y_size02">
-                        <select class="form-control" name="vpage" style='width:100px;'>
-                            <option value="0">不限</option>
-                            {php foreach($pages as $k=>$row) {}
-                            <option value="{$k}" {if $_GPC['vpage']==$k}selected="selected"{/if}>{$row}</option>
-                            {php } }
-                        </select>
-                    </div>
-                    <span class="y_sele_tit">列表类型</span>
-                    <div class="y_sele y_size02">
-                        <select class="form-control" name="page_type" style='width:100px;'>
-                            <option value="0">不限</option>
-                            {php foreach($pageTypes as $k=>$row) {}
-                            <option value="{$k}" {if $_GPC['page_type']==$k}selected="selected"{/if}>{$row}</option>
-                            {php } }
-                        </select>
-                    </div>
-                    <span class="y_sele_tit">视频分类</span>
-                    <div class="y_sele y_size02">
-                        <input type="text" class="form-control" name="category" value="{$_GPC['category']}">
-                    </div>
-                    <input type="hidden" name="c" value="{$_GPC['c']}" />
-                    <input type="hidden" name="a" value="{$_GPC['a']}" />
-                    <input type="hidden" name="eid" value="{$_GPC['eid']}" />
-                    <div class="btn-group l_table_search">
-                        <button type="submit" class="btn btn-success">搜 索</button>
-                    </div>
-                </form>
-            </div>
-
             <table class="table table-hover">
                 <tr>
                     <th>
                         <a class="btn btn-success save_order" href="javascript:void(0)" >保存排序</a>
                     </th>
                     <th>ID</th>
-                    <th>视频页面</th>
-                    <th>列表类型</th>
-                    <th>视频分类</th>
-                    <th>点赞数</th>
+                    <th>视频ID</th>
+                    <th>视频名称</th>
+                    <th>评论内容</th>
                     <th>创建日期</th>
                     <th>操作</th>
                 </tr>
@@ -87,22 +50,17 @@
                     </td>
                     <td>
                         <p class="form-control-static">
-                            {php echo $pages[$row['page']]}
+                            {$row['page_id']}
                         </p>
                     </td>
                     <td>
                         <p class="form-control-static">
-                            {php echo $pageTypes[$row['page_type']]}
+                            {$row['page_info']['name']}
                         </p>
                     </td>
                     <td>
                         <p class="form-control-static">
-                            {$row['category']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['like']}
+                            {$row['content']}
                         </p>
                     </td>
                     <td>
@@ -112,7 +70,6 @@
                     </td>
                     <td>
                         <p class="form-control-static">
-                            <a href='{php echo $this->createWebUrl("page_edit",array("id"=>$row["id"]))}'>编辑</a>
                             <a href="javascript:void(0)" onclick="del_coupon('{$row['id']}')">删除</a>
                         </p>
                     </td>
@@ -131,7 +88,7 @@
             var pars = {};
             pars.id = id;
             $.ajax({
-                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_page'))}",
+                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_comment'))}",
                 type: "post",
                 dataType: "html",
                 data: pars,
