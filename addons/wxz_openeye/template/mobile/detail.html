@@ -11,20 +11,20 @@
         <script src="{$modulePath}js/jquery.lazyload.min.js"></script>
         <script src="{$modulePath}js/swiper.js"></script>
         <script type="text/javascript">
-            $(function () {
-                $("#play-button").on("touchstart mousedown", function () {
+                    $(function () {
+                    $("#play-button").on("touchstart mousedown", function () {
                     $(".kyt-player .cover, #play-button").hide();
-                    $("#video")[0].play();
-                });
-            });
-        </script>
+                            $("#video")[0].play();
+                    });
+                    });</script>
     </head>
     <body class="videoPage">
-        <div class="kyt-player">
-            <video id="video" playsinline="true" preload="none" src="{$info['address']}" controls=""></video>
-            <div class="cover" style="background-image: url(&quot;{$attach_url}/{$info['pic']}&quot;);"></div>
-            <div class="play-button" id="play-button"></div>
-        </div>
+        <!--<div class="kyt-player">-->
+        <!--<video  playsinline="true" preload="none" src="{$info['address']}" controls=""></video>-->
+        <iframe style="width:100%;height:500px;" d="video" src="{$info['address']}" frameborder=0 'allowfullscreen'></iframe>
+        <!--<div class="cover" style="background-image: url(&quot;{$attach_url}/{$info['pic']}&quot;);"></div>-->
+        <!--<div class="play-button" id="play-button"></div>-->
+        <!--</div>-->
         <div class="video-info" style="background-image: url(images/078b8ad2e9514d847c949909533bcdf4.jpeg);">
             <div class="video-meta-positioner">
                 <div class="video-meta">
@@ -101,6 +101,7 @@
                     data: param,
                     success: function (dat) {
                         alert(dat);
+                        $(".messages").val('');
                     }
                 });
             })

@@ -18,14 +18,15 @@ if ($do == 'like') {
     //判断用户是否点赞
     $sql = "SELECT COUNT(*) FROM " . tablename('wxz_openeye_like') . " WHERE `uniacid`={$_W['uniacid']} AND `page_id`={$pageId} AND fans_id={$fans['uid']}";
     $count = pdo_fetchcolumn($sql);
+
     if ($count) {
         echo '已点赞';
         die;
     }
     //更新视频点赞数量
-    $update_mem = "UPDATE  " . tablename('wxz_openeye_page') . " set like=like+1 where id={$pageId}"; //消耗积分
+    $update_mem = "UPDATE  " . tablename('wxz_openeye_page') . " set `like`=`like`+1 where id={$pageId}"; //消耗积分
     $ret = pdo_query($update_mem);
-
+    
     $insert_data = array(
         'uniacid' => $_W['uniacid'],
         'fans_id' => $fans['uid'],
