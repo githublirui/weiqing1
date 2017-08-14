@@ -27,7 +27,7 @@ if ($do == 'del_fans') {
         $data = array(
             'order' => $orders[$k],
         );
-        pdo_update('wxz_openeye_page', $data, array('id' => $id));
+        pdo_update('wxz_openeye_page_position', $data, array('id' => $id));
     }
     echo 'ok';
     die;
@@ -35,6 +35,12 @@ if ($do == 'del_fans') {
     //删除视频
     $id = $_GPC['id'];
     $del = pdo_delete('wxz_openeye_page', array('id' => $id));
+    echo "ok";
+    die;
+} else if ($do == 'del_page_position') {
+    //删除视频
+    $id = $_GPC['id'];
+    $del = pdo_delete('wxz_openeye_page_position', array('id' => $id));
     echo "ok";
     die;
 } else if ($do == 'del_comment') {

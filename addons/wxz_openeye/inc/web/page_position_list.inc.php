@@ -25,16 +25,19 @@ if ($_GPC['vpage']) {
 if ($_GPC['page_type']) {
     $condition .= " AND page_type='{$_GPC['page_type']}'";
 }
-if ($_GPC['category']) {
-    $condition .= " AND category='{$_GPC['category']}'";
-}
 
-$sql = "SELECT count(*) as num FROM " . tablename('wxz_openeye_page') . " WHERE {$condition}";
+$sql = "SELECT count(*) as num FROM " . tablename('wxz_openeye_page_position') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql, $pars);
 
-$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition} ORDER BY `id` DESC limit $start , $psize";
+$sql = "SELECT * FROM " . tablename('wxz_openeye_page_position') . " WHERE {$condition} ORDER BY `order` DESC limit $start , $psize";
 $list = pdo_fetchall($sql, $pars);
+
+foreach ($list as $k => $row) {
+    $page_info_sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE id={$row['page_id']}";
+    $row['page_info'] = pdo_fetch($page_info_sql);
+    $list[$k] = $row;
+}
 $pager = pagination($total, $pindex, $psize);
 
-include $this->template('web/page_list');
+include $this->template('web/page_position_list');
 ?>

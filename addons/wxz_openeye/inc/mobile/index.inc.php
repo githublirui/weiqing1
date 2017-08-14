@@ -19,8 +19,15 @@ $user = $this->auth();
 
 //获取视频列表
 $condition = "`uniacid`={$_W['uniacid']} AND page='index'";
-$sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE {$condition} ORDER BY `order` DESC";
+$sql = "SELECT * FROM " . tablename('wxz_openeye_page_position') . " WHERE {$condition} ORDER BY `order` DESC";
 $list = pdo_fetchall($sql, $pars);
+
+foreach ($list as $k => $row) {
+    $page_info_sql = "SELECT * FROM " . tablename('wxz_openeye_page') . " WHERE id={$row['page_id']}";
+    $page_info = pdo_fetch($page_info_sql);
+    $list[$k] = array_merge($page_info, $row);
+}
+
 $result = array();
 
 foreach ($list as $row) {

@@ -32,7 +32,7 @@
                         <div class="swiper-wrapper">
                             {php foreach($resultHot['banner'] as $row) { }
                             <div class="swiper-slide">
-                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                     <img src="{$attach_url}/{$row['pic']}" />
                                 </a>
                             </div>
@@ -47,7 +47,7 @@
                     <ul class="imgLists">
                         {php foreach($list as $row) { }
                         <li>
-                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                 <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                             </a>
                             <div class="bigImg-bottom">
@@ -72,7 +72,7 @@
                                 <div class="swiper-wrapper">
                                     {php foreach($list as $row) { }
                                     <div class="swiper-slide">
-                                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}" class="image">
+                                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}" class="image">
                                             <img src="{$attach_url}/{$row['pic']}" />
                                             <p>{$row['name']}</p>
                                         </a>
@@ -93,7 +93,7 @@
                     <ul class="imgLists" id="hotLists">
                         {php foreach($list as $row) { }
                         <li>
-                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                 <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                             </a>
                             <div class="bigImg-bottom">
@@ -125,7 +125,7 @@
                                 <div class="swiper-wrapper">
                                     {php foreach($list as $row) { }
                                     <div class="swiper-slide">
-                                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['id']))}">
+                                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                             <img src="{$attach_url}/{$row['avatar']}" />
                                             <h4>{$row['name']}</h4>
                                             <p>#{$k}/{$row['upload_date']}</p>

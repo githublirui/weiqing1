@@ -21,26 +21,6 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">视频页面</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <select class="level form-control" name='page'>
-                            {php foreach($pages as $k=>$page) {}
-                            <option value="{$k}" {if $page_info['page']==$k}selected="selected"{/if}>{$page}</option>
-                            {php } }
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">列表类型</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <select class="level form-control" name='page_type'>
-                            {php foreach($pageTypes as $k=>$row) {}
-                            <option value="{$k}" {if $page_info['page_type']==$k}selected="selected"{/if}>{$row}</option>
-                            {php } }
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">视频分类</label>
                     <div class="col-sm-9 col-xs-12">
                         <input type="text" id="scan_title" class="form-control span7" placeholder="" name="category" value="{$page_info['category']}">
@@ -52,12 +32,6 @@
                         <input type="text" id="scan_title" class="form-control span7" placeholder="" name="category_desc" value="{$page_info['category_desc']}">
                     </div>
                 </div>
-                <!--                <div class="form-group">
-                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">分组名称</label>
-                                    <div class="col-sm-9 col-xs-12">
-                                        <input type="text" id="scan_title" class="form-control span7" placeholder="同一分组名，会放到相同列表类型里" name="group" value="{$page_info['group']}">
-                                    </div>
-                                </div>-->
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">视频名称</label>
                     <div class="col-sm-9 col-xs-12">

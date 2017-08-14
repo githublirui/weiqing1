@@ -19,8 +19,6 @@ load()->web('tpl');
 if (checksubmit()) {
     //字段验证, 并获得正确的数据$dat
     $data = array(
-        'page' => $_GPC['page'],
-        'page_type' => $_GPC['page_type'],
         'name' => $_GPC['name'],
         'desc' => $_GPC['desc'],
         'pic' => $_GPC['pic'],
