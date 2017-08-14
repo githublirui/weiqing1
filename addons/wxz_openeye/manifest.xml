@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[微小智每日开眼]]></name>
         <identifie><![CDATA[wxz_openeye]]></identifie>
-        <version><![CDATA[1.0.0]]></version>
+        <version><![CDATA[2.0.0]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_openeye]]></ability>
         <description><![CDATA[wxz_openeye]]></description>
