@@ -408,8 +408,9 @@ if($do == 'delete') {
 						if ($m == 'userapi') {
 				$reply_module = 'userapi';
 			} else {
-				$reply_module = 'reply';
+				$reply_module = $reply['module'];
 			}
+                      
 			$module = WeUtility::createModule($reply_module);
 			if (method_exists($module, 'ruleDeleted')) {
 				$module->ruleDeleted($rid);
