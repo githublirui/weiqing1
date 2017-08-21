@@ -146,7 +146,6 @@ if (!pdo_tableexists('wxz_panorama_reply_setting')) {
   `desc` TEXT NOT NULL COMMENT '描述',
   `img` VARCHAR(255) NOT NULL COMMENT '图片',
   `link` VARCHAR(255) NOT NULL COMMENT '链接地址',
-  `update_at` INT(11) NOT NULL,
   `create_at` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;");

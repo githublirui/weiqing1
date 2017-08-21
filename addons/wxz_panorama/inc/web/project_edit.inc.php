@@ -14,6 +14,7 @@ if (!$project_info) {
 load()->web('tpl');
 if (checksubmit()) {
     $data = array(
+        'aid' => (int) $_GPC['aid'],
         'name' => $_GPC['name'],
         'update_at' => time()
     );
