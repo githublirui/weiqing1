@@ -19,9 +19,9 @@ if (checksubmit()) {
     );
 
     if (pdo_update('wxz_panorama_project', $data, array('id' => $id))) {
-        message('更新成功', $this->createWebUrl('project_list'));
+        message('更新成功', $this->createWebUrl('project_list', array('aid' => $project_info['aid'])));
     } else {
-        message('更新失败', $this->createWebUrl('project_add'));
+        message('更新失败', $this->createWebUrl('project_edit', array('id' => $id)));
     }
 }
 include $this->template('web/project_edit');

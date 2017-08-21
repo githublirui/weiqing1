@@ -97,3 +97,57 @@ if (!pdo_tableexists('wxz_panorama_scene_hotspot')) {
 if (!pdo_fieldexists('wxz_panorama_project_config', 'config')) {
     pdo_query("ALTER TABLE " . tablename('wxz_panorama_project_config') . " ADD `config` text COMMENT '配置详情';");
 }
+
+if (!pdo_fieldexists('wxz_panorama_fans', 'sub_openid')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_fans') . " ADD `sub_openid` varchar(255) COMMENT '订阅号openid';");
+}
+
+if (!pdo_fieldexists('wxz_panorama_win', 'aid')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_win') . " ADD `aid` int(11) COMMENT '活动id';");
+}
+
+if (!pdo_fieldexists('wxz_panorama_award', 'aid')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_award') . " ADD `aid` int(11) COMMENT '活动id';");
+}
+
+if (!pdo_fieldexists('wxz_panorama_page', 'aid')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_page') . " ADD `aid` int(11) COMMENT '活动id';");
+}
+
+if (!pdo_fieldexists('wxz_panorama_project', 'aid')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_project') . " ADD `aid` int(11) COMMENT '活动id';");
+}
+
+if (!pdo_tableexists('wxz_panorama_activity')) {
+    pdo_query("CREATE TABLE IF NOT EXISTS " . tablename('wxz_panorama_activity') . " (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '活动名称',
+  `date_start` date NOT NULL COMMENT '活动开始时间',
+  `date_end` date NOT NULL COMMENT '活动结束时间',
+  `max_award_num` int(10) NOT NULL COMMENT '单个用户最大中奖次数',
+  `verification_code` varchar(50) NOT NULL COMMENT '核销码',
+  `force_follow` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否强制关注',
+  `force_follow_url` varchar(255) NOT NULL DEFAULT '0' COMMENT '强制关注url',
+  `update_time` int(10) NOT NULL COMMENT '活动修改时间',
+  `create_time` int(10) NOT NULL COMMENT '活动创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+}
+
+if (!pdo_tableexists('wxz_panorama_reply_setting')) {
+    pdo_query("CREATE TABLE IF NOT EXISTS " . tablename('wxz_panorama_reply_setting') . " (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `aid` INT(11) NOT NULL,
+  `rid` INT(11) NOT NULL,
+  `title` VARCHAR(500) NOT NULL COMMENT '标题',
+  `desc` TEXT NOT NULL COMMENT '描述',
+  `img` VARCHAR(255) NOT NULL COMMENT '图片',
+  `link` VARCHAR(255) NOT NULL COMMENT '链接地址',
+  `update_at` INT(11) NOT NULL,
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;");
+}

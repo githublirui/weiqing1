@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[2.0.9]]></version>
+        <version><![CDATA[2.1.1]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -31,6 +31,7 @@
     <bindings>
         <menu>
             <entry title="粉丝列表" do="fans_list" state="" direct="false" />
+            <entry title="活动列表" do="activity_list" state="" direct="false" />
             <entry title="中奖列表" do="win_list" state="" direct="false" />
             <entry title="项目列表" do="project_list" state="" direct="false" />
             <entry title="奖品设置" do="award_list" state="" direct="false" />
@@ -39,9 +40,40 @@
         </menu>
     </bindings>
     <install><![CDATA[
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '活动名称',
+  `date_start` date NOT NULL COMMENT '活动开始时间',
+  `date_end` date NOT NULL COMMENT '活动结束时间',
+  `max_award_num` int(10) NOT NULL COMMENT '单个用户最大中奖次数',
+  `verification_code` varchar(50) NOT NULL COMMENT '核销码',
+  `force_follow` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否强制关注',
+  `force_follow_url` varchar(255) NOT NULL DEFAULT '0' COMMENT '强制关注url',
+  `update_time` int(10) NOT NULL COMMENT '活动修改时间',
+  `create_time` int(10) NOT NULL COMMENT '活动创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_reply_setting` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `aid` INT(11) NOT NULL,
+  `rid` INT(11) NOT NULL,
+  `title` VARCHAR(500) NOT NULL COMMENT '标题',
+  `desc` TEXT NOT NULL COMMENT '描述',
+  `img` VARCHAR(255) NOT NULL COMMENT '图片',
+  `link` VARCHAR(255) NOT NULL COMMENT '链接地址',
+  `update_at` INT(11) NOT NULL,
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8; 
+                
 CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_win` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
+  `aid` int(11) NOT NULL COMMENT '活动id',
   `fans_id` int(11) NOT NULL COMMENT '粉丝id',
   `pano` int(11) NOT NULL COMMENT '场景id',
   `award_id` int(11) NOT NULL COMMENT '奖品id',
@@ -57,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_win` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_fans` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
+  `sub_openid` varchar(40) NOT NULL DEFAULT '',
   `openid` varchar(40) NOT NULL DEFAULT '',
   `proxy` varchar(40) NOT NULL DEFAULT '',
   `unionid` varchar(40) NOT NULL DEFAULT '',
@@ -97,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_payrecord` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_award` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `aid` int(11) NOT NULL COMMENT '活动id',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '奖品类型1:现金 2实物',
   `name` varchar(200) NOT NULL DEFAULT '' COMMENT '奖品名称',
   `min_money` int(11) NOT NULL DEFAULT '0' COMMENT '现金最小金额',
@@ -131,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_scene` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_page` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `uniacid` INT(11) NOT NULL,
+  `aid` int(11) NOT NULL COMMENT '活动id',
   `type` VARCHAR(50) NOT NULL COMMENT '页面类型',
   `title` VARCHAR(500) NOT NULL COMMENT '标题',
   `desc` TEXT NOT NULL COMMENT '描述',
@@ -145,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_page` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(10) unsigned NOT NULL COMMENT '',
+  `aid` int(11) NOT NULL COMMENT '活动id',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '项目名称',
   `sort_order` int(10) NOT NULL DEFAULT 0 COMMENT '排序',
   `update_at` varchar(255) NOT NULL DEFAULT '0' COMMENT '修改时间',
@@ -184,6 +220,8 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_scene_hotspot` (
 
 ]]></install>
     <uninstall><![CDATA[
+DROP TABLE IF EXISTS `ims_wxz_panorama_reply_setting`;
+DROP TABLE IF EXISTS `ims_wxz_panorama_activity`;
 DROP TABLE IF EXISTS `ims_wxz_panorama_win`;
 DROP TABLE IF EXISTS `ims_wxz_panorama_fans`; 
 DROP TABLE IF EXISTS `ims_wxz_panorama_payrecord`;

@@ -21,6 +21,12 @@ if ($do == 'del_page') {
     Scene::delById($id);
     echo "ok";
     die;
+} else if ($do == 'del_activity') {
+    require_once WXZ_PANORAMA . '/source/Activity.class.php';
+    $id = $_GPC['id'];
+    Activity::delById($id);
+    echo "ok";
+    die;
 } else if ($do == 'del_project') {
     require_once WXZ_PANORAMA . '/source/Project.class.php';
     $id = $_GPC['id'];

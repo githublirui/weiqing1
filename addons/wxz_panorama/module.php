@@ -11,20 +11,48 @@ defined('IN_IA') or exit('Access Denied');
 class Wxz_panoramaModule extends WeModule {
 
     public function fieldsFormDisplay($rid = 0) {
-        //要嵌入规则编辑页的自定义内容，这里 $rid 为对应的规则编号，新增时为 0
+        global $_W;
+        if (!empty($rid)) {
+            $setting = pdo_fetch('SELECT * FROM ' . tablename('wxz_wxz_panorama_reply_setting') . ' WHERE `uniacid` = :uniacid and `rid` = :rid', array(':uniacid' => $_W['uniacid'], ':rid' => $rid));
+        }
+
+        //获取所有活动
+        $sql = "SELECT * FROM " . tablename('wxz_panorama_activity') . " ORDER BY `id` DESC";
+        $activitys = pdo_fetchall($sql);
+
+        load()->web('tpl');
+        include $this->template('form');
     }
 
     public function fieldsFormValidate($rid = 0) {
-        //规则编辑保存时，要进行的数据验证，返回空串表示验证无误，返回其他字符串将呈现为错误提示。这里 $rid 为对应的规则编号，新增时为 0
+//规则编辑保存时，要进行的数据验证，返回空串表示验证无误，返回其他字符串将呈现为错误提示。这里 $rid 为对应的规则编号，新增时为 0
         return '';
     }
 
     public function fieldsFormSubmit($rid) {
-        //规则验证无误保存入库时执行，这里应该进行自定义字段的保存。这里 $rid 为对应的规则编号
+        global $_GPC, $_W;
+        $aid = intval($_GPC['aid']);
+
+
+        $data = array(
+            'uniacid' => $_W['uniacid'],
+            'aid' => $_GPC['aid'],
+            'title' => $_GPC['title'],
+            'img' => $_GPC['img'],
+            'desc' => $_GPC['desc'],
+            'link' => $_GPC['link'],
+        );
+
+        if ($aid) {
+            pdo_update('wxz_panorama_reply_setting', $data, array('rid' => $rid));
+        } else {
+            $data['rid'] = $rid;
+            pdo_insert('wxz_panorama_reply_setting', $data);
+        }
     }
 
     public function ruleDeleted($rid) {
-        //删除规则时调用，这里 $rid 为对应的规则编号
+//删除规则时调用，这里 $rid 为对应的规则编号
     }
 
     public function settingsDisplay($settings) {
