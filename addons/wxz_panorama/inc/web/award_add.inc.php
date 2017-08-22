@@ -2,11 +2,17 @@
 
 global $_W, $_GPC;
 
+$aid = intval($_GPC['aid']);
+
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
+$activitys = Activity::getAll('id,name');
+
 if (checksubmit()) {
     $_GPC['name'] = $_GPC['type'] == 1 ? '现金' : $_GPC['name'];
     //字段验证, 并获得正确的数据$dat
     $data = array(
         'uniacid' => $_W['uniacid'],
+        'aid' => (int) $_GPC['aid'],
         'type' => (int) $_GPC['type'],
         'min_money' => (int) $_GPC['min_money'],
         'max_money' => (int) $_GPC['max_money'],

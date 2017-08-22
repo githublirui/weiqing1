@@ -12,9 +12,9 @@ class Page {
      * @var type 
      */
     public static $types = array(
-        1 => '首页背景图1(640x1154)',
-        2 => '首页背景图2(640x1158)',
-        3 => '首页背景图3(640x1147)',
+        1 => '首页背景图1',
+        2 => '首页背景图2',
+        3 => '首页背景图3',
         4 => '领奖时间',
         5 => '领奖电话',
         6 => '领奖地址',
@@ -34,7 +34,7 @@ class Page {
      * 获取页面配置
      * @param type $type 数组或数字
      */
-    public static function getPage($type, $field = '*') {
+    public static function getPage($aid, $type, $field = '*') {
         global $_W;
         $result = array();
 
@@ -42,7 +42,7 @@ class Page {
             return FALSE;
         }
 
-        $condition = "uniacid={$_W['uniacid']} AND isdel=0";
+        $condition = "uniacid={$_W['uniacid']} AND aid={$aid}";
         if (is_numeric($type)) {
             $condition .= " AND type='{$type}'";
         } else if (is_array($type)) {
@@ -60,15 +60,17 @@ class Page {
 
     /**
      * 初始化页面配置
+     * $aid 活动ID
      */
-    public static function initPages() {
+    public static function initPages($aid) {
         global $_W;
         $pageTypes = self::getPageTypes();
         foreach ($pageTypes as $type => $pageType) {
-            $page = self::getPage($type, 'id');
+            $page = self::getPage($aid, $type, 'id');
             if (!$page) {
                 $insertData = array(
                     'uniacid' => $_W['uniacid'],
+                    'aid' => $aid,
                     'type' => $type,
                     'create_at' => time(),
                 );

@@ -3,7 +3,7 @@
 global $_W, $_GPC;
 
 $id = $_GPC['id'];
-$info_sql = "SELECT * FROM " . tablename('wxz_panorama_page') . " WHERE id={$id} AND isdel=0";
+$info_sql = "SELECT * FROM " . tablename('wxz_panorama_page') . " WHERE id={$id}";
 $info = pdo_fetch($info_sql);
 if (!$info) {
     message('页面配置不存在', $this->createWebUrl('page_list'));
@@ -30,7 +30,7 @@ if (checksubmit()) {
     );
 
     if (pdo_update('wxz_panorama_page', $data, array('id' => $id))) {
-        message('更新成功', $this->createWebUrl('page_list'));
+        message('更新成功', $this->createWebUrl('page_list', array('aid' => $info['aid'])));
     } else {
         message('更新失败', $this->createWebUrl('page_edit', array('id' => $id)));
     }

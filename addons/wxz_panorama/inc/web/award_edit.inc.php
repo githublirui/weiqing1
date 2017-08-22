@@ -15,6 +15,7 @@ if (checksubmit()) {
     $data = array(
         'name' => $_GPC['name'],
         'num' => (int) $_GPC['num'],
+        'aid' => (int) $_GPC['aid'],
         'probability' => $_GPC['probability'],
     );
 
@@ -36,7 +37,7 @@ if (checksubmit()) {
     }
 
     if (pdo_update('wxz_panorama_award', $data, array('id' => $id))) {
-        message('更新成功', $this->createWebUrl('award_list'));
+        message('更新成功', $this->createWebUrl('award_list', array('aid' => $award_info['aid'])));
     } else {
         message('更新失败', $this->createWebUrl('award_add'));
     }

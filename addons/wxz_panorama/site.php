@@ -15,7 +15,7 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
             $sub_openid = $_GPC['openid'];
             $_SESSION['__:proxy:WXZ_PANORAMA_OPENID'] = $sub_openid;
         }
-        
+
         $openid = $_SESSION['__:proxy:openid'];
         require_once WXZ_PANORAMA . '/source/Fans.class.php';
         $f = new Fans();
@@ -71,6 +71,10 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
                 $user['country'] = $info['country'];
                 $user['client_ip'] = getip();
 
+                if ($_GPC['openid']) {
+                    $sub_openid = $_GPC['openid'];
+                    $user['sub_openid'] = $sub_openid;
+                }
                 if (!empty($user['avatar'])) {
                     $user['avatar'] = rtrim($user['avatar'], '0');
                     $user['avatar'] .= '132';
