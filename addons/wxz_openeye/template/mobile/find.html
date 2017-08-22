@@ -30,7 +30,7 @@
                 <div id="hotTab">
                     <div class="swiper-container swiper1" id="swiper1">
                         <div class="swiper-wrapper">
-                            {php foreach($resultHot['banner'] as $row) { }
+                            {php foreach((array)$resultHot['banner'] as $row) { }
                             <div class="swiper-slide">
                                 <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                     <img src="{$attach_url}/{$row['pic']}" />
@@ -42,10 +42,10 @@
                         <div class="swiper-pagination" id="pagination1"></div>
                     </div>
                     <!-- 热门分类 -->
-                    {php foreach($resultHot['list1'] as $k=>$list) { }
+                    {php foreach((array)$resultHot['list1'] as $k=>$list) { }
                     <h1 class="hot-title">{$k}</h1>
                     <ul class="imgLists">
-                        {php foreach($list as $row) { }
+                        {php foreach((array)$list as $row) { }
                         <li>
                             <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                 <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
@@ -64,13 +64,13 @@
                     {php } }
 
                     <!-- 热门排行 -->
-                    {php foreach($resultHot['horizontal'] as $k=>$list) { }
+                    {php foreach((array)$resultHot['horizontal'] as $k=>$list) { }
                     <div class="imgLists-hot">
                         <h1>{$k}<a class="right-arrow"></a></h1>
                         <div class="swiper3-wrap">
                             <div class="swiper-container swiper3" id="swiper3">
                                 <div class="swiper-wrapper">
-                                    {php foreach($list as $row) { }
+                                    {php foreach((array)$list as $row) { }
                                     <div class="swiper-slide">
                                         <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}" class="image">
                                             <img src="{$attach_url}/{$row['pic']}" />
@@ -88,10 +88,10 @@
                     {php } }
 
                     <!-- 最 新 发 布 -->
-                    {php foreach($resultHot['list2'] as $k=>$list) { }
+                    {php foreach((array)$resultHot['list2'] as $k=>$list) { }
                     <h1 class="hot-title">{$k}</h1>
                     <ul class="imgLists" id="hotLists">
-                        {php foreach($list as $row) { }
+                        {php foreach((array)$list as $row) { }
                         <li>
                             <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                 <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
@@ -113,7 +113,7 @@
 
                 <div id="classifyTab"  style="display:none">
                     <!-- 滚动条到底部加载 -->
-                    {php foreach($resultCategory['horizontal'] as $k=>$list) { }
+                    {php foreach((array)$resultCategory['horizontal'] as $k=>$list) { }
                     <ul id="classifyLists">
                         <li class="classifyList">
                             <div class="classifyList-top">
@@ -123,7 +123,7 @@
                             </div>
                             <div class="swiper-container swipers" id="swipers0">
                                 <div class="swiper-wrapper">
-                                    {php foreach($list as $row) { }
+                                    {php foreach((array)$list as $row) { }
                                     <div class="swiper-slide">
                                         <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                                             <img src="{$attach_url}/{$row['avatar']}" />

@@ -17,7 +17,7 @@
             <div class="swiper-container swiper1" id="swiper1">
                 <span class="search-ico"></span>
                 <div class="swiper-wrapper">
-                    {php foreach($result['banner'] as $row) { }
+                    {php foreach((array)$result['banner'] as $row) { }
                     <div class="swiper-slide">
                         <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                             <img src="{$attach_url}/{$row['pic']}" />
@@ -30,7 +30,7 @@
             </div>
             <a href="javascript:;" class="more-video">更多开眼编辑精选 <span class="right-arrow"></span></a>
             <ul class="imgLists">
-                {php foreach($result['list1'] as $row) { }
+                {php foreach((array)$result['list1'] as $row) { }
                 <li>
                     <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                         <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
@@ -48,7 +48,7 @@
             </ul>
             <!-- 中间滑动 -->
             <div class="imgLists-middle">
-                {php foreach($result['ad'] as $row) { }
+                {php foreach((array)$result['ad'] as $row) { }
                 <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                     <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                 </a>
@@ -56,7 +56,7 @@
                 <div class="swiper2-wrap">
                     <div class="swiper-container swiper2" id="swiper2">
                         <div class="swiper-wrapper">
-                            {php foreach($result['horizontal'] as $row) { }
+                            {php foreach((array)$result['horizontal'] as $row) { }
                             <div class="swiper-slide">
                                 <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}" class="image">
                                     <img src="{$attach_url}/{$row['pic']}" />
@@ -75,7 +75,7 @@
                 </div>
             </div>
             <ul class="imgLists">
-                {php foreach($result['horizontal'] as $row) { }
+                {php foreach((array)$result['horizontal'] as $row) { }
                 <li>
                     <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                         <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
@@ -113,7 +113,7 @@
                 </div>			
             </div>-->
             <ul class="imgLists" id="hotLists">
-                {php foreach($result['list3'] as $row) { }
+                {php foreach((array)$result['list3'] as $row) { }
                 <li>
                     <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                         <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />

@@ -34,13 +34,18 @@ foreach ($list as $row) {
     $result[$row['page_type']][] = $row; //列表类型
 }
 
-$list1Num = 2;
-$list2Num = 2;
-//截取list
-$result['list1'] = array_slice($result['list'], 0, $list1Num); //显示5个
-//剩余列表
-$result['list2'] = array_slice($result['list'], $list1Num, $list2Num); //剩余列表
-$result['list3'] = array_slice($result['list'], $list1Num + $list2Num, count($result['list'])); //剩余列表
+$list1Num = 5;
+$list2Num = 5;
+$result['list1'] = [];
+$result['list2'] = [];
+$result['list3'] = [];
+if ($result['list']) {
+    //截取list
+    $result['list1'] = array_slice($result['list'], 0, $list1Num); //显示5个
+    //剩余列表
+    $result['list2'] = array_slice($result['list'], $list1Num, $list2Num); //剩余列表
+    $result['list3'] = array_slice($result['list'], $list1Num + $list2Num, count($result['list'])); //剩余列表
+}
 
 include $this->template('index');
 ?>
