@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>{php echo $this->module['config']['active_name'];}</title>
+        <title>{$activityInfo['name']}</title>
         <link href="{$modulePath}static/css/css.css" rel="stylesheet"/>
         <meta name="viewport" id="viewport" content="width=device-width,user-scalable=no">
         <meta name="keywords" content="">
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div class="btn1 ani"  swiper-animate-effect="shake" swiper-animate-duration="0.7s" swiper-animate-delay="1.3s">
-                        <input style="cursor: pointer;" type="button" onClick="location.href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}'"></div>
+                        <input style="cursor: pointer;" type="button" onClick="location.href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&aid={$aid}'"></div>
                     <footer><a href="{$pageContents[7]['title']}">{$pageContents[8]['title']}</a></footer>
                 </section>
 				

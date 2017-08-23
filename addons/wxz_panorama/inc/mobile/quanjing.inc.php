@@ -12,11 +12,18 @@ global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 $_W['module_config'] = $this->module['config'];
 
+$aid = intval($_GPC['aid']); //活动id
+if (!$aid) {
+    message('活动参数错误', $this->createMobileUrl('index'));
+}
+
+$activityInfo = Activity::getById($aid);
+
 $pid = $_GPC['pid']; //默认第一个项目
 if ($pid) {
     $projectInfo = Project::getById($pid, 'id');
 } else {
-    $projectInfo = Project::getFirstPro();
+    $projectInfo = Project::getFirstPro($aid);
 }
 
 if (!$projectInfo) {
@@ -36,7 +43,6 @@ $is_fans = pdo_fetch($sql, $pars);
 //    include $this->template(get_real_tpl('input_msg'));
 //    die();
 //}
-
 //if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
 //    $show_msg = "<p>恭喜你，获得了</p><p id='black'>" . $is_win['award'] . "</p><p>分享后可以领取，实物奖品需到售楼处领取</p>";
 //    include $this->template(get_real_tpl('msg'));

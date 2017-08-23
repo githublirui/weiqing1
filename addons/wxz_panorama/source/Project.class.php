@@ -33,10 +33,14 @@ class Project {
 
     /**
      * 获取第一个项目
+     * $aid 活动id
      */
-    public static function getFirstPro() {
+    public static function getFirstPro($aid) {
         global $_W;
-        $condition = "uniacid={$_W['uniacid']}";
+        if (!$aid) {
+            return;
+        }
+        $condition = "uniacid={$_W['uniacid']} AND aid={$aid}";
         $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc limit 1";
         return pdo_fetch($sql);
     }
