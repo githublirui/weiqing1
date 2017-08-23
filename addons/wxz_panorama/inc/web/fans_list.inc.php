@@ -2,10 +2,9 @@
 
 global $_W, $_GPC;
 
-require_once WXZ_PANORAMA . '/source/Activity.class.php';
-$activitys = Activity::getAll('id,name');
-
-$aid = intval($_GPC['aid']);
+$filters = array();
+$filters['uniacid'] = $_W['uniacid'];
+$filters['nickname'] = $_GPC['nickname'];
 
 $pindex = intval($_GPC['page']);
 $pindex = max($pindex, 1);
@@ -15,10 +14,6 @@ $start = ($pindex - 1) * $psize;
 $condition = '`uniacid`=:uniacid';
 $pars = array();
 $pars[':uniacid'] = $_W['uniacid'];
-
-if ($aid) {
-    $condition .= " AND aid={$aid}";
-}
 
 $sql = "SELECT count(*) as num FROM " . tablename('wxz_panorama_fans') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql, $pars);

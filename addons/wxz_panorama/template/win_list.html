@@ -1,56 +1,13 @@
 {template 'common/header'}
-<style>
-    .l_tableWrap .l_table_tit .l_formBar {
-        border: 0;
-        float: left;
-        font-size: 0;
-    }
-    .y_sele {
-        display: inline-block;
-        padding: 5px 0 12px 12px;
-    }
-    .y_sele_tit {
-        font-size: 14px;
-        padding: 0 0 0 10px;
-    }
-    .l_table_search{
-        margin-left: 10px;
-        margin-bottom: 5px;
-    }
-</style>
 <div class="clearfix">
     <div class="panel panel-default">
         <div class="panel-heading">
             用户列表
         </div>
         <div class="table-responsive panel-body" style="overflow:visible;">
-
-            <div class="l_table_tit clearfix">
-                <form method="get" action="" name="frm" class="l_formBar" id="frm1">
-                    <span class="y_sele_tit">活动:</span>
-                    <div class="y_sele y_size02">
-                        <select class="form-control" name="aid" style='width:100px;'>
-                            <option value="0">不限</option>
-                            {php foreach($activitys as $k=>$row) {}
-                            <option value="{$row['id']}" {if $aid==$row['id']}selected="selected"{/if}>{$row['name']}</option>
-                            {php } }
-                        </select>
-                    </div>
-                    <input type="hidden" name="c" value="{$_GPC['c']}" />
-                    <input type="hidden" name="m" value="{$_GPC['m']}" />
-                    <input type="hidden" name="do" value="{$_GPC['do']}" />
-                    <input type="hidden" name="a" value="{$_GPC['a']}" />
-                    <input type="hidden" name="eid" value="{$_GPC['eid']}" />
-                    <div class="btn-group l_table_search">
-                        <button type="submit" class="btn btn-success">搜 索</button>
-                    </div>
-                </form>
-            </div>
-
             <table class="table table-hover">
                 <tr>
                     <th>ID</th>
-                    <th>活动</th>
                     <th>微信openid</th>
                     <th>微信昵称</th>
                     <th>用户姓名</th>
@@ -66,11 +23,6 @@
                     <td>
                         <p class="form-control-static">
                             {$row['id']}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="form-control-static">
-                            {$row['activity_name']}
                         </p>
                     </td>
                     <td>
@@ -116,9 +68,9 @@
                     <td>
                         <p class="form-control-static">
                             {if $row['is_send']==1}
-                            已发放
+                               已发放
                             {else}
-                            未发放
+                               未发放
                             {/if}
                         </p>
                     </td>

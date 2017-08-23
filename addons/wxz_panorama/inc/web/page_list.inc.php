@@ -2,10 +2,10 @@
 
 global $_W, $_GPC;
 
-$aid = intval($_GPC['aid']);
-if (!$aid) {
-    message('请选择一个活动', $this->createWebUrl('activity_list'));
-}
+$filters = array();
+$filters['uniacid'] = $_W['uniacid'];
+
+$filters['nickname'] = $_GPC['nickname'];
 
 require_once WXZ_PANORAMA . '/source/Page.class.php';
 $pageTypes = Page::getPageTypes();
@@ -13,14 +13,14 @@ $pageTypes = Page::getPageTypes();
 $types = array_keys($pageTypes);
 $typeStr = implode(',', $types);
 
-Page::initPages($aid);
+Page::initPages();
 
 $pindex = intval($_GPC['page']);
 $pindex = max($pindex, 1);
 $psize = 15;
 
 $start = ($pindex - 1) * $psize;
-$condition = "`uniacid`={$_W['uniacid']} AND `type` in ({$typeStr}) AND aid={$aid}";
+$condition = "`uniacid`={$_W['uniacid']} AND `type` in ({$typeStr}) AND isdel=0";
 
 $sql = "SELECT count(*) as num FROM " . tablename('wxz_panorama_page') . " WHERE {$condition}";
 $total = pdo_fetchcolumn($sql);

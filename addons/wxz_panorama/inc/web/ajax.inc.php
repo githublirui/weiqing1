@@ -6,7 +6,8 @@ $_W['module_setting'] = $this->module['config'];
 
 if ($do == 'del_page') {
     $id = $_GPC['id'];
-    $ret = pdo_delete('wxz_panorama_page', array('id' => $id));
+    $update_sql = "UPDATE " . tablename("wxz_panorama_page") . " set `isdel`=1 where id={$id}";
+    $ret = pdo_query($update_sql);
     echo "ok";
     die;
 } else if ($do == 'del_award') {
