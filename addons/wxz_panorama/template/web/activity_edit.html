@@ -1,0 +1,119 @@
+{template 'common/header'}
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $(function () {
+            $('#theform').submit(function () {
+                var message = '';
+                if ($.trim($(':text[name=date_start]').val()) == '') {
+                    message += '必须活动开始时间<br>';
+                }
+                if ($.trim($(':text[name=date_end]').val()) == '') {
+                    message += '必须活动结束时间<br>';
+                }
+                if (message) {
+                    u.message(message);
+                    return false;
+                }
+                return true;
+            });
+
+            $('#date_start').datetimepicker({
+                format: 'Y-m-d',
+                language: 'zh-CN',
+                pickDate: false,
+                pickTime: false,
+                hourStep: 1,
+                autoclose: true,
+                inputMask: true,
+                minView: "month",
+                timepicker: false,
+            });
+            $("#date_end").datetimepicker({
+                format: 'Y-m-d',
+                language: 'zh-CN',
+                pickDate: false,
+                pickTime: false,
+                hourStep: 1,
+                autoclose: true,
+                inputMask: true,
+                minView: "month",
+                timepicker: false,
+            });
+
+            //强制关注
+            $(".force_follow").change(function () {
+                var checked = $(this).is(":checked");
+                if (checked) {
+                    $(".force_follow_div").show();
+                } else {
+                    $(".force_follow_div").hide();
+                }
+            });
+        });
+    });
+</script>
+<div class="clearfix">
+    <form id="theform" class="form form-horizontal" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                添加活动
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动名称</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="name" value="{$activity_info['name']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动开始时间</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="date_start" class="form-control span7" placeholder="" name="date_start" value="{$activity_info['date_start']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动结束时间</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="date_end" class="form-control span7" placeholder="" name="date_end" value="{$activity_info['date_end']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">强制关注</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            <input type="checkbox" value="1" name="force_follow" class="force_follow" {if $activity_info['force_follow']==1 }checked="checked"{/if}/>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group force_follow_div" {if $activity_info['force_follow']!=1 }style="display:none"{/if}>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">引导关注链接</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <span class="help-block">
+                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="force_follow_url" value="{$activity_info['force_follow_url']}">
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">用户最大中奖次数</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="active_name" class="form-control span7" placeholder="" name="max_award_num" value="{$activity_info['max_award_num']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">核销码</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="active_name" class="form-control span7" placeholder="" name="verification_code" value="{$activity_info['verification_code']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}
