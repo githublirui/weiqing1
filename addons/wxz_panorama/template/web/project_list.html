@@ -23,9 +23,32 @@
         <div class="panel-heading">
             项目列表
             &nbsp;&nbsp;
-            <a class="btn btn-success" href='{php echo $this->createWebUrl("project_add")}' id="export">添加项目</a>
+            <a class="btn btn-success" href='{php echo $this->createWebUrl("project_add",array("aid"=>$aid))}' id="export">添加项目</a>
         </div>
         <div class="table-responsive panel-body" style="overflow:visible;">
+
+            <div class="l_table_tit clearfix">
+                <form method="get" action="" name="frm" class="l_formBar" id="frm1">
+                    <span class="y_sele_tit">活动:</span>
+                    <div class="y_sele y_size02">
+                        <select class="form-control" name="aid" style='width:100px;'>
+                            <option value="0">不限</option>
+                            {php foreach($activitys as $k=>$row) {}
+                            <option value="{$row['id']}" {if $aid==$row['id']}selected="selected"{/if}>{$row['name']}</option>
+                            {php } }
+                        </select>
+                    </div>
+                    <input type="hidden" name="c" value="{$_GPC['c']}" />
+                    <input type="hidden" name="m" value="{$_GPC['m']}" />
+                    <input type="hidden" name="do" value="{$_GPC['do']}" />
+                    <input type="hidden" name="a" value="{$_GPC['a']}" />
+                    <input type="hidden" name="eid" value="{$_GPC['eid']}" />
+                    <div class="btn-group l_table_search">
+                        <button type="submit" class="btn btn-success">搜 索</button>
+                    </div>
+                </form>
+            </div>
+
             <table class="table table-hover">
                 <tr>
                     <th>

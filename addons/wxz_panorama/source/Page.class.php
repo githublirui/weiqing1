@@ -34,22 +34,23 @@ class Page {
      * 获取页面配置
      * @param type $type 数组或数字
      */
-    public static function getPage($type, $field = '*') {
+    public static function getPage($aid, $type, $field = '*') {
         global $_W;
         $result = array();
 
-        if (!$type) {
+        if (!$type || !$aid) {
             return FALSE;
         }
 
-        $condition = "uniacid={$_W['uniacid']} AND isdel=0";
+        $condition = "uniacid={$_W['uniacid']} AND aid={$aid}";
+
         if (is_numeric($type)) {
             $condition .= " AND type='{$type}'";
         } else if (is_array($type)) {
             $condition .= " AND type in (" . implode(',', $type) . ")";
         }
 
-        $sql = "SELECT {$field} FROM " . tablename('wxz_panorama_page') . " WHERE {$condition}";
+        $sql = "SELECT {$field} FROM " . tablename(self::$table) . " WHERE {$condition}";
 
         $list = pdo_fetchall($sql);
         foreach ($list as $row) {

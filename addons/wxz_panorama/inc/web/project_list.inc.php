@@ -5,13 +5,22 @@
  */
 
 global $_W, $_GPC;
+$aid = intval($_GPC['aid']);
 
 $pindex = intval($_GPC['page']);
 $pindex = max($pindex, 1);
 $psize = 15;
 
 $start = ($pindex - 1) * $psize;
-$condition = '`uniacid`=:uniacid';
+$condition = "`uniacid`=:uniacid";
+
+if ($aid) {
+    $condition .= " AND aid={$aid}";
+}
+
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
+$activitys = Activity::getAll('id,name');
+
 $pars = array();
 $pars[':uniacid'] = $_W['uniacid'];
 

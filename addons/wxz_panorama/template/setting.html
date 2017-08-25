@@ -63,7 +63,7 @@
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动首页</label>
                     <div class="col-sm-9 col-xs-12">
                         <span class="help-block">
-                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=index&m={$_GPC['m']}
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=index&m={$_GPC['m']}&aid=活动id
                         </span>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">我的奖品</label>
                     <div class="col-sm-9 col-xs-12">
                         <span class="help-block">
-                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=win&m={$_GPC['m']}
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=win&m={$_GPC['m']}&aid=活动id
                         </span>
                     </div>
                 </div>
@@ -79,87 +79,8 @@
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">抽奖链接</label>
                     <div class="col-sm-9 col-xs-12">
                         <span class="help-block">
-                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=award&m={$_GPC['m']}&pid=项目id
+                            {$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=entry&do=award&m={$_GPC['m']}&pid=项目id&aid=活动id
                         </span>
-                    </div>
-                </div>
-                <div class="panel-heading">
-                    活动设置
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动名称</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <input type="text" id="active_name" class="form-control span7" placeholder="" name="active_name" value="{$settings['active_name']}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动开始时间</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <input type="text" id="start_time" class="form-control span7" placeholder="" name="start_time" value="{$settings['quanjin']['start_time']}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动结束时间</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <input type="text" id="end_time" class="form-control span7" placeholder="" name="end_time" value="{$settings['quanjin']['end_time']}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">强制关注</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <span class="help-block">
-                            <input type="checkbox" value="1" name="force_follow" class="force_follow" {if $settings['force_follow']==1 }checked="checked"{/if}/>
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group force_follow_div" {if $settings['force_follow']!=1 }style="display:none"{/if}>
-                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">引导关注链接</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <span class="help-block">
-                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="force_follow_url" value="{$settings['force_follow_url']}">
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">用户最大中奖次数</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <input type="text" id="active_name" class="form-control span7" placeholder="" name="max_award_num" value="{$settings['max_award_num']}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">核销码</label>
-                    <div class="col-sm-9 col-xs-12">
-                        <input type="text" id="active_name" class="form-control span7" placeholder="" name="verification_code" value="{$settings['verification_code']}">
-                    </div>
-                </div>
-                <div class="panel-heading">
-                    入口
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文标题</label>
-                        <div class="col-sm-9 col-xs-12">
-                            <input type="text" id="scan_title" class="form-control span7" placeholder="" name="title" value="{$settings['quanjin']['title']}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文图片</label>
-                        <div class="col-sm-9 col-xs-12">
-                            {php echo tpl_form_field_image('img',$settings['quanjin']['img'])}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文描述</label>
-                        <div class="col-sm-9 col-xs-12">
-                            <textarea style="height:60px;" name="desc" class="form-control span7" cols="60">{$settings['quanjin']['desc']}</textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
-                    <div class="col-md-2 col-lg-1">
-                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
-                        <input type="hidden" name="token" value="{$_W['token']}" />
                     </div>
                 </div>
             </div>

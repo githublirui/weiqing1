@@ -19,11 +19,28 @@ class Project {
     }
 
     /**
-     * 获取第一个项目
+     * 获取活动下所有项目
      */
-    public static function getFirstPro() {
+    public static function getAllByAid($aid, $field = '*') {
         global $_W;
-        $condition = "uniacid={$_W['uniacid']}";
+        if (!$aid) {
+            return;
+        }
+        $condition = "uniacid={$_W['uniacid']} AND aid={$aid}";
+        $sql = "SELECT {$field} FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc";
+        return pdo_fetchall($sql);
+    }
+
+    /**
+     * 获取第一个项目
+     * $aid 活动id
+     */
+    public static function getFirstPro($aid) {
+        global $_W;
+        if (!$aid) {
+            return;
+        }
+        $condition = "uniacid={$_W['uniacid']} AND aid={$aid}";
         $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc limit 1";
         return pdo_fetch($sql);
     }
@@ -130,8 +147,24 @@ class Project {
             //删除场景
             require_once WXZ_PANORAMA . '/source/Scene.class.php';
             require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
+
             Scene::delSceneByProId($id);
             Hotspot::delByProId($id);
+        }
+        return true;
+    }
+
+    /**
+     * 通过活动id删除项目
+     * @param type $aid
+     */
+    public static function delByAid($aid) {
+        global $_W;
+
+        $list = self::getAllByAid($aid, 'id');
+
+        foreach ($list as $row) {
+            $this->delById($row['id']);
         }
         return true;
     }

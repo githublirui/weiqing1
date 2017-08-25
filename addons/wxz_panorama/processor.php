@@ -12,19 +12,24 @@ class Wxz_panoramaModuleProcessor extends WeModuleProcessor {
 
     public function respond() {
         global $_W;
-        $setting = $this->module['config'];
-        $content = $this->message['content'];
-        $url = $_W['siteroot'] . 'app/index.php?i=' . $_W['account']['uniacid'] . '&c=entry&do=index&m=wxz_panorama&openid=' . urlencode($this->message['from']);
-        $content = array(
-            array(
-                'title' => $setting['quanjin']['title'],
-                'description' => $setting['quanjin']['desc'],
-                'picurl' => $setting['quanjin']['img'],
-                'url' => $url,
-            ),
+        //获取图片域名
+        setting_load('remote');
+        if ($_W['setting']['remote']['type']) {
+            $attach_url = $_W['attachurl_remote'];
+        } else {
+            $attach_url = $_W['siteroot'] . $_W['config']['upload']['attachdir'];
+        }
+
+        $item = pdo_fetch("select * from " . tablename('wxz_panorama_reply_setting') . " where rid = " . $this->rule . " AND uniacid = " . $_W['uniacid']);
+        $url = $_W['siteroot'] . 'app/index.php?i=' . $_W['account']['uniacid'] . '&c=entry&do=index&m=wxz_panorama&openid=' . urlencode($this->message['from']) . "&aid={$item['aid']}";
+
+        $respon = array(
+            'Title' => $item['title'],
+            'Description' => $item['desc'],
+            'PicUrl' => $attach_url . $item['img'],
+            'Url' => $url,
         );
-        return $this->respNews($content);
-        //这里定义此模块进行消息处理时的具体过程, 请查看微擎文档来编写你的代码
+        return $this->respNews($respon);
     }
 
 }
