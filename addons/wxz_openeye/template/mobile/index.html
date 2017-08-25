@@ -74,7 +74,8 @@
                     </div>		
                 </div>
             </div>
-            <ul class="imgLists">
+            
+<!--            <ul class="imgLists">
                 {php foreach((array)$result['horizontal'] as $row) { }
                 <li>
                     <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
@@ -90,30 +91,30 @@
                     </div>
                 </li>
                 {php } }
-            </ul>
+            </ul>-->
             <!-- 热门分类 -->
-<!--            <div class="imgLists-hot">
-                <h1>热门分类 <a class="right-arrow"></a></h1>
-                <div class="swiper3-wrap">
-                    <div class="swiper-container swiper3" id="swiper3">
-                        <div class="swiper-wrapper">
-                            {php foreach($result['category'] as $row) { }
-                            <div class="swiper-slide">
-                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}" class="image">
-                                    <img src="{$attach_url}/{$row['pic']}" />
-                                    <p>{$row['name']}</p>
-                                </a>
-                            </div>
-                            {php } }
-                                                        <div class="swiper-slide">
-                                                            <a href="javascript:;" class="image"><span>查看全部<span></a>
-                                                                        </div>
-                        </div>
-                    </div>
-                </div>			
-            </div>-->
+            <!--            <div class="imgLists-hot">
+                            <h1>热门分类 <a class="right-arrow"></a></h1>
+                            <div class="swiper3-wrap">
+                                <div class="swiper-container swiper3" id="swiper3">
+                                    <div class="swiper-wrapper">
+                                        {php foreach($result['category'] as $row) { }
+                                        <div class="swiper-slide">
+                                            <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}" class="image">
+                                                <img src="{$attach_url}/{$row['pic']}" />
+                                                <p>{$row['name']}</p>
+                                            </a>
+                                        </div>
+                                        {php } }
+                                                                    <div class="swiper-slide">
+                                                                        <a href="javascript:;" class="image"><span>查看全部<span></a>
+                                                                                    </div>
+                                    </div>
+                                </div>
+                            </div>			
+                        </div>-->
             <ul class="imgLists" id="hotLists">
-                {php foreach((array)$result['list3'] as $row) { }
+                {php foreach((array)$result['list2'] as $row) { }
                 <li>
                     <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
                         <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
@@ -132,13 +133,13 @@
         </div>
         <ul id="footer">
             <li>
-                <a href="index.html" class="active">
+                <a href="{php echo $this->createMobileUrl('index')}" class="active">
                     <div class="foot-ico"></div>
                     <p>首页</p>
                 </a>
             </li>
             <li>
-                <a href="find.html">
+                <a href="{php echo $this->createMobileUrl('find')}">
                     <div class="foot-ico"></div>
                     <p>发现</p>
                 </a>

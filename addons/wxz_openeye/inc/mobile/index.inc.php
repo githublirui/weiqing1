@@ -43,8 +43,7 @@ if ($result['list']) {
     //截取list
     $result['list1'] = array_slice($result['list'], 0, $list1Num); //显示5个
     //剩余列表
-    $result['list2'] = array_slice($result['list'], $list1Num, $list2Num); //剩余列表
-    $result['list3'] = array_slice($result['list'], $list1Num + $list2Num, count($result['list'])); //剩余列表
+    $result['list2'] = array_slice($result['list'], $list1Num, count($result['list'])); //剩余列表
 }
 
 include $this->template('index');

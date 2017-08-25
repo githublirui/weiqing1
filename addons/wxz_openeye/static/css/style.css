@@ -166,6 +166,7 @@ a,input,button,img,textarea{outline:none;}
 	width: 5.4rem;
 	height: 3.12rem;
 }
+/*
 .indexPage .swiper2 .swiper-slide:last-child{
 	width: 3.12rem;
 }
@@ -183,7 +184,7 @@ a,input,button,img,textarea{outline:none;}
 	height: 2.88rem;
 	width: 2.88rem;
 	background: #fff;
-}
+}*/
 .indexPage .image-bottom{
 	margin-top: 0.12rem;
 }
