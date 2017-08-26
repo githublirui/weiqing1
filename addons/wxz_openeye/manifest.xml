@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[微小智每日开眼]]></name>
         <identifie><![CDATA[wxz_openeye]]></identifie>
-        <version><![CDATA[2.0.0]]></version>
+        <version><![CDATA[2.0.1]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_openeye]]></ability>
         <description><![CDATA[wxz_openeye]]></description>
@@ -34,6 +34,7 @@
             <entry title="用户列表" do="fans_list" state="" direct="false" />
             <entry title="视频列表" do="page_list" state="" direct="false" />
             <entry title="页面列表" do="page_position_list" state="" direct="false" />
+            <entry title="专题列表" do="special_list" state="" direct="false" />
             <entry title="评论列表" do="comment_list" state="" direct="false" />
         </menu>
     </bindings>
@@ -110,7 +111,28 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_comment` (
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;      
-                  
+
+ CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_special` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `name` varchar(40) NOT NULL DEFAULT '' COMMENT '专题名称',
+  `pic` varchar(255) NOT NULL DEFAULT '' COMMENT '专题图片',
+  `desc` varchar(500) NOT NULL DEFAULT '' COMMENT '专题描述',
+  `create_time` int(10) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_openeye_special_page` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
+  `page_id` int(11) unsigned NOT NULL,
+  `special_id` int(11) unsigned NOT NULL,
+  `create_time` int(10) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;  
+                                  
 ]]></install>
     <uninstall><![CDATA[
 DROP TABLE IF EXISTS `ims_wxz_openeye_fans`; 
@@ -118,6 +140,8 @@ DROP TABLE IF EXISTS `ims_wxz_openeye_page`;
 DROP TABLE IF EXISTS `ims_wxz_openeye_page_position`; 
 DROP TABLE IF EXISTS `ims_wxz_openeye_comment`; 
 DROP TABLE IF EXISTS `ims_wxz_openeye_like`; 
+DROP TABLE IF EXISTS `ims_wxz_openeye_special`; 
+DROP TABLE IF EXISTS `ims_wxz_openeye_special_page`; 
 ]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

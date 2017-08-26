@@ -49,5 +49,17 @@ if ($do == 'del_fans') {
     $del = pdo_delete('wxz_openeye_comment', array('id' => $id));
     echo "ok";
     die;
+} else if ($do == 'del_special') {
+    //删除专题
+    $id = $_GPC['id'];
+    $del = pdo_delete('wxz_openeye_special', array('id' => $id));
+    echo "ok";
+    die;
+} else if ($do == 'del_special_page') {
+    //删除专题
+    $id = $_GPC['id'];
+    $del = pdo_delete('wxz_openeye_special_page', array('id' => $id));
+    echo "ok";
+    die;
 }
 ?>
