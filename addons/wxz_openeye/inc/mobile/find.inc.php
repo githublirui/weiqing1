@@ -15,6 +15,8 @@ if ($_W['setting']['remote']['type']) {
     $attach_url = $_W['siteroot'] . $_W['config']['upload']['attachdir'];
 }
 
+$_W['module_config'] = $this->module['config'];
+
 $user = $this->auth();
 
 //获取视频列表
@@ -64,6 +66,14 @@ foreach ($listCategory as $row) {
     if ($row['category_desc']) {
         $category_descs[$row['category']] = $row['category_desc'];
     }
+}
+
+//获取图片域名
+setting_load('remote');
+if ($_W['setting']['remote']['type']) {
+    $attach_url = $_W['attachurl_remote'];
+} else {
+    $attach_url = $_W['siteroot'] . $_W['config']['upload']['attachdir'];
 }
 
 include $this->template('find');

@@ -16,9 +16,10 @@
         <div class="main">
             <div class="find-top-wrap">
                 <div class="find-top">
-                    <a class="left">全部分类</a>
-                    <span class="center"></span>
-                    <a class="right"></a>
+                    <!--<a class="left">全部分类</a>-->
+                    <span class="center" style="background: url({php echo $attach_url.'/'.$_W['module_config']['logo'];})">
+                    </span>
+                    <!--<a class="right"></a>-->
                 </div>
                 <ul class="tabs">
                     <li><a href="#hotTab" class="active"  data-init="1" data-scroll="0">热 门</a></li>
@@ -51,7 +52,7 @@
                                 <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                             </a>
                             <div class="bigImg-bottom">
-                                <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
+                                <div class="image"><img class="lazy" src="{$attach_url}/{$row['pic']}" /></div>
                                 <div class="image-center">
                                     <h2 class="text-over">{$row['name']}</h2>
                                     <p class="text-over">{$row['desc']}</p>
@@ -97,7 +98,7 @@
                                 <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
                             </a>
                             <div class="bigImg-bottom">
-                                <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}"/></div>
+                                <div class="image"><img class="lazy" src="{$attach_url}/{$row['pic']}"/></div>
                                 <div class="image-center">
                                     <h2 class="text-over">{$row['name']}</h2>
                                     <p class="text-over">{$row['desc']}</p>
@@ -126,7 +127,7 @@
                                     {php foreach((array)$list as $row) { }
                                     <div class="swiper-slide">
                                         <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
-                                            <img src="{$attach_url}/{$row['avatar']}" />
+                                            <img src="{$attach_url}/{$row['pic']}" />
                                             <h4>{$row['name']}</h4>
                                             <p>#{$k}/{$row['upload_date']}</p>
                                         </a>
@@ -155,20 +156,8 @@
             </li>
             <li>
                 <a href="{php echo $this->createMobileUrl('find')}" class="active">
-                    <div class="foot-ico"></div>
+                    <div class="foot-ico1"></div>
                     <p>发现</p>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <div class="foot-ico"></div>
-                    <p>关注</p>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <div class="foot-ico"></div>
-                    <p>我的</p>
                 </a>
             </li>
         </ul>

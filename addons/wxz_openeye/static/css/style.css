@@ -8,475 +8,483 @@ a,input,button,img,textarea{outline:none;}
 .image{overflow: hidden;display: block;}
 .image img{width: 100%;height: 100%;}
 .text-over{
-	text-overflow:ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .center{text-align: center;}
 .greenClr{color: #9dce9e !important;}
 .right{float: right;}
 .left{float:left;}
 #footer{
-	height: 0.86rem;
-	background: #fff;
-	border-top: 0.02rem solid #ccc;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 7.5rem;
-	z-index:999;
+    height: 0.86rem;
+    background: #fff;
+    border-top: 0.02rem solid #ccc;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 7.5rem;
+    z-index:999;
 }
 #footer li{
-	width: 25%;
-	float: left;
+    width: 50%;
+    float: left;
 }
 #footer li a{
-	display: block;
-	color: #999;
-	height: 0.77rem;
-	padding-top: 0.09rem;
-	text-align: center;
-	font-size: 0.18rem;
-	line-height: 0.26rem;
+    display: block;
+    color: #999;
+    height: 0.77rem;
+    padding-top: 0.09rem;
+    text-align: center;
+    font-size: 0.18rem;
+    line-height: 0.26rem;
 }
 #footer li a.active{
-	color: #444;
+    color: #444;
 }
 #footer .foot-ico{
-	width: 0.43rem;
-	height: 0.43rem;
-	background: #eee;
-	display: inline-block;
+    width: 65px;
+    height: 65px;
+    background-image: url('../images/index.png');
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+#footer .foot-ico1{
+    width: 65px;
+    height: 65px;
+    background-image: url('../images/find.png');
+    background-repeat: no-repeat;
+    display: inline-block;
 }
 .indexPage .swiper1{
-	width: 7.5rem;
-	height: 5.6rem;
-	background: #eee;
+    width: 7.5rem;
+    height: 5.6rem;
+    background: #eee;
 }
 .indexPage .swiper1 .swiper-slide a, .indexPage .swiper1 .swiper-slide img{
-	width: 100%;
-	height: 100%;
-	display: block;
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 .main{
-	padding-bottom:0.86rem;
+    padding-bottom:0.86rem;
 }
 .indexPage .swiper1 .search-ico{
-	position: absolute;
-	top:0.25rem;
-	width: 0.35rem;
-	height: 0.45rem;
-	background: #333;
-	right: 0.3rem;
-	z-index: 999;
+    position: absolute;
+    top:0.25rem;
+    width: 0.35rem;
+    height: 0.45rem;
+    background: #333;
+    right: 0.3rem;
+    z-index: 999;
 }
 .indexPage .swiper1 .swiper-pagination-bullet{
-	width: 0.22rem;
-	height: 0.22rem;
-	background: #000;
-	opacity: 0.5;
+    width: 0.22rem;
+    height: 0.22rem;
+    background: #000;
+    opacity: 0.5;
 }
 .indexPage .swiper1 .swiper-pagination-bullet-active{
-	background: #fff;
-	opacity: 1;
+    background: #fff;
+    opacity: 1;
 }
 .indexPage .more-video{
-	display: block;
-	background: #fff;
-	line-height: 1rem;
-	height: 1rem;
-	color: #444;
-	text-align: center;
-	border-bottom: 1px solid #ccc;
+    display: block;
+    background: #fff;
+    line-height: 1rem;
+    height: 1rem;
+    color: #444;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
 }
 .right-arrow{
-	width: 0.11rem;
-	height: 0.2rem;
-	display: inline-block;
-	background: #eee;
+    width: 0.11rem;
+    height: 0.2rem;
+    display: inline-block;
+    background: #eee;
 }
 .indexPage .imgLists>li{
-	margin-top: 0.12rem;
+    margin-top: 0.12rem;
 }
 .indexPage .imgLists .bigImg{
-	display: block;
-	height: 4.35rem;
-	width: 7.5rem;
+    display: block;
+    height: 4.35rem;
+    width: 7.5rem;
 }
 .indexPage .bigImg-bottom{
-	padding: 0.3rem 0.34rem;
-	background: #fff;
-	height: 0.84rem;
-	border-bottom: 1px solid #ccc;
+    padding: 0.3rem 0.34rem;
+    background: #fff;
+    height: 0.84rem;
+    border-bottom: 1px solid #ccc;
 }
 .indexPage .bigImg-bottom .image{
-	float: left;
-	width: 0.84rem;
-	height: 0.84rem;
-	border-radius: 100%;
+    float: left;
+    width: 0.84rem;
+    height: 0.84rem;
+    border-radius: 100%;
 }
 .indexPage .bigImg-bottom .image-center{
-	width: 5rem;
-	margin-left: 0.25rem;
-	float: left;
+    width: 5rem;
+    margin-left: 0.25rem;
+    float: left;
 }
 .indexPage .bigImg-bottom .image-right{
-	width: 0.7rem;
-	float: right;
-	text-align: right;
-	line-height: 0.84rem;
-	color: #999;
-	font-size: 0.2rem;
+    width: 0.7rem;
+    float: right;
+    text-align: right;
+    line-height: 0.84rem;
+    color: #999;
+    font-size: 0.2rem;
 }
 .indexPage .bigImg-bottom h2{
-	line-height: 0.44rem;
-	font-size: 0.28rem;
-	color: #444;
+    line-height: 0.44rem;
+    font-size: 0.28rem;
+    color: #444;
 }
 .indexPage .bigImg-bottom p{
-	line-height: 0.4rem;
-	font-size: 0.24rem;
-	color: #999;
+    line-height: 0.4rem;
+    font-size: 0.24rem;
+    color: #999;
 }
 .imgLists-middle{
-	margin-top: 0.12rem;
-	background: #fff;
-	border-bottom: 1px solid #ccc;
+    margin-top: 0.12rem;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
 }
 .imgLists-middle .bigImg{
-	display: block;
-	height: 4.35rem;
-	width: 7.5rem;
+    display: block;
+    height: 4.35rem;
+    width: 7.5rem;
 }
 .indexPage .swiper2{
-	height: 4.5rem;
-	overflow: auto;
+    height: 4.5rem;
+    overflow: auto;
 }
 .indexPage .swiper2-wrap{
-	padding: 0.08rem 0.04rem;
-	height: 4.2rem;
-	overflow: hidden;
+    padding: 0.08rem 0.04rem;
+    height: 4.2rem;
+    overflow: hidden;
 }
 .indexPage .swiper2 .swiper-slide{
-	width: 5.4rem;
-	height: 4.2rem;
-	margin:0 0.04rem;
+    width: 5.4rem;
+    height: 4.2rem;
+    margin:0 0.04rem;
 }
 .indexPage .swiper2 .image{
-	width: 5.4rem;
-	height: 3.12rem;
+    width: 5.4rem;
+    height: 3.12rem;
 }
 /*
 .indexPage .swiper2 .swiper-slide:last-child{
-	width: 3.12rem;
+        width: 3.12rem;
 }
 .indexPage .swiper2 .swiper-slide:last-child .image{
-	width: 2.88rem;
-	height: 2.88rem;
-	line-height: 3.12rem;
-	text-align: center;
-	color: #444;
-	background: #eee;
-	padding: 0.12rem;
+        width: 2.88rem;
+        height: 2.88rem;
+        line-height: 3.12rem;
+        text-align: center;
+        color: #444;
+        background: #eee;
+        padding: 0.12rem;
 }
 .indexPage .swiper2 .swiper-slide:last-child span{
-	display: block;
-	height: 2.88rem;
-	width: 2.88rem;
-	background: #fff;
+        display: block;
+        height: 2.88rem;
+        width: 2.88rem;
+        background: #fff;
 }*/
 .indexPage .image-bottom{
-	margin-top: 0.12rem;
+    margin-top: 0.12rem;
 }
 .indexPage .image-bottom h2{
-	line-height: 0.44rem;
-	font-size: 0.28rem;
-	color: #444;
+    line-height: 0.44rem;
+    font-size: 0.28rem;
+    color: #444;
 }
 .indexPage .image-bottom p{
-	line-height: 0.4rem;
-	font-size: 0.24rem;
-	color: #999;
+    line-height: 0.4rem;
+    font-size: 0.24rem;
+    color: #999;
 }
 .imgLists-hot{
-	background: #fff;
-	padding: 0.24rem 0.2rem;
-	padding-top: 0;
-	border-bottom: 1px solid #ccc;
-	margin-top: 0.12rem;
+    background: #fff;
+    padding: 0.24rem 0.2rem;
+    padding-top: 0;
+    border-bottom: 1px solid #ccc;
+    margin-top: 0.12rem;
 }
 .imgLists-hot h1{
-	line-height: 1.32rem;
-	font-size: 0.32rem;
-	text-align: center;
-	padding: 0 0.35rem;
+    line-height: 1.32rem;
+    font-size: 0.32rem;
+    text-align: center;
+    padding: 0 0.35rem;
 }
 .imgLists-hot h1 .right-arrow{
-	float: right;
-	margin-top: 0.56rem;
+    float: right;
+    margin-top: 0.56rem;
 }
 .imgLists-hot .swiper3-wrap{
-	height: 3.74rem;
-	overflow: hidden;
+    height: 3.74rem;
+    overflow: hidden;
 }
 .imgLists-hot .swiper3{
-	height: 3.9rem;
-	overflow: auto;
+    height: 3.9rem;
+    overflow: auto;
 }
 .imgLists-hot .swiper-slide{
-	width: 3.74rem;
-	height: 3.74rem;
-	margin: 0.04rem;
+    width: 3.74rem;
+    height: 3.74rem;
+    margin: 0.04rem;
 }
 .imgLists-hot .swiper-slide .image{
-	position: relative;
-	display: block;
-	height: 3.74rem;
+    position: relative;
+    display: block;
+    height: 3.74rem;
 }
 .imgLists-hot .swiper-slide .image p{
-	line-height: 3.74rem;
-	text-align: center;
-	color: #fff;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	font-size: 0.32rem;
-	font-weight: bold;
+    line-height: 3.74rem;
+    text-align: center;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-size: 0.32rem;
+    font-weight: bold;
 }
 .imgLists-hot .swiper-slide:last-child .image{
-	background: #eee;
-	width: 3.5rem;
-	height: 3.5rem;
-	padding: 0.12rem;
+    background: #eee;
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0.12rem;
 }
 .imgLists-hot .swiper-slide:last-child .image span{
-	width: 3.5rem;
-	display: block;
-	background: #fff;
-	line-height: 3.5rem;
-	text-align: center;
-	color: #444;
+    width: 3.5rem;
+    display: block;
+    background: #fff;
+    line-height: 3.5rem;
+    text-align: center;
+    color: #444;
 }
 
 /******************发现页面********************/
 .find-top{
-	height: 0.96rem;
-	line-height: 0.96rem;
-	padding: 0 0.3rem 0 0.22rem;
-	background: #fff;
-	text-align: center;
+    height: 0.96rem;
+    line-height: 0.96rem;
+    padding: 0 0.3rem 0 0.22rem;
+    background: #fff;
+    text-align: center;
 }
 .find-top .left{
-	font-size: 0.32rem;
-	color: #444;
+    font-size: 0.32rem;
+    color: #444;
 }
 .find-top .center{
-	width: 1.6rem;
-	height: 0.4rem;
-	display: inline-block;
-	background: #eee;
-	vertical-align: middle;
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    background: #eee;
+    vertical-align: middle;
 }
 .find-top .right{
-	width: 0.35rem;
-	height: 0.35rem;
-	display: inline-block;
-	background: #eee;
-	margin-top: 0.28rem;
+    width: 0.35rem;
+    height: 0.35rem;
+    display: inline-block;
+    background: #eee;
+    margin-top: 0.28rem;
 }
 .findPage .swiper1{
-	width: 7.5rem;
-	height: 4.35rem;
-	background: #eee;
+    width: 7.5rem;
+    height: 4.35rem;
+    background: #eee;
 }
 .findPage .swiper1 .swiper-slide a, .findPage .swiper1 .swiper-slide img{
-	width: 100%;
-	height: 100%;
-	display: block;
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 .findPage .swiper1 .swiper-pagination-bullet{
-	width: 0.22rem;
-	height: 0.22rem;
-	background: #000;
-	opacity: 0.5;
+    width: 0.22rem;
+    height: 0.22rem;
+    background: #000;
+    opacity: 0.5;
 }
 .findPage .swiper1 .swiper-pagination-bullet-active{
-	background: #fff;
-	opacity: 1;
+    background: #fff;
+    opacity: 1;
 }
 .findPage .tabs{
-	background: #fff;
-	height: 0.95rem;
+    background: #fff;
+    height: 0.95rem;
 }
 .findPage .tabs li{
-	width: 50%;
-	line-height: 0.95rem;
-	font-weight: bold;
-	float: left;
-	text-align: center;
+    width: 50%;
+    line-height: 0.95rem;
+    font-weight: bold;
+    float: left;
+    text-align: center;
 }
 .findPage .tabs a{
-	display: block;
-	color: #666;
+    display: block;
+    color: #666;
 }
 .findPage .tabs a.active{
-	color: #444;
+    color: #444;
 }
 .find-top-wrap{
-	position: fixed;
-	top: 0;
-	left: 0;
-	background: #fff;
-	border-bottom: 0.02rem solid #ccc;
-	height: 1.91rem;
-	width: 7.5rem;
-	z-index:99;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #fff;
+    border-bottom: 0.02rem solid #ccc;
+    height: 1.91rem;
+    width: 7.5rem;
+    z-index:99;
 }
 #tabs-container{
-	padding-top: 1.91rem;
+    padding-top: 1.91rem;
 }
 .findPage .hot-title{
-	line-height: 1rem;
-	height: 1rem;
-	background: #fff;
-	font-size: 0.32rem;
-	color: #444;
-	text-align: center;
-	margin-top: 0.12rem;
-	padding: 0 0.35rem;
+    line-height: 1rem;
+    height: 1rem;
+    background: #fff;
+    font-size: 0.32rem;
+    color: #444;
+    text-align: center;
+    margin-top: 0.12rem;
+    padding: 0 0.35rem;
 }
 .hotSpecial .hot-title{
-	height: 1.32rem;
-	line-height: 1.32rem;
+    height: 1.32rem;
+    line-height: 1.32rem;
 }
 .findPage .hot-title .right-arrow{
-	float: right;
-	margin-top: 0.56rem;
+    float: right;
+    margin-top: 0.56rem;
 }
 .findPage .imgLists>li{
-	margin-bottom: 0.12rem;
+    margin-bottom: 0.12rem;
 }
 .findPage .imgLists .bigImg{
-	display: block;
-	height: 4.35rem;
-	width: 7.5rem;
+    display: block;
+    height: 4.35rem;
+    width: 7.5rem;
 }
 .findPage .bigImg-bottom{
-	padding: 0.3rem 0.34rem;
-	background: #fff;
-	height: 0.84rem;
-	border-bottom: 1px solid #ccc;
+    padding: 0.3rem 0.34rem;
+    background: #fff;
+    height: 0.84rem;
+    border-bottom: 1px solid #ccc;
 }
 .findPage .bigImg-bottom .image{
-	float: left;
-	width: 0.84rem;
-	height: 0.84rem;
-	border-radius: 100%;
+    float: left;
+    width: 0.84rem;
+    height: 0.84rem;
+    border-radius: 100%;
 }
 .findPage .bigImg-bottom .image-center{
-	width: 5rem;
-	margin-left: 0.25rem;
-	float: left;
+    width: 5rem;
+    margin-left: 0.25rem;
+    float: left;
 }
 .findPage .bigImg-bottom .image-right{
-	width: 0.7rem;
-	float: right;
-	text-align: right;
-	line-height: 0.84rem;
-	color: #999;
-	font-size: 0.2rem;
+    width: 0.7rem;
+    float: right;
+    text-align: right;
+    line-height: 0.84rem;
+    color: #999;
+    font-size: 0.2rem;
 }
 .findPage .bigImg-bottom h2{
-	line-height: 0.44rem;
-	font-size: 0.28rem;
-	color: #444;
+    line-height: 0.44rem;
+    font-size: 0.28rem;
+    color: #444;
 }
 .findPage .bigImg-bottom p{
-	line-height: 0.4rem;
-	font-size: 0.24rem;
-	color: #999;
+    line-height: 0.4rem;
+    font-size: 0.24rem;
+    color: #999;
 }
 .findPage .swipers .swiper-slide{
-	width: 7.5rem;
-	height: 4rem;
+    width: 7.5rem;
+    height: 4rem;
 }
 .findPage .swipers .swiper-slide a{
-	width: 99%;
-	padding: 0 0.5%;
-	height: 100%;
-	display: block;
+    width: 99%;
+    padding: 0 0.5%;
+    height: 100%;
+    display: block;
 }
 .findPage .swipers .swiper-slide img{
-	width: 100%;
-	height: 4rem;
+    width: 100%;
+    height: 4rem;
 }
 .findPage .hotSpecial{
-	background: #fff;
-	height: 5.85rem;
-	border-bottom: 0.02rem solid #ccc;
+    background: #fff;
+    height: 5.85rem;
+    border-bottom: 0.02rem solid #ccc;
 }
 .hotSpecial .swiper-container{
-	height: 4.5rem;
+    height: 4.5rem;
 }
 .paginations .swiper-pagination-bullet{
-	width: 0.13rem;
-	height: 0.13rem;
-	background: #666;
-	margin: 0 0.1rem;
+    width: 0.13rem;
+    height: 0.13rem;
+    background: #666;
+    margin: 0 0.1rem;
 }
 .classifyList{
-	background: #fff;
-	margin-top: 0.12rem;
+    background: #fff;
+    margin-top: 0.12rem;
 }
 .classifyList-top{
-	height: 1.65rem;
-	position: relative;
-	text-align: center;
+    height: 1.65rem;
+    position: relative;
+    text-align: center;
 }
 .classifyList-top h2{
-	color: #444;
-	font-size: 0.34rem;
-	line-height: 0.8rem;
-	padding-top: 0.16rem;
-	text-overflow:ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+    color: #444;
+    font-size: 0.34rem;
+    line-height: 0.8rem;
+    padding-top: 0.16rem;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .classifyList-top p{
-	color: #999;
-	text-overflow:ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+    color: #999;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .classifyList-top .concern{
-	display: block;
-	width: 0.9rem;
-	height: 0.44rem;
-	line-height: 0.44rem;
-	font-size: 0.22rem;
-	color: #444;
-	border:0.02rem solid #ccc;
-	border-radius: 0.08rem;
-	position: absolute;
-	top: 0.6rem;
-	right: 0.32rem;
+    display: block;
+    width: 0.9rem;
+    height: 0.44rem;
+    line-height: 0.44rem;
+    font-size: 0.22rem;
+    color: #444;
+    border:0.02rem solid #ccc;
+    border-radius: 0.08rem;
+    position: absolute;
+    top: 0.6rem;
+    right: 0.32rem;
 }
 #classifyLists .swiper-slide{
-	height: 5.3rem;
-	text-align: center;
+    height: 5.3rem;
+    text-align: center;
 }
 #classifyLists .swiper-slide h4{
-	line-height: 0.72rem;
-	font-size: 0.28rem;
-	color: #444;
+    line-height: 0.72rem;
+    font-size: 0.28rem;
+    color: #444;
 }
 #classifyLists .swiper-slide p{
-	font-size: 0.22rem;
-	color: #999;
+    font-size: 0.22rem;
+    color: #999;
 }
 #classifyLists .swiper-container{
-	height: 5.6rem;
+    height: 5.6rem;
 }
 
 /**************播放页面*************/
@@ -488,7 +496,7 @@ a,input,button,img,textarea{outline:none;}
     width: 100%;
 }
 .video-meta{
-	padding: 0 0.25rem;
+    padding: 0 0.25rem;
 }
 .kyt-player a, .kyt-player div, .kyt-player video {
     height: 100%;
@@ -519,21 +527,21 @@ a,input,button,img,textarea{outline:none;}
 .video-meta-positioner {
     background: rgba(0,0,0,.2);
     color: #fff;
-    border-bottom: 1px solid #fff;
+    /*border-bottom: 1px solid #fff;*/
 }
 .video-meta h1 {
     font-size: 0.34rem;
     line-height: 0.9rem;
-   	text-overflow:ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .video-meta p {
     margin: 0;
     margin-bottom: 12px;
     text-overflow:ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .relate-video-list {
     background: rgba(0,0,0,.4);
@@ -591,56 +599,168 @@ a,input,button,img,textarea{outline:none;}
 .kyt-footer .qr-tips {
     background: transparent;
     color: #fff;
-    font-size: 0.24rem;
+    font-size: 0.2rem;
     letter-spacing: 1px;
     text-align: center;
     display: block;
     margin: 0 auto 0.2rem;
 }
 .icoLists{
-	height: 1rem;
+    height: 1rem;
 }
 .icoLists li{
-	float: left;
-	width: 22%;
+    float: left;
+    width: 22%;
 }
 .icoLists li a{
-	display: block;
-	line-height: 1.1rem;
-	color: #fff;
+    display: block;
+    line-height: 1.1rem;
+    color: #fff;
 }
 .icoLists .video-ico{
-	width: 0.45rem;
-	height: 0.45rem;
-	background: #333;
-	display: inline-block;
-	vertical-align: middle;
-	margin-left: 0.25rem;
+    width: 65px;
+    height: 65px;
+    background-image: url('../images/like.png');
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.25rem;
+}
+.icoLists .video-ico1{
+    width: 65px;
+    height: 65px;
+    background-image: url('../images/share1.png');
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.25rem;
 }
 .video-mess{
-	height: 0.6rem;
-	line-height: 0.6rem;
-	padding:0.1rem 0.25rem 0.25rem;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    padding:0.1rem 0.25rem 0.25rem;
 }
 .video-mess .messages{
-	box-sizing:border-box;
-	height: 0.6rem;
-	background: #fff;
-	border:0;
-	border-radius: 0.06rem;
-	padding: 0 0.05rem;
-	font-size: 0.26rem;
-	color: #444;
-	width: 5.8rem;
+    box-sizing:border-box;
+    height: 0.6rem;
+    background: #fff;
+    border:0;
+    border-radius: 0.06rem;
+    padding: 0 0.05rem;
+    font-size: 0.26rem;
+    color: #444;
+    width: 5.8rem;
 }
 .video-mess a{
-	border-radius: 0.06rem;
-	height: 0.6rem;
-	background: #fff;
-	font-size: 0.26rem;
-	width: 1rem;
-	display: inline-block;
-	float: right;
-	color: #444;
-	text-align: center;
+    border-radius: 0.06rem;
+    height: 0.6rem;
+    background: #fff;
+    font-size: 0.26rem;
+    width: 1rem;
+    display: inline-block;
+    float: right;
+    color: #444;
+    text-align: center;
 }
+.reply-list-container {
+    background: rgba(0,0,0,.4);
+}
+.reply-list-container .header {
+    margin: 0.35rem 0 0.2rem;
+    text-align: center;
+    color: #fff;
+}
+.reply-list-container .reply {
+    font-size: 0.23rem;
+    padding-bottom: 0.3rem;
+    position: relative;
+    color: #fff;
+}
+.reply-list-container .reply .like {
+    position: absolute;
+    text-align: right;
+    top: 0;
+    right: 0.35rem;
+}
+.reply-list-container .reply .avatar {
+    background-position: 50%;
+    background-size: cover;
+    border-radius: 50%;
+    float: left;
+    height: 0.72rem;
+    margin: 0 0.26rem;
+    width: 0.72rem;
+}
+.reply-list-container .reply .like-count>div {
+    display: inline-block;
+}
+.reply-list-container .reply .like-count-icon {
+    background-image: url('../images/icon_like_grey@3x.d2a2a2a8.png');
+    background-position: 50%;
+    background-size: cover;
+    height: 0.3rem;
+    width: 0.3rem;
+}
+.reply-list-container .reply .like-count-hot {
+    font-family: Lobster,cursive;
+}
+.reply-list-container .reply .entity {
+    margin-left: 1.24rem;
+}
+.reply-list-container .reply .entity .username {
+    margin: 0;
+    margin-bottom: 0.08rem;
+}
+.reply-list-container .reply .entity .time {
+    margin-bottom: 0.08rem;
+    opacity: .6;
+}
+.reply-list-container .reply .entity p {
+    margin: 0;
+}
+.reply-list-container .reply .entity .text {
+    margin-bottom: 0.3rem;
+    padding-right: 0.7rem;
+}
+@media (-webkit-min-device-pixel-ratio: 2) {
+    .kyt-divider {
+        -webkit-transform: scaleY(.5);
+        transform: scaleY(.5);
+    }
+}
+.kyt-divider {
+    background: #fff;
+    height: 1px;
+}
+.sharePop{
+    width:100%;
+    height: 100%;
+    background: #fff;
+    position: fixed;
+    z-index: 1000;
+    top:0;
+    left: 0;
+    display: none;
+}
+.sharePop img{
+    width: 100%;
+    height: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

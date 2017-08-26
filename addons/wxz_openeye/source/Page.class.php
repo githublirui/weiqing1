@@ -15,6 +15,7 @@ class Page {
         'index' => '首页',
         'hot' => '热门',
         'category' => '分类',
+        'detail' => '详情页',
     );
 
     /**

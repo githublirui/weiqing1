@@ -3,20 +3,30 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
-        <title>视频详情页</title>
+        <title>{$info['name']}</title>
         <link href="{$modulePath}css/style.css" rel="stylesheet" type="text/css">
         <link href="{$modulePath}css/swiper.css" rel="stylesheet" type="text/css">
         <script src="{$modulePath}js/jquery-1.11.1.min.js"></script>
         <script src="{$modulePath}js/common.js"></script>
         <script src="{$modulePath}js/jquery.lazyload.min.js"></script>
         <script src="{$modulePath}js/swiper.js"></script>
-        <script type="text/javascript">
-                    $(function () {
-                    $("#play-button").on("touchstart mousedown", function () {
-                    $(".kyt-player .cover, #play-button").hide();
-                            $("#video")[0].play();
-                    });
-                    });</script>
+<script type="text/javascript">
+$(function () {
+	//视频播放
+	$("#play-button").on("touchstart mousedown", function () {
+		$(".kyt-player .cover, #play-button").hide();
+		$("#video")[0].play();
+	});
+	//分享点击功能
+	$("#shareBtn").on("touchstart mousedown", function (e) {
+		$(".sharePop").show();
+		return false;
+	});
+	$(".sharePop").on("touchstart mousedown", function () {
+		$(this).hide();
+	});
+});
+</script>
     </head>
     <body class="videoPage">
         <!--<div class="kyt-player">-->
@@ -25,7 +35,7 @@
         <!--<div class="cover" style="background-image: url(&quot;{$attach_url}/{$info['pic']}&quot;);"></div>-->
         <!--<div class="play-button" id="play-button"></div>-->
         <!--</div>-->
-        <div class="video-info" style="background-image: url(images/078b8ad2e9514d847c949909533bcdf4.jpeg);">
+        <div class="video-info" style="background-image: url({$attach_url.'/'.$info['pic']});">
             <div class="video-meta-positioner">
                 <div class="video-meta">
                     <h1>{$info['name']}</h1>
@@ -41,8 +51,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;">
-                            <span class="video-ico"></span>
+                        <a href="javascript:;" id='shareBtn'>
+                            <span class="video-ico1"></span>
                             <span class="video-text">分享</span>
                         </a>
                     </li>
@@ -52,6 +62,34 @@
                     <a href="javascript:;" class="comment">评论</a>
                 </div>
             </div>
+
+            <div class="reply-list-container">
+                <div class="kyt-divider"></div>
+                <div class="header">热门评论</div>
+                <div class="reply-list">  
+                    {php foreach($comments as $row) { }
+                    <a>
+                        <div class="reply">
+                            <div class="like">
+                                <div class="like-count">
+                                    <!--<div>432</div>-->
+                                    <!--<div class="like-count-icon"></div>-->
+                                </div>  
+                                <!--<div class="like-count-hot">- Hot -</div>-->  
+                            </div>
+                            <div class="avatar" style="background-image: url('{$row['fans_info']['avatar']}')"></div>
+                            <div class="entity">
+                                <p class="username">{$row['fans_info']['nickname']}</p>
+                                <p class="time">{$row['date_format']}</p>
+                                <p class="text">{$row['content']}</p>
+                            </div>
+                        </div>
+                    </a>
+                    {php } }
+                </div>   
+                <div class="kyt-divider"></div>
+            </div>
+
             <div class="relate-video-list-positioner">
                 <div class="relate-video-list">  
                     {php foreach($list as $row) { }
@@ -73,38 +111,41 @@
                 <div class="qr-tips">长按二维码关注「开眼 Eyepetizer」微信公众号</div>
             </div>
         </div>
+        <div class="sharePop"><img src="{$modulePath}images/share.png" /></div>
     </body>
 
     <script type="text/javascript">
-        $(function () {
-            $('.like').click(function () {
+                $(function () {
+                $('.like').click(function () {
                 var param = {};
-                param.page_id = {$info['id']};
-                $.ajax({
-                    url: "{php echo $this->createMobileUrl("ajax",array("sdo"=>"like"))}",
-                    type: "post",
-                    dataType: "html",
-                    data: param,
-                    success: function (dat) {
-                        alert(dat);
-                    }
+                        param.page_id = {$info['id']};
+                        $.ajax({
+                        url: "{php echo $this->createMobileUrl("ajax",array("sdo"=>"like"))}",
+                                type: "post",
+                                dataType: "html",
+                                data: param,
+                                success: function (dat) {
+                                alert(dat);
+                                window.location.reload();
+                                }
+                        });
                 });
-            });
-             $('.comment').click(function () {
+                        $('.comment').click(function () {
                 var param = {};
-                param.page_id = {$info['id']};
-                param.content = $(".messages").val();
-                $.ajax({
-                    url: "{php echo $this->createMobileUrl("ajax",array("sdo"=>"comment"))}",
-                    type: "post",
-                    dataType: "html",
-                    data: param,
-                    success: function (dat) {
-                        alert(dat);
-                        $(".messages").val('');
-                    }
+                        param.page_id = {$info['id']};
+                        param.content = $(".messages").val();
+                        $.ajax({
+                        url: "{php echo $this->createMobileUrl("ajax",array("sdo"=>"comment"))}",
+                                type: "post",
+                                dataType: "html",
+                                data: param,
+                                success: function (dat) {
+                                alert(dat);
+                                        $(".messages").val('');
+                                        window.location.reload();
+                                }
+                        });
+                })
                 });
-            })
-        });
     </script>
 </html>

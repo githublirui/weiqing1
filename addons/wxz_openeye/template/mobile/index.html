@@ -15,7 +15,7 @@
     <body class="indexPage">
         <div class="main">
             <div class="swiper-container swiper1" id="swiper1">
-                <span class="search-ico"></span>
+                <!--<span class="search-ico"></span>-->
                 <div class="swiper-wrapper">
                     {php foreach((array)$result['banner'] as $row) { }
                     <div class="swiper-slide">
@@ -74,24 +74,24 @@
                     </div>		
                 </div>
             </div>
-            
-<!--            <ul class="imgLists">
-                {php foreach((array)$result['horizontal'] as $row) { }
-                <li>
-                    <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
-                        <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
-                    </a>
-                    <div class="bigImg-bottom">
-                        <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
-                        <div class="image-center">
-                            <h2 class="text-over">{$row['name']}</h2>
-                            <p class="text-over">{$row['desc']}</p>
-                        </div>
-                        <div class="image-right text-over">{$row['upload_date']}</div>
-                    </div>
-                </li>
-                {php } }
-            </ul>-->
+
+            <!--            <ul class="imgLists">
+                            {php foreach((array)$result['horizontal'] as $row) { }
+                            <li>
+                                <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
+                                    <img class="bigImg lazy" src="{$attach_url}/{$row['pic']}" />
+                                </a>
+                                <div class="bigImg-bottom">
+                                    <div class="image"><img class="lazy" src="{$attach_url}/{$row['avatar']}" /></div>
+                                    <div class="image-center">
+                                        <h2 class="text-over">{$row['name']}</h2>
+                                        <p class="text-over">{$row['desc']}</p>
+                                    </div>
+                                    <div class="image-right text-over">{$row['upload_date']}</div>
+                                </div>
+                            </li>
+                            {php } }
+                        </ul>-->
             <!-- 热门分类 -->
             <!--            <div class="imgLists-hot">
                             <h1>热门分类 <a class="right-arrow"></a></h1>
@@ -134,26 +134,14 @@
         <ul id="footer">
             <li>
                 <a href="{php echo $this->createMobileUrl('index')}" class="active">
-                    <div class="foot-ico"></div>
+                    <div class="foot-ico" style="background: {$modulePath}/images/index.jpg"></div>
                     <p>首页</p>
                 </a>
             </li>
             <li>
                 <a href="{php echo $this->createMobileUrl('find')}">
-                    <div class="foot-ico"></div>
+                    <div class="foot-ico1"></div>
                     <p>发现</p>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <div class="foot-ico"></div>
-                    <p>关注</p>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <div class="foot-ico"></div>
-                    <p>我的</p>
                 </a>
             </li>
         </ul>
