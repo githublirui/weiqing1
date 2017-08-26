@@ -29,6 +29,12 @@ if (checksubmit()) {
         message('添加失败', $this->createWebUrl('page_add'));
     }
 }
+
+//获取所有分类
+$condition = "`uniacid`={$_W['uniacid']}";
+$sql = "SELECT DISTINCT category FROM " . tablename('wxz_openeye_page') . " WHERE {$condition}";
+$categorys = pdo_fetchall($sql, $pars);
+
 load()->web('tpl');
 include $this->template('web/page_add');
 ?>

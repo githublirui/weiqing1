@@ -13,6 +13,46 @@
         });
     });
 </script>
+<style type="text/css">
+    .tipselect {  
+        width: 50%;  
+        height: 134px!important;
+        margin: 0px;  
+        outline: none;  
+        border: 1px solid #999;  
+        margin-top: 10px;  
+    }  
+    .second input {  
+        width: 167px;  
+        top: 9px;  
+        outline: none;  
+        border: 0pt;  
+        position: absolute;  
+        line-height: 30px;  
+        left: 8px;  
+        height: 20px;  
+        border: 1px solid #999;
+    }  
+    .second ul {  
+        position: absolute;  
+        top: 27px;  
+        border: 1px solid #999;  
+        left: 8px;  
+        width: 125px;  
+        line-height: 16px;  
+    }  
+    .ul li{  
+        list-style: none;  
+        width: 161px;  
+        /* left: 15px; */  
+        margin-left: -40px;  
+        font-family: 微软雅黑;  
+        padding-left: 4px;  
+    }  
+    .blue {   
+        background:#1e91ff;   
+    } 
+</style>
 <div class="clearfix">
     <form id="theform" class="form form-horizontal" action="" method="post">
         <div class="panel panel-default">
@@ -23,7 +63,12 @@
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">视频分类</label>
                     <div class="col-sm-9 col-xs-12">
-                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="category" value="">
+                        <input type="text" id="makeupCo" class="form-control span7 makeinp" onfocus="setfocus(this)" oninput="setinput(this);" placeholder="" name="category" value="">
+                        <select name="makeupCoSe" id="typenum" class="tipselect" onchange="changeF(this)" size="10" style="display:none;">  
+                            {php foreach($categorys as $row) { }
+                            <option value="">{$row['category']}</option>  
+                            {php } }
+                        </select>  
                     </div>
                 </div>
                 <div class="form-group">
@@ -91,4 +136,50 @@
         </div>
     </form>
 </div>
+<script type="text/javascript">
+    var TempArr = [];//存储option  
+    $(function () {
+        /*先将数据存入数组*/
+        $("#typenum option").each(function (index, el) {
+            TempArr[index] = $(this).text();
+        });
+        $(document).bind('click', function (e) {
+            var e = e || window.event; //浏览器兼容性     
+            var elem = e.target || e.srcElement;
+            while (elem) { //循环判断至跟节点，防止点击的是div子元素     
+                if (elem.id && (elem.id == 'typenum' || elem.id == "makeupCo")) {
+                    return;
+                }
+                elem = elem.parentNode;
+            }
+            $('#typenum').css('display', 'none'); //点击的不是div或其子元素     
+        });
+    })
+
+    function changeF(this_) {
+        $(this_).prev("input").val($(this_).find("option:selected").text());
+        $("#typenum").css({"display": "none"});
+    }
+    function setfocus(this_) {
+        $("#typenum").css({"display": ""});
+        var select = $("#typenum");
+        for (i = 0; i < TempArr.length; i++) {
+            var option = $("<option></option>").text(TempArr[i]);
+            select.append(option);
+        }
+        setinput(this_);
+    }
+
+    function setinput(this_) {
+        var select = $("#typenum");
+        select.html("");
+        for (i = 0; i < TempArr.length; i++) {
+            //若找到以txt的内容开头的，添option  
+            if (TempArr[i].substring(0, this_.value.length).indexOf(this_.value) == 0) {
+                var option = $("<option></option>").text(TempArr[i]);
+                select.append(option);
+            }
+        }
+    }
+</script>
 {template 'common/footer'}

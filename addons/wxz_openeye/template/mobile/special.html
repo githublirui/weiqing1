@@ -41,11 +41,10 @@
                 {php foreach($list as $row) { }
                 <div class="video" data-vid="45984">
                     <div class="video-player" style="height:393.75px;">
-                        <div class="video-poster" style="background-image: url('{$attach_url}/{$row['page']['pic']}');background-size: cover;"></div>
-                        <!--<img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">-->
-                        <video webkit-playsinline="" playsinline="true" preload="none" onplaying="this.controls=true">
-                            <source src="http://baobab.kaiyanapp.com/api/v1/playUrl?vid=45984&amp;editionType=default&amp;source=qcloud " type="video/mp4">
-                        </video>
+                        <a href="{php echo $this->createMobileUrl('detail',array('id'=>$row['page_id']))}">
+                            <div class="video-poster" style="background-image: url('{$attach_url}/{$row['page']['pic']}');background-size: cover;"></div>
+                            <!--<img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">-->
+                        </a>
                     </div>
                     <div id="meta">
                         <div class="title">{$row['page']['name']}</div>
