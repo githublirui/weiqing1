@@ -23,95 +23,39 @@
         </div>
         <div class="kyt-container">
             <div class="top-cover">
-                <img alt="" src="http://img.kaiyanapp.com/117df4f5a7f58fe9c82b59b513a706f0.jpeg?imageMogr2/quality/60/format/jpg">
+                <img alt="" src="{$attach_url}/{$special_info['pic']}">
             </div>
             <div id="text-wrap">
                 <div class="content">
                     <div class="abstract">
-                        <p>与其说他是个 Rapper 不如说是个相声演员</p>
+                        <p>{$special_info['name']}</p>
                     </div>
-                    <p class="desc">说唱歌手 Lil Dicky 的歌词内容往往是很多人最瞧不上的炫富和啪啪啪，但其实他只是用了一种自嘲和解构的方式去调侃生活，曲风非常丧，不过 Flow 还是很好听的，幽默同时不失音乐性。</p>
+                    <p class="desc">
+                        {$special_info['desc']}
+                    </p>
                 </div>
                 <div class="spliter">
                 </div>
             </div>
             <div class="video-list"> 
+                {php foreach($list as $row) { }
                 <div class="video" data-vid="45984">
                     <div class="video-player" style="height:393.75px;">
-                        <div class="video-poster" style="background-image: url('http://img.kaiyanapp.com/132b06b1281861b79a559051c182ee3d.jpeg?imageMogr2/quality/60/format/jpg');background-size: cover;"></div>
-                        <img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">
+                        <div class="video-poster" style="background-image: url('{$attach_url}/{$row['page']['pic']}');background-size: cover;"></div>
+                        <!--<img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">-->
                         <video webkit-playsinline="" playsinline="true" preload="none" onplaying="this.controls=true">
                             <source src="http://baobab.kaiyanapp.com/api/v1/playUrl?vid=45984&amp;editionType=default&amp;source=qcloud " type="video/mp4">
                         </video>
                     </div>
                     <div id="meta">
-                        <div class="title">史上性价比最高的 MV：$ave Dat Money</div>
-                        <div class="subtitle">#音乐 / 8' 47"</div>
-                        <button class="share"></button>
+                        <div class="title">{$row['page']['name']}</div>
+                        <div class="subtitle">#{$row['page']['category']} / {$row['page']['time']}</div>
+                        <!--<button class="share"></button>-->
                     </div>
-                    <div class="desc">他不花钱，用借到的房子和车拍了这个看似很骄奢淫逸的 MV……而且这货每首歌都给自己起一个新外号……From Lil Dicky</div>
-                    <div class="spliter"></div>
-                </div>  <div class="video" data-vid="45997">
-                    <div class="video-player" style="height:393.75px;">
-                        <div class="video-poster" style="background-image: url('http://img.kaiyanapp.com/0c66b613862ab0173e6c364755b86cff.jpeg?imageMogr2/quality/60/format/jpg');background-size: cover;"></div>
-                        <img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">
-                        <video webkit-playsinline="" playsinline="true" preload="none" onplaying="this.controls=true">
-                            <source src="http://baobab.kaiyanapp.com/api/v1/playUrl?vid=45997&amp;editionType=default&amp;source=qcloud " type="video/mp4">
-                        </video>
-                    </div>
-                    <div id="meta">
-                        <div class="title">飙车慎点：饶舌鬼才斥资 2000 万的大脑洞</div>
-                        <div class="subtitle">#音乐 / 10' 54"</div>
-                        <button class="share"></button>
-                    </div>
-                    <div class="desc">Lil Dicky 的这首「Pillow Talking」（枕边情话）与 Brain（在片中有点萌）合作，脑洞开得根本是一部爱情喜剧！2000 万什么的，只能说，出来混总是要还的……From Yu Wei</div>
-                    <div class="spliter"></div>
-                </div>  <div class="video" data-vid="45996">
-                    <div class="video-player" style="height:393.75px;">
-                        <div class="video-poster" style="background-image: url('http://img.kaiyanapp.com/8de893b6c67c2258cf3fe8ec755dc850.jpeg?imageMogr2/quality/60/format/jpg');background-size: cover;"></div>
-                        <img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">
-                        <video webkit-playsinline="" playsinline="true" preload="none" onplaying="this.controls=true">
-                            <source src="http://baobab.kaiyanapp.com/api/v1/playUrl?vid=45996&amp;editionType=default&amp;source=qcloud " type="video/mp4">
-                        </video>
-                    </div>
-                    <div id="meta">
-                        <div class="title">飙车慎点：她前男友这么帅我拿什么争！</div>
-                        <div class="subtitle">#音乐 / 4' 26"</div>
-                        <button class="share"></button>
-                    </div>
-                    <div class="desc">「Ex-Boyfriend」这个 MV 来自 Dicky 的首张合辑，“太难了”。From Lil Dicky </div>
-                    <div class="spliter"></div>
-                </div>  <div class="video" data-vid="45993">
-                    <div class="video-player" style="height:393.75px;">
-                        <div class="video-poster" style="background-image: url('http://img.kaiyanapp.com/ca24b7c3933a3fd726ea5e192fc8fbdc.jpeg?imageMogr2/quality/60/format/jpg');background-size: cover;"></div>
-                        <img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">
-                        <video webkit-playsinline="" playsinline="true" preload="none" onplaying="this.controls=true">
-                            <source src="http://baobab.kaiyanapp.com/api/v1/playUrl?vid=45993&amp;editionType=default&amp;source=qcloud " type="video/mp4">
-                        </video>
-                    </div>
-                    <div id="meta">
-                        <div class="title">飙车慎点：老婆，跪求让我释放自己！</div>
-                        <div class="subtitle">#音乐 / 5' 4"</div>
-                        <button class="share"></button>
-                    </div>
-                    <div class="desc">废话不多说，祝大家不要像他，七夕都有顺利的性生活……From LilDickyVEVO </div>
-                    <div class="spliter"></div>
-                </div>  <div class="video" data-vid="45991">
-                    <div class="video-player" style="height:393.75px;">
-                        <div class="video-poster" style="background-image: url('http://img.kaiyanapp.com/df9accb25c9462cdbfba2ec1aaaa47fa.jpeg?imageMogr2/quality/60/format/jpg');background-size: cover;"></div>
-                        <img class="video-play" src="assets/images/videos_article/icon_play.8aa59451.png">
-                        <video webkit-playsinline="" playsinline="true" preload="none" onplaying="this.controls=true">
-                            <source src="http://baobab.kaiyanapp.com/api/v1/playUrl?vid=45991&amp;editionType=default&amp;source=qcloud " type="video/mp4">
-                        </video>
-                    </div>
-                    <div id="meta">
-                        <div class="title">是的，他还有这种画风</div>
-                        <div class="subtitle">#创意 / 5' 54"</div>
-                        <button class="share"></button>
-                    </div>
-                    <div class="desc">找工作谁都经历过（好的，我知道你年轻但你也即将会经历！）这首「Professional Rapper」就是他与 Snoop Dogg 合作，把自己的简历唱了出来。From Lil Dicky </div>
+                    <div class="desc">{$row['page']['desc']}</div>
                     <div class="spliter"></div>
                 </div>  
+                {php } }
             </div>
             <div id="footer">
                 <div class="spliter"></div>

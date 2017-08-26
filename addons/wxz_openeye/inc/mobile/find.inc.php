@@ -76,5 +76,10 @@ if ($_W['setting']['remote']['type']) {
     $attach_url = $_W['siteroot'] . $_W['config']['upload']['attachdir'];
 }
 
+//获取热门专题
+$condition = "`uniacid`={$_W['uniacid']}";
+$sql = "SELECT * FROM " . tablename('wxz_openeye_special') . " WHERE {$condition} ORDER BY `id` DESC";
+$specials = pdo_fetchall($sql, $pars);
+
 include $this->template('find');
 ?>

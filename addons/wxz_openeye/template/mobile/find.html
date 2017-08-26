@@ -113,6 +113,24 @@
                 </div>
 
                 <div id="classifyTab"  style="display:none">
+                    <!-- 热门专题 -->
+                    <div class="hotSpecial">
+                        <h1 class="hot-title">热 门 专 题</h1>
+                        <div class="swiper-container swipers" id="swiper2">
+                            <div class="swiper-wrapper">
+                                {php foreach((array)$specials as $k=>$row) { }
+                                <div class="swiper-slide">
+                                    <a href="{php echo $this->createMobileUrl('special',array('id'=>$row['id']))}">
+                                        <img src="{$attach_url}/{$row['pic']}" />
+                                    </a>
+                                </div>
+                                {php } }
+                            </div>
+                            <!-- 分页器 -->
+                            <div class="swiper-pagination paginations" id="pagination2"></div>
+                        </div>
+                    </div>
+
                     <!-- 滚动条到底部加载 -->
                     {php foreach((array)$resultCategory['horizontal'] as $k=>$list) { }
                     <ul id="classifyLists">
