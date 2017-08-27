@@ -6,6 +6,7 @@
  */
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/static/';
+$_W['module_config'] = $this->module['config'];
 
 //获取图片域名
 setting_load('remote');

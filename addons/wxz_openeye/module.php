@@ -42,6 +42,8 @@ class Wxz_openeyeModule extends WeModule {
                     'desc' => $_GPC['desc'],
                 ),
                 'logo' => $_GPC['logo'],
+                'qrcodetxt' => $_GPC['qrcodetxt'],
+                'qrcode' => $_GPC['qrcode'],
             );
             if ($this->saveSettings($data)) {
                 if (function_exists('cache_system_key')) {
