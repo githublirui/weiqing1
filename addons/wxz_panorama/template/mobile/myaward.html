@@ -26,9 +26,11 @@
                     {if $win['is_send'] == 1}
                     <span style="color:green">已发放</span>
                     {else}
-                    <span>
-                        <button class="verification" data-id="{$win['id']}">确认核销</button>
-                    </span>
+                     {if $win['fee'] == 0}
+                        <span>
+                            <button class="verification" data-id="{$win['id']}">确认核销</button>
+                        </span>
+                         {/if}
                     {/if}
                 </p>
                 {php } }
