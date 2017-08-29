@@ -2,6 +2,8 @@
 
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/function/global.func.php';
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
+
 $start_time = $this->module['config']['quanjin']["start_time"];
 $end_time = $this->module['config']['quanjin']["end_time"];
 
@@ -16,6 +18,9 @@ if ($end_time && time() >= strtotime($end_time)) {
     include $this->template(get_real_tpl('msg'));
     die;
 }
+
+$aid = intval($_GPC['aid']);
+$activityInfo = Activity::getById($aid, 'id,name');
 
 $user = $this->auth();
 
@@ -40,11 +45,11 @@ if ($user) {
 //判断是否关注订阅号
 if (!$wx_fans || $wx_fans['follow'] != 1) {
     //没有关注
-    if ($this->module['config']['force_follow'] == 1) {
-        message('请先关注帐号后参加活动', $this->module['config']['force_follow_url']);
+    if ($activityInfo['force_follow'] == 1) {
+        message('请先关注帐号后参加活动', $activityInfo['force_follow_url']);
     }
 }
 
 require_once WXZ_PANORAMA . '/source/Page.class.php';
-$pageContents = Page::getPage(array(4, 5, 6, 7, 8));
+$pageContents = Page::getPage($aid, array(4, 5, 6, 7, 8));
 ?>

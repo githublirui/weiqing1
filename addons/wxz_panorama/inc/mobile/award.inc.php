@@ -6,6 +6,8 @@
  */
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Project.class.php';
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
+
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 $_W['module_config'] = $this->module['config'];
@@ -13,7 +15,11 @@ $pid = $_GPC['pid'];
 $next_pano = Project::getNextProject($pid);
 $next_pano = $next_pano['id'];
 
-$redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}";
+$aid = intval($_GPC['aid']);
+$activityInfo = Activity::getById($aid, 'id,name');
+
+$redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}&aid={$aid}";
+
 if (!$pid) {
     message('场景参数不能为空！', $redirect);
 }
@@ -24,7 +30,7 @@ if (!$user['cellphone'] && strpos($_SERVER["HTTP_REFERER"], "do=quanjing") === f
 }
 
 //判断是否中奖，分享
-$sql = "select * from " . tablename('wxz_panorama_win') . " where fans_id =" . $user["uid"];
+$sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"];
 $is_win = pdo_fetch($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
@@ -41,7 +47,7 @@ $is_fans = pdo_fetch($sql, $pars);
 $settings = $this->module['config'];
 //判断用户是否中过奖
 if ($user["award_num"] >= $settings['max_award_num']) {
-    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}'>点击进入下一个场景</a></p>";
+    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}&aid={$aid}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
 }
@@ -66,7 +72,7 @@ function get_rand($probability) {
 
 //奖品概率计算
 //查询所有奖品
-$sql = "SELECT * FROM " . tablename('wxz_panorama_award') . " WHERE uniacid={$_GPC['i']} AND left_num>0";
+$sql = "SELECT * FROM " . tablename('wxz_panorama_award') . " WHERE aid={$aid} AND uniacid={$_GPC['i']} AND left_num>0";
 $award_list = pdo_fetchall($sql, $pars);
 foreach ($award_list as $award) {
     $prize_arr[] = array('id' => $award['id'], 'type' => $award['type'], 'min_money' => $award['min_money'], 'max_money' => $award['max_money'], 'left_num' => $award['left_num'], 'prize' => $award['name'], 'pro' => $award['probability']);
@@ -116,6 +122,7 @@ if ($award_type == 1) {
 if ($award_id) {
     $data = array(
         "uniacid" => $user["uniacid"],
+        "aid" => $aid,
         "fans_id" => $user["uid"],
         "award_id" => $award_id,
         "award" => $award_name,
@@ -129,11 +136,16 @@ if ($award_id) {
     $sql = "update " . tablename('wxz_panorama_award') . " set left_num=left_num-" . $inventory . " where id={$award_id}";
     pdo_query($sql);
 //    $show_msg = "<p>恭喜你，获得了" . $award_name . " 分享后可以领取</p>";
-    include $this->template(get_real_tpl('input_msg'));
+    if (!$is_fans['cellphone']) {
+        include $this->template(get_real_tpl('input_msg'));
+    } else {
+        header('Location: ' . $this->createMobileUrl('win'));
+        exit;
+    }
     //include $this->template('msg');
     die;
 } else {
-    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}'>点击进入下一个场景</a></p>";
+    $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}&aid={$aid}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
 }

@@ -7,6 +7,7 @@
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Scene.class.php';
 require_once WXZ_PANORAMA . '/source/Project.class.php';
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
 
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
@@ -34,8 +35,9 @@ $user = $this->auth();
 include dirname(__FILE__) . '/permission.php';
 
 //判断是否中奖，分享
-$sql = "select * from " . tablename('wxz_panorama_win') . " where fans_id =" . $user["uid"];
+$sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"];
 $is_win = pdo_fetch($sql, $pars);
+
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
 

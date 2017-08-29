@@ -8,6 +8,8 @@ session_start();
  * 执行动作
  */
 require_once WXZ_PANORAMA . '/source/Fans.class.php';
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
+
 $f = new Fans();
 $openid = $_SESSION['__:proxy:openid'];
 $fans = $f->getOne($openid, true);
@@ -92,10 +94,14 @@ if ($do == 'share') {
         echo 'error';
     }
 } else if ($do == 'verification') {
+    
+    $aid = intval($_GPC['aid']);
+    $activityInfo = Activity::getById($aid, 'id,name');
+    
     $settings = $this->module['config'];
     $id = $_GPC['id'];
     $code = $_GPC['code'];
-    if ($code != $settings['verification_code']) {
+    if ($code != $activityInfo['verification_code']) {
         echo '核销码错误';
         die;
     }
