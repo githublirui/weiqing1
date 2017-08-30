@@ -143,7 +143,7 @@ if ($award_id) {
     if (!$is_fans['cellphone']) {
         include $this->template(get_real_tpl('input_msg'));
     } else {
-        header('Location: ' . $this->createMobileUrl('win'));
+        header('Location: ' . $this->createMobileUrl('win', array('aid' => $aid)));
         exit;
     }
 //include $this->template('msg');

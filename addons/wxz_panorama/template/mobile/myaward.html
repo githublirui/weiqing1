@@ -59,7 +59,7 @@
                 pars.id = $(this).attr('data-id');
                 pars.code = prompt("请输入核销码");
                 $.ajax({
-                    url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=verification",
+                    url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=verification&aid={$aid}",
                     type: "post",
                     dataType: "html",
                     data: pars,
