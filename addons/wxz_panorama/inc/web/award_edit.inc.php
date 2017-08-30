@@ -5,6 +5,10 @@ global $_W, $_GPC;
 $id = $_GPC['id'];
 $award_info_sql = "SELECT * FROM " . tablename('wxz_panorama_award') . " WHERE id={$id}";
 $award_info = pdo_fetch($award_info_sql);
+
+require_once WXZ_PANORAMA . '/source/Activity.class.php';
+$activityInfo = Activity::getById($award_info['aid'], 'id,name');
+
 if (!$award_info) {
     message('奖品不存在', $this->createWebUrl('award_list'));
 }
@@ -36,9 +40,9 @@ if (checksubmit()) {
     }
 
     if (pdo_update('wxz_panorama_award', $data, array('id' => $id))) {
-        message('更新成功', $this->createWebUrl('award_list'));
+        message('更新成功', $this->createWebUrl('award_list', array('aid' => $award_info['aid'])));
     } else {
-        message('更新失败', $this->createWebUrl('award_add'));
+        message('更新失败', $this->createWebUrl('award_edit', array('id' => $id)));
     }
 }
 include $this->template('web/award_edit');

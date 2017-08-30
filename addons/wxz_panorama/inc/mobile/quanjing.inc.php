@@ -8,17 +8,19 @@ require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Scene.class.php';
 require_once WXZ_PANORAMA . '/source/Project.class.php';
 require_once WXZ_PANORAMA . '/source/Activity.class.php';
+include_once dirname(__FILE__) . '/permission.php';
+
+session_start();
+$_SESSION['__:proxy:url_from'] = 'quanjing';
 
 global $_W, $_GPC;
 $modulePath = '../addons/' . $_GPC['m'] . '/';
+
 $_W['module_config'] = $this->module['config'];
 
-$aid = intval($_GPC['aid']); //活动id
 if (!$aid) {
-    message('活动参数错误', $this->createMobileUrl('index'));
+    message('活动参数错误', $this->createMobileUrl('index', array('aid' => $aid)));
 }
-
-$activityInfo = Activity::getById($aid);
 
 $pid = $_GPC['pid']; //默认第一个项目
 if ($pid) {
@@ -28,11 +30,10 @@ if ($pid) {
 }
 
 if (!$projectInfo) {
-    message('场景不存在，或已删除', $this->createMobileUrl('index'));
+    message('场景不存在，或已删除', $this->createMobileUrl('index', array('aid' => $aid)));
 }
 $pid = $projectInfo['id'];
 $user = $this->auth();
-include dirname(__FILE__) . '/permission.php';
 
 //判断是否中奖，分享
 $sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"];

@@ -3,9 +3,13 @@
 global $_W, $_GPC;
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Activity.class.php';
+$modulePath = '../addons/' . $_GPC['m'] . '/';
 
-$start_time = $this->module['config']['quanjin']["start_time"];
-$end_time = $this->module['config']['quanjin']["end_time"];
+$aid = intval($_GPC['aid']);
+$activityInfo = Activity::getById($aid);
+
+$start_time = $activityInfo["date_start"];
+$end_time = $activityInfo["date_end"] . '23:00:00';
 
 if ($start_time && time() < strtotime($start_time)) {
     $show_msg = '<p>亲，活动即将开始</p><p>不要着急哦~~</p><p>活动时间' . date("m月-d日", strtotime($start_time)) . '-' . date("m月-d日", strtotime($end_time)) . '</p>';
@@ -18,9 +22,6 @@ if ($end_time && time() >= strtotime($end_time)) {
     include $this->template(get_real_tpl('msg'));
     die;
 }
-
-$aid = intval($_GPC['aid']);
-$activityInfo = Activity::getById($aid, 'id,name');
 
 $user = $this->auth();
 

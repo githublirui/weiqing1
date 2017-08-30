@@ -7,16 +7,17 @@
 require_once WXZ_PANORAMA . '/function/global.func.php';
 require_once WXZ_PANORAMA . '/source/Project.class.php';
 require_once WXZ_PANORAMA . '/source/Activity.class.php';
+include_once dirname(__FILE__) . '/permission.php';
 
 global $_W, $_GPC;
+
 $modulePath = '../addons/' . $_GPC['m'] . '/';
 $_W['module_config'] = $this->module['config'];
 $pid = $_GPC['pid'];
-$next_pano = Project::getNextProject($pid);
+
+$next_pano = Project::getNextProject($aid, $pid);
 $next_pano = $next_pano['id'];
 
-$aid = intval($_GPC['aid']);
-$activityInfo = Activity::getById($aid, 'id,name');
 
 $redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}&aid={$aid}";
 
@@ -24,12 +25,13 @@ if (!$pid) {
     message('场景参数不能为空！', $redirect);
 }
 
-include dirname(__FILE__) . '/permission.php';
-
-if (strpos($_SERVER["HTTP_REFERER"], "do=quanjing") === false) {
-    header('Location: ' . $redirect);
+session_start();
+if ($_SESSION['__:proxy:url_from'] != 'quanjing') {
+    header("Location: {$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}&aid={$aid}");
     exit;
 }
+
+unset($_SESSION['__:proxy:url_from']);
 
 //判断是否中奖，分享
 $sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"];

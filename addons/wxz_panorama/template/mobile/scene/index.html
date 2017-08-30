@@ -20,9 +20,9 @@
         <div id="pano" style="width:100%;height:100%;">
             <noscript><table style="width:100%;height:100%;"><tr style="valign:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
             <script>
-                    embedpano({swf: "{$modulePath}template/mobile/scene/krpano.swf", xml: "{php echo $this->createMobileUrl('genxml',array('pid'=>$pid,'debug'=>$_GPC['debug']));}", target: "pano", html5: "auto", mobilescale: 1.0, passQueryParameters: true});
+                embedpano({swf: "{$modulePath}template/mobile/scene/krpano.swf", xml: "{php echo $this->createMobileUrl('genxml',array('aid'=>$aid,'pid'=>$pid,'debug'=>$_GPC['debug']));}", target: "pano", html5: "auto", mobilescale: 1.0, passQueryParameters: true});
             </script>
         </div>
     </body>
-      {template 'share'}
+    {template 'share'}
 </html>

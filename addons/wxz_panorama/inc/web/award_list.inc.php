@@ -6,8 +6,10 @@ $pindex = intval($_GPC['page']);
 $pindex = max($pindex, 1);
 $psize = 15;
 
+$aid = intval($_GPC['aid']);
+
 $start = ($pindex - 1) * $psize;
-$condition = '`uniacid`=:uniacid';
+$condition = "`uniacid`=:uniacid AND aid={$aid}";
 $pars = array();
 $pars[':uniacid'] = $_W['uniacid'];
 

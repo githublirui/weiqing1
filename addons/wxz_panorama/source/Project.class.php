@@ -49,18 +49,18 @@ class Project {
      * 获取下一个项目id
      * @param type $pid
      */
-    public static function getNextProject($pid) {
+    public static function getNextProject($aid, $pid) {
         global $_W;
         $proInfo = self::getById($pid, 'sort_order');
         if (!$proInfo) {
             return self::getFirstPro();
         }
 
-        $condition = "uniacid={$_W['uniacid']} AND sort_order<={$proInfo['sort_order']} AND id !={$pid}";
+        $condition = "uniacid={$_W['uniacid']} AND aid={$aid} AND sort_order<={$proInfo['sort_order']} AND id !={$pid}";
         $sql = "SELECT * FROM " . tablename(self::$table) . " WHERE {$condition} order by `sort_order` desc,id desc";
         $nextInfo = pdo_fetch($sql);
         if (!$nextInfo) {
-            return self::getFirstPro(); //没有下一个场景，返回第一个场景
+            return self::getFirstPro($aid); //没有下一个场景，返回第一个场景
         }
         return $nextInfo;
     }

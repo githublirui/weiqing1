@@ -14,12 +14,13 @@ $html = ''; //xml配置
 $krpanoElement = ''; //krpano内容
 //参数校验
 $pid = (int) $_GPC['pid'];
-$next_project = Project::getNextProject($pid); //下一个项目
 
 if (!$pid) {
     message('项目id错误');
 }
 $projectInfo = Project::getById($pid);
+
+$next_project = Project::getNextProject($projectInfo['aid'], $pid); //下一个项目
 
 if (!$projectInfo) {
     message('项目不能存在,或已删除');
@@ -116,7 +117,7 @@ foreach ($scenes as $i => $scene) {
                 'rz' => "",
                 'ry' => "",
                 'rx' => "",
-                'onclick' => "openurl(" . urldecode($_W['siteroot'] . "app/index.php?i=" . $_W['uniacid'] . "&amp;pid=" . $pid . "&amp;c=entry&amp;do=award&amp;m=" . $_GPC['m'] . "&amp;aid=" . $projectInfo['aid']) . ",_blank);",
+                'onclick' => "openurl(" . urldecode($_W['siteroot'] . "app/index.php?i=" . $_W['uniacid'] . "&amp;pid=" . $pid . "&amp;c=entry&amp;do=award&amp;m=" . $_GPC['m'] . "&amp;aid=" . $projectInfo['aid']) . ");",
                 'url' => tomedia($projectConfigInfo['treasure']),
             );
             $sceneElement .= Scene::createTag('hotspot', $attributes);

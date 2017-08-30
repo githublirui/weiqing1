@@ -96,7 +96,7 @@ if ($do == 'share') {
 } else if ($do == 'verification') {
     
     $aid = intval($_GPC['aid']);
-    $activityInfo = Activity::getById($aid, 'id,name');
+    $activityInfo = Activity::getById($aid, 'verification_code');
     
     $settings = $this->module['config'];
     $id = $_GPC['id'];
