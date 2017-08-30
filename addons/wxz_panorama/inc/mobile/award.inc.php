@@ -23,10 +23,12 @@ $redirect = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$
 if (!$pid) {
     message('场景参数不能为空！', $redirect);
 }
+
 include dirname(__FILE__) . '/permission.php';
 
-if (!$user['cellphone'] && strpos($_SERVER["HTTP_REFERER"], "do=quanjing") === false) {
-    message('请浏览全景，在全景中领取宝箱礼品！', $redirect);
+if (strpos($_SERVER["HTTP_REFERER"], "do=quanjing") === false) {
+    header('Location: ' . $redirect);
+    exit;
 }
 
 //判断是否中奖，分享
@@ -58,7 +60,7 @@ if ($user["award_num"] >= $settings['max_award_num']) {
  * @return integer|string 
  */
 function get_rand($probability) {
-    // 概率数组的总概率精度  
+// 概率数组的总概率精度  
     $max = array_sum($probability);
     foreach ($probability as $key => $val) {
         $rand_number = mt_rand(1, $max); //从1到max中随机一个值  
@@ -142,7 +144,7 @@ if ($award_id) {
         header('Location: ' . $this->createMobileUrl('win'));
         exit;
     }
-    //include $this->template('msg');
+//include $this->template('msg');
     die;
 } else {
     $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}&aid={$aid}'>点击进入下一个场景</a></p>";

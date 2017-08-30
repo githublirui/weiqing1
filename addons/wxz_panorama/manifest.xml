@@ -36,7 +36,6 @@
             <entry title="项目列表" do="project_list" state="" direct="false" />
             <entry title="奖品设置" do="award_list" state="" direct="false" />
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
-            <entry title="数据配置" do="page_list" state="" direct="false" />
         </menu>
     </bindings>
     <install><![CDATA[

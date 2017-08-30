@@ -12,6 +12,9 @@ $rootca = file_get_contents($certDir . '/rootca.pem');
 $apiclient_cert = file_get_contents($certDir . '/apiclient_cert.pem');
 $apiclient_key = file_get_contents($certDir . '/apiclient_key.pem');
 
+$apiclient_cert = substr($apiclient_cert, 0, 10) . '....';
+$apiclient_key = substr($apiclient_key, 0, 10) . '....';
+
 if (checksubmit()) {
     $settings['pay'] = array(
         'appid' => trim($_GPC['appid']),
@@ -22,10 +25,11 @@ if (checksubmit()) {
     file_put_contents($certDir . '/rootca.pem', $_GPC['rootca']);
     file_put_contents($certDir . '/apiclient_cert.pem', $_GPC['apiclient_cert']);
     file_put_contents($certDir . '/apiclient_key.pem', $_GPC['apiclient_key']);
+
     $pars = array('module' => $this->modulename, 'uniacid' => $_W['uniacid']);
     $row = array();
     $row['settings'] = iserializer($settings);
-    
+
     if (function_exists('cache_build_module_info')) {
         cache_build_module_info($this->modulename);
     }
@@ -37,7 +41,7 @@ if (checksubmit()) {
         $setting_cachekey = cache_system_key($_W['uniacid'] . "module_setting:" . $this->modulename);
         cache_delete($setting_cachekey);
     }
-    
+
     if (pdo_fetchcolumn("SELECT module FROM " . tablename('uni_account_modules') . " WHERE module = :module AND uniacid = :uniacid", array(':module' => $this->modulename, ':uniacid' => $_W['uniacid']))) {
         $ret = pdo_update('uni_account_modules', $row, $pars) !== false;
     } else {

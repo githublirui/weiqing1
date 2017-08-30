@@ -15,13 +15,21 @@ class Wxz_panoramaModuleSite extends WeModuleSite {
             $sub_openid = $_GPC['openid'];
             $_SESSION['__:proxy:WXZ_PANORAMA_OPENID'] = $sub_openid;
         }
-        
+
         $openid = $_SESSION['__:proxy:openid'];
         require_once WXZ_PANORAMA . '/source/Fans.class.php';
         $f = new Fans();
         if (!empty($openid)) {
             $exists = $f->getOne($openid, true);
             if (!empty($exists)) {
+                if ($sub_openid && !$exists['sub_openid']) {
+                    //更新订阅号ID
+                    $filters = array();
+                    $filters['uid'] = $exists['uid'];
+                    $rec = array();
+                    $rec['sub_openid'] = $sub_openid;
+                    pdo_update('wxz_panorama_fans', $rec, $filters);
+                }
                 return $exists;
             }
         }

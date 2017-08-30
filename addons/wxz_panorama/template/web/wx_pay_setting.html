@@ -1,4 +1,13 @@
 {template 'common/header'}
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $(function () {
+            $(".enter_empty").focus(function () {
+                $(this).val('');
+            })
+        });
+    });
+</script>
 <div class="clearfix">
     <form id="theform" class="form form-horizontal" action="" method="post">
         <div class="panel panel-default">
@@ -42,7 +51,7 @@
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">rootca证书</label>
                         <div class="col-sm-9 col-xs-12">
-                            <textarea  placeholder="请输入商户rootca证书" style="width:700px;height:300px;" name="rootca">{$rootca}</textarea>
+                            <textarea  placeholder="请输入商户rootca证书" class="enter_empty" style="width:700px;height:300px;" name="rootca">{$rootca}</textarea>
                         </div>
                     </div>
                 </div>
@@ -50,7 +59,7 @@
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">apiclient_cert证书</label>
                         <div class="col-sm-9 col-xs-12">
-                            <textarea placeholder="请输入商户apiclient_cert证书" style="width:700px;height:300px;" name="apiclient_cert">{$apiclient_cert}</textarea>
+                            <textarea placeholder="请输入商户apiclient_cert证书" class="enter_empty" style="width:700px;height:300px;" name="apiclient_cert">{$apiclient_cert}</textarea>
                         </div>
                     </div>
                 </div>
@@ -58,7 +67,7 @@
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">apiclient_key证书</label>
                         <div class="col-sm-9 col-xs-12">
-                            <textarea placeholder="请输入商户apiclient_key证书" style="width:700px;height:300px;" name="apiclient_key">{$apiclient_key}</textarea>
+                            <textarea placeholder="请输入商户apiclient_key证书" class="enter_empty" style="width:700px;height:300px;" name="apiclient_key">{$apiclient_key}</textarea>
                         </div>
                     </div>
                 </div>
