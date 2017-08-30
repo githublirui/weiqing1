@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns="http://www.we7.cc" versionCode="0.6">
     <application setting="true">
-        <name><![CDATA[小智-购物中心会员停车场解决方案]]></name>
+        <name><![CDATA[小智-购物中心会员和停车场解决方案]]></name>
         <identifie><![CDATA[wxz_shoppingmall]]></identifie>
-        <version><![CDATA[1.1.7]]></version>
+        <version><![CDATA[1.2.0]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[小智-购物中心+停车场解决方案]]></ability>
         <description><![CDATA[小智-购物中心+停车场解决方案(会员卡,积分,充值,兑换,店面,拍小票,优惠券,分享传播)]]></description>
