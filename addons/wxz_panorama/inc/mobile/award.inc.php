@@ -35,7 +35,7 @@ unset($_SESSION['__:proxy:url_from']);
 
 //判断是否中奖，分享
 $sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"];
-$is_win = pdo_fetch($sql, $pars);
+$wins = pdo_fetch($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
 //if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
@@ -47,10 +47,9 @@ $is_fans = pdo_fetch($sql, $pars);
 //    $show_msg = "<p>恭喜您获得了</p><p id='black'>" . $award_msg . " （您奖品ID为：" . $is_win['award_id'] . " ）</p><p>分享后可以领取</p>";
 //    include $this->template(get_real_tpl('msg'));
 //}
-
-$settings = $this->module['config'];
+//
 //判断用户是否中过奖
-if ($user["award_num"] >= $settings['max_award_num']) {
+if (count($wins) >= $activityInfo['max_award_num']) {
     $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}&aid={$aid}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
@@ -78,6 +77,7 @@ function get_rand($probability) {
 //查询所有奖品
 $sql = "SELECT * FROM " . tablename('wxz_panorama_award') . " WHERE aid={$aid} AND uniacid={$_GPC['i']} AND left_num>0";
 $award_list = pdo_fetchall($sql, $pars);
+
 foreach ($award_list as $award) {
     $prize_arr[] = array('id' => $award['id'], 'type' => $award['type'], 'min_money' => $award['min_money'], 'max_money' => $award['max_money'], 'left_num' => $award['left_num'], 'prize' => $award['name'], 'pro' => $award['probability']);
 }

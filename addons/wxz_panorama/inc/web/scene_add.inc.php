@@ -4,7 +4,7 @@ global $_W, $_GPC;
 
 $pid = intval($_GPC['pid']);
 if (!$pid) {
-    message('请选择一个项目', $this->createWebUrl('project_list'));
+    message('请选择一个项目', $this->createWebUrl('activity_list'));
 }
 
 require_once WXZ_PANORAMA . '/function/global.func.php';

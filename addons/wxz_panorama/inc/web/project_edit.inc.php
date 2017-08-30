@@ -10,7 +10,7 @@ $id = $_GPC['id'];
 $project_info = Project::getById($id);
 $project_info['url'] = $_W['siteroot'] . "app/index.php?i=" . $_W['uniacid'] . "&pid=" . $pid . "&c=entry&do=quanjing&m=" . $_GPC['m'] . '&pid=' . $id . "aid={$project_info['aid']}";
 if (!$project_info) {
-    message('项目不存在', $this->createWebUrl('project_list'));
+    message('项目不存在', $this->createWebUrl('activity_list'));
 }
 
 load()->web('tpl');

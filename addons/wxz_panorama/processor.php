@@ -26,7 +26,7 @@ class Wxz_panoramaModuleProcessor extends WeModuleProcessor {
         $respon = array(
             'Title' => $item['title'],
             'Description' => $item['desc'],
-            'PicUrl' => $attach_url . $item['img'],
+            'PicUrl' => $attach_url . '/' . $item['img'],
             'Url' => $url,
         );
         return $this->respNews($respon);

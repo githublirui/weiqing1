@@ -12,7 +12,7 @@ $psize = 15;
 
 $sid = intval($_GPC['sid']);
 if (!$sid) {
-    message('请选择一个项目场景', $this->createWebUrl('project_list'));
+    message('请选择一个项目场景', $this->createWebUrl('activity_list'));
 }
 
 $start = ($pindex - 1) * $psize;

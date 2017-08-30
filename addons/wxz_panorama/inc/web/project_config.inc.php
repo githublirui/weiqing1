@@ -9,7 +9,7 @@ $pid = $_GPC['pid'];
 $project_info = Project::getById($pid);
 
 if (!$project_info) {
-    message('项目不存在', $this->createWebUrl('project_list'));
+    message('项目不存在', $this->createWebUrl('activity_list'));
 }
 
 $project_config_info = Project::getConfigById($pid);

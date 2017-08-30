@@ -10,7 +10,7 @@ require_once WXZ_PANORAMA . '/source/Hotspot.class.php';
 
 $sid = intval($_GPC['sid']);
 if (!$sid) {
-    message('请选择一个项目场景', $this->createWebUrl('project_list'));
+    message('请选择一个项目场景', $this->createWebUrl('activity_list'));
 }
 
 $types = Hotspot::$types;

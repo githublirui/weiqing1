@@ -14,7 +14,7 @@ $hotspotInfo = Hotspot::getById($id);
 $projects = Project::getAll('id,name');
 
 if (!$hotspotInfo) {
-    message('热点不存在', $this->createWebUrl('project_list'));
+    message('热点不存在', $this->createWebUrl('activity_list'));
 }
 
 $types = Hotspot::$types;
