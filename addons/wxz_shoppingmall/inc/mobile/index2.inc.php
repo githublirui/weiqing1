@@ -41,7 +41,7 @@ if ($index_info['shop_activity_ids']) {
 
 if ($index_info['shop_ids']) {
     $condition = "id in({$index_info['shop_ids']})";
-    $sql = "SELECT * FROM " . tablename('wxz_shoppingmall_shop') . " WHERE {$condition}";
+    $sql = "SELECT * FROM " . tablename('wxz_shoppingmall_shop') . " WHERE {$condition} order by substring_index('{$index_info['shop_ids']}',id,1)";
     $index_info['shops'] = pdo_fetchall($sql);
 }
 
