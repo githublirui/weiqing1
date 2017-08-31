@@ -8,7 +8,9 @@ class Wxz_shoppingmallModuleSite extends WeModuleSite {
     protected function auth() {
         global $_W, $_GPC;
         session_start();
-//        $_SESSION['__:proxy:openid'] = 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';//debug
+        if (getip() == '127.0.0.1') {
+            $_SESSION['__:proxy:openid'] = 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';
+        }
         $openid = $_SESSION['__:proxy:openid'];
         require_once WXZ_SHOPPINGMALL . '/source/Fans.class.php';
         $f = new Fans();
