@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns="http://www.we7.cc" versionCode="0.6">
-	<application setting="true">
-		<name><![CDATA[小智-简单支付交易平台]]></name>
-		<identifie><![CDATA[wxz_easy_pay]]></identifie>
-		<version><![CDATA[2.7]]></version>
-		<type><![CDATA[business]]></type>
-		<ability><![CDATA[小智-简单支付]]></ability>
-		<description><![CDATA[小智-简单支付]]></description>
-		<author><![CDATA[wxz_hangyi:QQ1478043077]]></author>
-		<url><![CDATA[http://bbs.we7.cc/]]></url>
-	</application>
-	<platform>
-		<subscribes>
-		</subscribes>
-		<handles>
-			<message type="image" />
-			<message type="voice" />
-			<message type="video" />
-			<message type="shortvideo" />
-			<message type="location" />
-			<message type="link" />
-			<message type="subscribe" />
-			<message type="qr" />
-			<message type="trace" />
-			<message type="click" />
-			<message type="merchant_order" />
-			<message type="text" />
-		</handles>
-		<rule embed="true" />
-		<card embed="false" />
-	</platform>
-	<bindings>
-		<cover>
-			<entry title="功能封面" do="gnfm" state="" direct="false" />
-		</cover>
-		<rule>
-			<entry title="规则列表" do="hflist" state="" direct="false" />
-		</rule>
-		<menu>
-			<entry title="用户管理" do="usermanage" state="" direct="false" />
-			<entry title="订单管理" do="ordermanage" state="" direct="false" />
-			<entry title="支付记录" do="paylog" state="" direct="false" />
-			<entry title="物流公司" do="expresscompany" state="" direct="false" />
-			<entry title="商品海报设置" do="sphbset" state="" direct="false" />
-			<entry title="商品管理" do="productmanage" state="" direct="false" />
-			<entry title="费率设置" do="myrate" state="" direct="false" />
-			<entry title="文案设置" do="fontset" state="" direct="false" />
-			<entry title="付款卖家设置" do="paysell" state="" direct="false" />
-			<entry title="模板消息设置" do="tplset" state="" direct="false" />
+    <application setting="true">
+        <name><![CDATA[小智-简单支付交易平台]]></name>
+        <identifie><![CDATA[wxz_easy_pay]]></identifie>
+        <version><![CDATA[2.7]]></version>
+        <type><![CDATA[business]]></type>
+        <ability><![CDATA[小智-简单支付]]></ability>
+        <description><![CDATA[小智-简单支付]]></description>
+        <author><![CDATA[wxz_hangyi:QQ1478043077]]></author>
+        <url><![CDATA[http://bbs.we7.cc/]]></url>
+    </application>
+    <platform>
+        <subscribes>
+        </subscribes>
+        <handles>
+            <message type="image" />
+            <message type="voice" />
+            <message type="video" />
+            <message type="shortvideo" />
+            <message type="location" />
+            <message type="link" />
+            <message type="subscribe" />
+            <message type="qr" />
+            <message type="trace" />
+            <message type="click" />
+            <message type="merchant_order" />
+            <message type="text" />
+        </handles>
+        <rule embed="true" />
+        <card embed="false" />
+    </platform>
+    <bindings>
+        <cover>
+            <entry title="功能封面" do="gnfm" state="" direct="false" />
+        </cover>
+        <rule>
+            <entry title="规则列表" do="hflist" state="" direct="false" />
+        </rule>
+        <menu>
+            <entry title="用户管理" do="usermanage" state="" direct="false" />
+            <entry title="订单管理" do="ordermanage" state="" direct="false" />
+            <entry title="支付记录" do="paylog" state="" direct="false" />
+            <entry title="物流公司" do="expresscompany" state="" direct="false" />
+            <entry title="商品海报设置" do="sphbset" state="" direct="false" />
+            <entry title="商品管理" do="productmanage" state="" direct="false" />
+            <entry title="费率设置" do="myrate" state="" direct="false" />
+            <entry title="文案设置" do="fontset" state="" direct="false" />
+            <entry title="付款卖家设置" do="paysell" state="" direct="false" />
+            <entry title="模板消息设置" do="tplset" state="" direct="false" />
 			
-		</menu>
+        </menu>
 		
-	</bindings>
-	<permissions>
-	</permissions>
-	<install><![CDATA[
+    </bindings>
+    <permissions>
+    </permissions>
+    <install><![CDATA[
 CREATE TABLE `ims_hangyi_add_font` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `add_one` varchar(255) DEFAULT NULL,
@@ -169,7 +169,7 @@ CREATE TABLE `ims_hangyi_user` (
 
 
 ]]></install>
-	<uninstall><![CDATA[
+    <uninstall><![CDATA[
 	DROP TABLE IF EXISTS `ims_hangyi_user`;
 	DROP TABLE IF EXISTS `ims_hangyi_add_font`;
 	DROP TABLE IF EXISTS `ims_hangyi_my_rate`;
@@ -178,10 +178,5 @@ CREATE TABLE `ims_hangyi_user` (
 	DROP TABLE IF EXISTS `ims_hangyi_peizhi`;
 	DROP TABLE IF EXISTS `ims_hangyi_order`;
 	]]></uninstall>
-	<upgrade><![CDATA[
-	ALTER TABLE ims_hangyi_peizhi ADD uniacid int(10);
-	ALTER TABLE ims_hangyi_add_font ADD uniacid int(10);
-	ALTER TABLE ims_hangyi_tplset ADD uniacid int(10);
-	ALTER TABLE ims_hangyi_my_rate ADD uniacid int(10);
-]]></upgrade>
+    <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>
