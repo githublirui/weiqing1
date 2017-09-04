@@ -1,0 +1,43 @@
+﻿	<html>
+			<head>
+				<meta charset="gbk">
+				<title>找点空闲时间,卖点小商品吧</title>
+				{php echo register_jssdk(false);} <!-- 放到其他引入的 js 之前 -->
+			</head>
+			<style>
+			body{
+				#background-color:#00C000;
+				margin:0px 0px;
+				padding:0px 0px;
+			}
+			img{
+				width:100%;
+				margin:0px 0px;
+				padding:0px 0px;
+			}
+			
+			</style>
+			<body>
+			<img src= "../addons/wxz_easy_pay/upload/{$cur_time}.png">
+			</body>
+			<script>
+	wx.ready(function () {
+		sharedata = {
+			title: "{$_GPC['goodsName']}",
+			desc: "{$_GPC['goodsInfo']}",
+			link: "{$url2}",
+			imgUrl: "{$url3}addons/wxz_easy_pay/upload/{$cur_time}.png",
+			success: function(){
+				
+				
+				
+			},
+			cancel: function(){
+				//alert('cancel');
+			}
+		};
+		wx.onMenuShareAppMessage(sharedata);
+		wx.onMenuShareTimeline(sharedata);
+	});
+	</script>
+		</html>

@@ -1,0 +1,88 @@
+{template 'common/header'}
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            用户列表
+        </div>
+		<style>
+.table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    white-space: normal;
+}
+</style>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+            <table class="table table-hover">
+                <tr>
+                    <th width="105px;">ID</th>
+					<th width="105px;">头像</th>
+                    <th width="115px;">昵称</th>
+                    <th>OpenId</th>
+                    <th>电话</th>
+                    <th>地址</th>
+                    
+                </tr>
+                {loop $list $row}
+                <tr>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['uid']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            <img width="45px;" src="{$row['headimgurl']}"/>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                           {$row['nickname']}
+                        </p>
+                    </td>
+					 <td>
+                        <p class="form-control-static">
+                           {$row['openid']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                           {$row['tel']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                           {$row['mysaddress']}
+                        </p>
+                    </td>
+                </tr>
+                {/loop}
+            </table>
+        </div>
+        <div class="panel-body text-right">
+            {$pager}
+        </div>
+    </div>
+</div>
+<script>
+    function del_fans(id) {
+        if (confirm("确定删除吗？")) {
+            var pars = {};
+            pars.id = id;
+            $.ajax({
+                url: "{php echo $this->createWebUrl('ajax',array('sdo'=>'del_fans'))}",
+                type: "post",
+                dataType: "html",
+                data: pars,
+                success: function (res) {
+                    $(".submit").attr("disabled", false);
+                    if (res == "ok") {
+                        alert("操作成功");
+                        window.location.reload(true);
+                    } else {
+                        alert(res);
+                    }
+                }
+            })
+        }
+    }
+
+</script>
+{template 'common/footer'}

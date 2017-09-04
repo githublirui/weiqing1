@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>卖家中心</title>
+    
+      <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  
+</head>
+
+<body>
+    
+   
+
+ 
+    
+
+
+   
+
+
+
+
+    
+        <div style="width:100%;height:100%;">
+           <img style="width:100%;height:100%;" src="{$product['goodsCode']}"/>
+        </div>
+
+        {php echo register_jssdk(false);} <!-- 放到其他引入的 js 之前 -->
+
+      
+           
+ <script>
+	wx.ready(function () {
+		sharedata = {
+			title: "{$product['goodsName']}",
+			desc: "{$product['goodsName']}",
+			link: "{$url2}",
+			imgUrl: "{$goodsImg},
+			success: function(){
+				
+				
+				
+			},
+			cancel: function(){
+				//alert('cancel');
+			}
+		};
+		wx.onMenuShareAppMessage(sharedata);
+		wx.onMenuShareTimeline(sharedata);
+	});
+	</script>      
+           
+
+        
+
+       
+        
+   
+
+   
+</body>
+
+</html>

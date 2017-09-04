@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
+<title>发布商品</title>
+<link href="../addons/wxz_easy_pay/css/style.css" rel="stylesheet" type="text/css">
+<script src="../addons/wxz_easy_pay/js/jquery-1.11.1.min.js"></script>
+<script src="../addons/wxz_easy_pay/js/common.js"></script>
+<script src="../addons/wxz_easy_pay/js/release_goods.js?ddfg"></script>
+</head>
+<body class="release-goods">
+<script type="text/javascript">
+ function toVaild(){
+ 
+     var goodsName =  $("#goodsName").val();   
+     var goodsPrice = $("#goodsPrice").val();  
+     var goodsInfo = $("#goodsInfo").val();  
+	 if(goodsPrice){
+		goodsPrice  = parseFloat(goodsPrice);
+		if(goodsPrice<1){
+			alert("价格必须大于1");
+			return false;
+		}
+	 }
+	 if(!goodsName){
+		alert("商品名称必须填写");
+		return false;
+	 }
+	 var reg = /^[1-9]{1}[0-9]{0,10}[.]{0,1}[0-9]{0,2}$/;  
+            if(!reg.test(goodsPrice)){  
+                alert("商品价格格式不正确");
+				return false;
+            }
+	 if(!goodsPrice){
+		alert("商品价格必须填写");
+		return false;
+	 }
+	  if(!goodsInfo){
+		alert("商品介绍必须填写");
+		return false;
+	 }
+	 
+	 document.getElementById('imageform').submit();
+	 return true;
+}
+</script>
+<form id="imageform" method="post"  enctype="multipart/form-data" action='{php echo $this->createMobileUrl("uploadimage")}' onsubmit="return toVaild();">
+	<div class="release-goods-top">
+		<div class="image"><img src="{$_W['fans']['headimgurl']}" /></div>
+		<div class="image_r">
+			<p>卖家：{$_W['fans']['nickname']} 卖家联系微信：{$userinfo['weixin']} &nbsp;卖家联系电话：{$userinfo['tel']} <a href="{php echo $this->createMobileUrl('savesell')}" class="revise">修改</a></p>
+		</div>
+	</div>
+	<div class="release-goods-main">
+		<div class="session">
+			<p style="line-height:0.88rem;">上传商品（图片） <a href="{$setting['helpurl']}" class="revise right">使用帮助..</a></p>
+			<ul class="upLoadList" id="upLoadList">
+				<li>
+					<a href="javascript:;" class="upLoadImg">+</a>
+					<input type="file" accept="image/*" class="file" id="file" name="file">
+				</li>
+			</ul>
+			<ul class="message-list">
+				<li style="height:auto;">
+					<textarea placeholder="商品名称" class="goodsName" name="goodsName" id="goodsName"></textarea>
+				</li>
+				<li>
+					<div class="label-cell">价格</div>
+					<input type="text" class="input-cell" name="goodsPrice" id="goodsPrice" placeholder="单位（元）" >
+					<!--<a href="#" class="set_btn">设置多种价格</a>-->
+				</li>
+				<li>
+					<div class="label-cell">商品单位</div>
+					<input type="text" class="input-cell" name="goodsUnit" placeholder="个" >
+					<!--<a href="#" class="set_btn">设置多种价格</a>-->
+				</li>
+				<li>
+					<div class="label-cell">库存数</div>
+					<input type="text" class="input-cell" name="goodsStock" value="10" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+				</li>
+			</ul>
+			
+		</div>
+		<div class="release-goods-more" style="display:block;">
+		<div class="session">
+				<ul class="message-list">
+					<!--<li>
+						<div class="label-cell">促销</div>
+						<span></span>
+						<div class="right">每人最多购买一件</div>
+					</li>-->
+					<li style="height:auto;">
+						<textarea placeholder="商品介绍" class="goodsName" name="goodsInfo" id="goodsInfo"></textarea>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="release-goods-more">
+			<div class="session" style="margin:0.3rem 0;">
+				<ul class="message-list">
+					<li>
+						<div class="label-cell">邮费</div>
+						<input type="text" class="input-cell" name="goodsPost" placeholder="默认免邮费，单位（元）" >
+						<!--<a href="#" class="set_btn">不同地区邮费</a>-->
+					</li>
+					<li>
+						<div class="label-cell">包邮件数</div>
+						<input type="text" class="input-cell" name="goodsPostNum" placeholder="例如：几件包邮" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+					</li>
+					<!--<li>
+						<div class="label-cell">可否自提</div>
+						<span></span>
+					</li>-->
+				</ul>
+			</div>
+			
+		</div>
+	</div>
+	<div class="center">
+		<a href="#" class="more-open">更多选项+</a>
+		<a href="#" class="btn" onclick="toVaild();">生成支付码图</a>
+		<p class="agreement"><span class="ico"></span> {$setting_font['add_one']}</p>
+		<p class="footer">{$setting_font['add_two']}</p>
+	</div>
+	</form>
+</body>
+</html>
+

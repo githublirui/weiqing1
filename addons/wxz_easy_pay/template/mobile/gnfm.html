@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>简单支付</title>
+    
+
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
+   
+    <style>
+        .more {}
+        
+        [v-cloak] {
+            display: none;
+        }
+        
+        .weui_actionsheet_menu a {
+            display: block;
+        }
+        
+        .info .weui_grid:before {
+            border: 0;
+        }
+        box {
+            display: flex;
+        }
+        
+        .weui_grid_desc {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .weui_grid {
+            height: 120px;
+        }
+        
+        .weui_grids {
+            background-color: #fff;
+        }
+        
+        .weui_grid_2 {
+            padding: 10px;
+            width: 50%;
+            height: 160px;
+        }
+        
+        .page1 {
+            /*overflow-y: auto;
+            -webkit-overflow-scrolling: touch;*/
+            background-color: #EFEFF3;
+            z-index: 1;
+        }
+        
+        .container1,
+        .page1 {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow-x: hidden;
+        }
+        
+        .tag {
+            -webkit-transform: scale(0.8);
+            display: inline-block;
+            background-color: #ff6600;
+            border-radius: 4px;
+            padding: 4px 6px;
+            color: #fff;
+            font-size: 9px;
+            -webkit-transform-origin-x: -1px;
+        }
+        
+        .weui_media_box.weui_media_appmsg {
+            align-items: flex-start;
+        }
+        
+        .weui_navbar {
+            z-index: 10;
+        }
+        
+        .info p {
+            margin: 4px;
+        }
+        
+        .disable {
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        
+        .weui_grid_icon_block {
+            display: block;
+        }
+        
+        .weui_grid_desc a {
+            margin: 3px 3px;
+        }
+        .section_title{
+            color:green;
+            text-align:center;
+        }
+        .weui_panel{
+            
+            margin-bottom:40px;
+        }
+    </style>
+</head>
+
+<body id="app">
+    <div class="container">
+        <div class="weui_panel"> 
+            <div class="weui_panel_hd">
+                <h2 class="section_title">我是买家</h2>
+                <p>生成［支付码商品图］帮你在微信中自助收款统计订单</p>
+                <a href="{php echo $this->createMobileUrl('buyorders')}" class="weui_btn weui_btn_primary" style="margin:10px 0 15px 0" >我的购物订单</a>
+            </div>
+			
+			<div class="weui_panel_hd">
+                <h2 class="section_title">我是卖家</h2>
+                <p></p>
+                <a href="{php echo $this->createMobileUrl('sellercentral')}" class="weui_btn weui_btn_primary" style="margin:10px 0 15px 0" >我要发布商品</a>
+                <a href="{php echo $this->createMobileUrl('my')}" class="weui_btn weui_btn_primary" style="margin:10px 0 15px 0" >我的商品</a>
+                
+            </div>
+        </div>
+       
+       
+  
+    </div>
+
+   
+
+
+        
+    
+
+</body>
+
+</html>

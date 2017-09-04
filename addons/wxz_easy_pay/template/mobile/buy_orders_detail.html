@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
+    <title>我的订单</title>
+    
+</head>
+
+<body>
+    <div class="weui_cells_title">订单编号：<span>{$orderinfo['id']}</span> 
+	
+					{if $orderinfo['order_status']==1}
+					<span>未发货</span>
+					{else if $orderinfo['order_status']==2}
+					<span>已发货</span>
+					{/if}
+	</div>
+    <div class="weui_cells">
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>商品名称</p>
+            </div>
+            <div class="weui_cell_ft">{$produt_info['goodsName']}</div>
+        </div>
+
+      
+       
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>购买数量</p>
+            </div>
+            <div class="weui_cell_ft">{$orderinfo['goodsNum']}</div>
+        </div>
+       
+
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>收货人姓名</p>
+            </div>
+            <div class="weui_cell_ft">{$orderinfo['buy_nick']}</div>
+        </div>
+
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>收货人手机</p>
+            </div>
+            <div id="cell" class="weui_cell_ft">{$orderinfo['cell']}</div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>收货地址</p>
+            </div>
+            <div class="weui_cell_ft">
+             
+                <span>{$orderinfo['address']}</span>
+            </div>
+        </div>
+       
+
+       
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>买家备注</p>
+            </div>
+            <div class="weui_cell_ft">
+                {$orderinfo['postscript']}
+            </div>
+        </div>
+    </div>
+    
+    <div>
+        <div class="weui_cells_title">卖家联系方式</div>
+        <div class="weui_cells ">
+            <div class="weui_cell" >
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>卖家</p>
+                </div>
+                <div class="weui_cell_ft">
+                   {$sell_info['nickname']}
+                </div>
+            </div>
+            <div class="weui_cell" >
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>联系电话</p>
+                </div>
+                <div class="weui_cell_ft">
+                    {$sell_info['tel']}
+                </div>
+            </div>
+            <div class="weui_cell" >
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>微信号</p>
+                </div>
+                <div class="weui_cell_ft">
+                    {$sell_info['weixin']}
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+
+   
+
+   
+
+   
+    
+  
+</body>
+</html>

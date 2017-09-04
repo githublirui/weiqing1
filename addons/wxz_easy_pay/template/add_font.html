@@ -1,0 +1,85 @@
+{template 'common/header'}
+<style>
+    .l_tableWrap .l_table_tit .l_formBar {
+        border: 0;
+        float: left;
+        font-size: 0;
+    }
+    .y_sele {
+        display: inline-block;
+        padding: 5px 0 12px 12px;
+    }
+    .y_sele_tit {
+        font-size: 14px;
+        padding: 0 0 0 10px;
+    }
+    .l_table_search{
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+</style>
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $('#order_time_start').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+        $('#order_time_end').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+    });
+</script>
+<form action="" method="post" class="form form-horizontal">
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            文案设置 
+        </div>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+           
+		   <div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">发布商品上文字：</label>
+				<div class="col-sm-9 col-xs-12">
+					<input type="text" class="form-control" name="add_one" value="{$setting['add_one']}">
+				</div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">发布商品下文字：</label>
+				<div class="col-sm-9 col-xs-12">
+					<input type="text" class="form-control" name="add_two" value="{$setting['add_two']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">提交支付文字：</label>
+				<div class="col-sm-9 col-xs-12">
+					<textarea type="text" class="form-control" name="add_three">{$setting['add_three']}</textarea>
+				</div>
+			</div>
+           
+        </div>
+       
+    </div>
+</div>
+<button class="btn btn-primary" type="submit" name="submit" value="提交">提交</button>
+
+<input type="hidden" name="token" value="{$_W['token']}">
+
+</form>
+
+{template 'common/footer'}
+

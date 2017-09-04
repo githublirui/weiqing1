@@ -1,0 +1,210 @@
+{template 'common/header'}
+
+<style>
+    .l_tableWrap .l_table_tit .l_formBar {
+        border: 0;
+        float: left;
+        font-size: 0;
+    }
+    .y_sele {
+        display: inline-block;
+        padding: 5px 0 12px 12px;
+    }
+    .y_sele_tit {
+        font-size: 14px;
+        padding: 0 0 0 10px;
+    }
+    .l_table_search{
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+</style>
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $('#order_time_start').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+        $('#order_time_end').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+    });
+</script>
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            企业付款列表
+        </div>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+            <div class="l_table_tit clearfix">
+                <form method="get" action="" name="frm" class="l_formBar" id="frm1">
+                    <span class="y_sele_tit">付款状态:</span>
+                    <div class="y_sele y_size02">
+                        <select class="form-control" name="status">
+                            <option value="0">不限</option>
+                           
+                            <option value="1" {if $_GPC['status']==1}selected="selected"{/if}>未付款</option>
+                            <option value="2" {if $_GPC['status']==2}selected="selected"{/if}>已付款</option>
+                            
+                        </select>
+                    </div>
+                    <input type="hidden" name="c" value="{$_GPC['c']}" />
+                    <input type="hidden" name="a" value="{$_GPC['a']}" />
+                    <input type="hidden" name="eid" value="{$_GPC['eid']}" />
+                    <div class="y_sele y_size02">
+                        <input type="text" class="form-control" id="order_time_end" name="order_time_end" value="{$_GPC['order_time_end']}">
+                    </div>
+                    <div class="btn-group l_table_search">
+                        <button type="submit" class="btn btn-success">搜 索</button>
+                    </div>
+                </form>
+            </div>
+<style>
+.table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    white-space: normal;
+}
+</style>
+            <table class="table table-hover">
+                <tr>
+                    
+                    <th>交易号</th>
+                    <th>商品名称</th>
+                    <th>商品图片</th>
+                    <th>付款状态</th>
+                    <th>卖家</th>
+                    <th>买家</th>
+                    <th>订单总金额</th>
+                    <th>实际支付金额</th>
+                    <th>将要付给商家钱</th>
+                    <th>实际付给商家钱</th>
+                    <th>支付时间</th>
+                    <th>操作</th>
+                </tr>
+                {loop $list $row}
+                <tr>
+                  
+                    <td>
+                        <p class="form-control-static">
+                            {$row['id']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            {$row['goodsName']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            <img src="{$row['goodsImg']}" style="width:60px;height:60px;"/>
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                           {if $row['we_pay_sell_status'] == 1}
+								未支付
+								{else}
+								已支付
+							{/if}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                           {$row['sell_nickname']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            
+							 {$row['buy_nick']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+						{$row['goodsPriceTotalReal']}
+                            
+                        </p>
+                    </td>
+                  
+                    <td>
+                        <p class="form-control-static">
+                            {$row['goodsPriceTotalReal']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+                            {$row['gmoney']}
+                        </p>
+                    </td>
+					 <td>
+                        <p class="form-control-static">
+                            {$row['give_money']}
+                        </p>
+                    </td>
+                    <td>
+                       
+                        <p class="form-control-static" >
+						{if $row['qi_pay_time']}
+                            {php echo date('Y-m-d H:i:s',$row['qi_pay_time']);}
+						{/if}
+                        </p>
+                      
+                    </td>
+                    <td>
+					 {if $row['we_pay_sell_status'] == 1}
+								 <a class="btn btn-success save_order" onclick="we_pay_sell({$row['id']},'{$row['gmoney']}');">给商户付款</a>
+								{else}
+								 <a class="btn btn-success save_order">已付款</a>
+							{/if}
+                        
+                    </td>
+					 
+                </tr>
+                {/loop}
+            </table>
+        </div>
+		<script type="text/javascript">
+		function we_pay_sell(id,money){
+			if(id && money){
+				if(confirm("确定给该商户付款"+money+"元吗？")){
+				//http://hefei.hfwxz.com/app/index.php?i=22&c=entry&do=macpay&m=wxz_easy_pay&orderid=
+				$.ajax({
+						url:"http://{$_SERVER['HTTP_HOST']}/app/index.php?i={$_W['uniacid']}&c=entry&do=macpay&m=wxz_easy_pay&orderid="+id,
+						type:"get",
+						success: function(re){
+							if(re=='ok'){
+								alert("付款成功");
+								window.location.reload();
+							}else{
+								alert(re);
+							}
+						},
+						async:false
+					});
+				}
+			
+			}else{
+			alert("参数错误");
+			}
+		}
+		</script>
+        <div class="panel-body text-right">
+            {$pager}
+        </div>
+    </div>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,204 @@
+{template 'common/header'}
+
+<form action="" method="post" class="form-horizontal" role="form" id="form1" >
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				支付成功模板消息通知
+			</div>
+			<div class="panel-body">
+								
+							
+							
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">直播通知模板id</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_zhifu['template_id']}" class="form-control" name="template_id">
+											
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_zhifu['title']}" class="form-control" name="firstvalue">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('firstcolor',$setting_zhifu['title_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_zhifu['tpl_word_1']}" class="form-control" name="keyword1value">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('keyword1color',$setting_zhifu['tpl_word_1_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_zhifu['tpl_word_2']}" class="form-control" name="keyword2value">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('keyword2color',$setting_zhifu['tpl_word_2_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_zhifu['tpl_word_3']}" class="form-control" name="keyword3value">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('keyword3color',$setting_zhifu['tpl_word_3_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">备注</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_zhifu['tpl_word_4']}" class="form-control" name="remarkvalue">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">备注字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('remarkcolor',$setting_zhifu['tpl_word_4_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span> 状态</label>
+									<div class="col-sm-9 col-xs-12">
+										<label class='radio-inline' >
+											<input type='radio' name='status' value='0' {if $setting_zhifu['status']==0}checked{/if} />停用
+										</label>
+										<label class='radio-inline' >
+											<input type='radio' name='status' value='1' {if $setting_zhifu['status']==1}checked{/if} />启用
+										</label>
+								</div>
+								</div>
+						  <div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"></label>
+									<div class="col-sm-8 col-lg-9 col-xs-12">
+										<input type="submit" name="submit" class="btn btn-success" value="提交">
+										<input type="hidden" name="uniacid" value="{$uniacid}">
+										<input type="hidden" name="postform" value="1">
+										<input type="hidden" name="tpl_type" value="1">
+									</div>
+								</div>
+					</div>
+			     </div><!--tab_news-->
+
+</form>
+
+<form action="" method="post" class="form-horizontal" role="form" id="form2" >
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				发货模板消息通知
+			</div>
+			<div class="panel-body">
+								
+							
+							
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">直播通知模板id</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_fh['template_id']}" class="form-control" name="template_id">
+											
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_fh['title']}" class="form-control" name="firstvalue">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('firstcolor',$setting_fh['title_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_fh['tpl_word_1']}" class="form-control" name="keyword1value">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('keyword1color',$setting_fh['tpl_word_1_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_fh['tpl_word_2']}" class="form-control" name="keyword2value">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('keyword2color',$setting_fh['tpl_word_2_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_fh['tpl_word_3']}" class="form-control" name="keyword3value">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('keyword3color',$setting_fh['tpl_word_3_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">备注</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											<input type="text" value="{$setting_fh['tpl_word_4']}" class="form-control" name="remarkvalue">
+										</div>
+								</div>
+								<div class="form-group">
+										<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">备注字体颜色</label>
+										<div class="col-sm-8 col-lg-9 col-xs-12">
+											{php echo tpl_form_field_color('remarkcolor',$setting_fh['tpl_word_4_color']);}
+										</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span> 状态</label>
+									<div class="col-sm-9 col-xs-12">
+										<label class='radio-inline' >
+											<input type='radio' name='status' value='0' {if $setting_fh['status']==0}checked{/if} />停用
+										</label>
+										<label class='radio-inline' >
+											<input type='radio' name='status' value='1' {if $setting_fh['status']==1}checked{/if} />启用
+										</label>
+								</div>
+								</div>
+						  <div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"></label>
+									<div class="col-sm-8 col-lg-9 col-xs-12">
+										<input type="submit" name="submit" class="btn btn-success" value="提交">
+										<input type="hidden" name="uniacid" value="{$uniacid}">
+										<input type="hidden" name="postform" value="1">
+										<input type="hidden" name="tpl_type" value="2">
+									</div>
+								</div>
+					</div>
+			     </div><!--tab_news-->
+
+</form>
+{template 'common/footer'}

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+	<application setting="true">
+		<name><![CDATA[小智-简单支付交易平台]]></name>
+		<identifie><![CDATA[wxz_easy_pay]]></identifie>
+		<version><![CDATA[2.7]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[小智-简单支付]]></ability>
+		<description><![CDATA[小智-简单支付]]></description>
+		<author><![CDATA[wxz_hangyi:QQ1478043077]]></author>
+		<url><![CDATA[http://bbs.we7.cc/]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+			<message type="image" />
+			<message type="voice" />
+			<message type="video" />
+			<message type="shortvideo" />
+			<message type="location" />
+			<message type="link" />
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="trace" />
+			<message type="click" />
+			<message type="merchant_order" />
+			<message type="text" />
+		</handles>
+		<rule embed="true" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="功能封面" do="gnfm" state="" direct="false" />
+		</cover>
+		<rule>
+			<entry title="规则列表" do="hflist" state="" direct="false" />
+		</rule>
+		<menu>
+			<entry title="用户管理" do="usermanage" state="" direct="false" />
+			<entry title="订单管理" do="ordermanage" state="" direct="false" />
+			<entry title="支付记录" do="paylog" state="" direct="false" />
+			<entry title="物流公司" do="expresscompany" state="" direct="false" />
+			<entry title="商品海报设置" do="sphbset" state="" direct="false" />
+			<entry title="商品管理" do="productmanage" state="" direct="false" />
+			<entry title="费率设置" do="myrate" state="" direct="false" />
+			<entry title="文案设置" do="fontset" state="" direct="false" />
+			<entry title="付款卖家设置" do="paysell" state="" direct="false" />
+			<entry title="模板消息设置" do="tplset" state="" direct="false" />
+			
+		</menu>
+		
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[
+CREATE TABLE `ims_hangyi_add_font` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `add_one` varchar(255) DEFAULT NULL,
+  `add_two` varchar(255) DEFAULT NULL,
+  `add_three` varchar(255) DEFAULT NULL,
+  `add_four` varchar(255) DEFAULT NULL,
+  `uniacid` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ims_hangyi_hbset` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `img_text` varchar(255) DEFAULT NULL,
+  `uniacid` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_hangyi_my_rate` (
+  `id` int(10) DEFAULT NULL,
+  `uniacid` int(10) DEFAULT NULL,
+  `my_rate` varchar(30) DEFAULT NULL COMMENT '费率 正数给奖励，负数扣钱'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ims_hangyi_order` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `price` varchar(10) DEFAULT NULL,
+  `buy_id` int(10) DEFAULT NULL,
+  `pay_status` int(1) DEFAULT '0' COMMENT '0未付款2已付款',
+  `order_status` int(1) DEFAULT '0' COMMENT '0未发货，1已发货',
+  `pid` int(11) DEFAULT NULL COMMENT '产品id',
+  `pay_time` int(10) DEFAULT NULL,
+  `add_time` int(10) DEFAULT NULL,
+  `fh_time` int(10) DEFAULT NULL,
+  `sell_id` int(11) DEFAULT NULL,
+  `goodsName` varchar(255) DEFAULT NULL,
+  `goodsNum` int(11) DEFAULT '1' COMMENT '产品数',
+  `goodsPriceTotal` varchar(255) DEFAULT NULL,
+  `buy_nick` varchar(50) DEFAULT NULL COMMENT '收货人',
+  `sell_openid` varchar(255) DEFAULT NULL,
+  `buy_openid` varchar(255) DEFAULT NULL,
+  `postscript` varchar(255) DEFAULT NULL COMMENT '买家留言',
+  `cell` varchar(255) DEFAULT NULL,
+  `weixin` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `goodsPriceTotalReal` varchar(255) DEFAULT NULL,
+  `out_trade_no` varchar(255) DEFAULT NULL,
+  `send_time` int(10) DEFAULT '0' COMMENT '发货时间',
+  `get_time` int(10) DEFAULT '0' COMMENT '收货时间',
+  `pay_price` float(10,2) DEFAULT NULL,
+  `we_pay_sell_status` int(1) DEFAULT '1' COMMENT '1未给出售者付款，2已付款给销售者',
+  `qi_pay_time` int(10) DEFAULT NULL,
+  `tracking_number` varchar(100) DEFAULT NULL COMMENT '快递单号',
+  `give_money` varchar(20) DEFAULT NULL COMMENT '负数为扣钱正数为加钱',
+  `buy_nickname` varchar(50) DEFAULT NULL COMMENT '买家昵称',
+  `sell_nickname` varchar(50) DEFAULT NULL COMMENT '卖家昵称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ims_hangyi_peizhi` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `mchid` varchar(100) DEFAULT NULL,
+  `mc_key` varchar(100) DEFAULT NULL,
+  `edit_time` int(10) DEFAULT NULL,
+  `helpurl` varchar(255) DEFAULT NULL,
+  `notifyurl` varchar(255) DEFAULT NULL,
+  `i_val` int(11) DEFAULT NULL,
+  `add_product_url` varchar(255) DEFAULT NULL,
+  `orderlist_url` varchar(255) DEFAULT NULL,
+  `ordermanager_url` varchar(255) DEFAULT NULL,
+  `myorder_url` varchar(255) DEFAULT NULL,
+  `apiclient_key` text,
+  `apiclient_cert` text,
+  `rootca` text,
+  `paysell_isauto` tinyint(1) DEFAULT '0' COMMENT '0表示不自动打款，1表示自动打款',
+  `uniacid` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_hangyi_product` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `goodsName` varchar(255) DEFAULT NULL,
+  `goodsUnit` varchar(20) DEFAULT NULL,
+  `goodsPrice` varchar(10) DEFAULT '0',
+  `goodsStock` varchar(255) DEFAULT '0',
+  `goodsSince` int(1) DEFAULT '1' COMMENT '1快递送，2自提',
+  `goodsImg` varchar(255) DEFAULT NULL,
+  `uid` int(10) DEFAULT '0' COMMENT '产品所属人',
+  `goodsCode` varchar(255) DEFAULT NULL COMMENT '生成产品支付二维码',
+  `goodsInfo` varchar(255) DEFAULT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `openid` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `sell_num` int(10) DEFAULT '0',
+  `add_time` int(10) DEFAULT NULL,
+  `postage` varchar(20) DEFAULT NULL COMMENT '邮费',
+  `goodsPostNum` int(10) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_hangyi_user` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `nickname` varchar(255) DEFAULT NULL,
+  `tel` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `add_time` int(10) DEFAULT NULL,
+  `uid` int(10) DEFAULT NULL,
+  `openid` varchar(255) DEFAULT NULL,
+  `weixin` varchar(30) DEFAULT NULL,
+  `mysaddress` varchar(255) DEFAULT NULL,
+  `order_address` varchar(50) DEFAULT NULL,
+  `realname` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+]]></install>
+	<uninstall><![CDATA[
+	DROP TABLE IF EXISTS `ims_hangyi_user`;
+	DROP TABLE IF EXISTS `ims_hangyi_add_font`;
+	DROP TABLE IF EXISTS `ims_hangyi_my_rate`;
+	DROP TABLE IF EXISTS `ims_hangyi_hbset`;
+	DROP TABLE IF EXISTS `ims_hangyi_product`;
+	DROP TABLE IF EXISTS `ims_hangyi_peizhi`;
+	DROP TABLE IF EXISTS `ims_hangyi_order`;
+	]]></uninstall>
+	<upgrade><![CDATA[
+	ALTER TABLE ims_hangyi_peizhi ADD uniacid int(10);
+	ALTER TABLE ims_hangyi_add_font ADD uniacid int(10);
+	ALTER TABLE ims_hangyi_tplset ADD uniacid int(10);
+	ALTER TABLE ims_hangyi_my_rate ADD uniacid int(10);
+]]></upgrade>
+</manifest>

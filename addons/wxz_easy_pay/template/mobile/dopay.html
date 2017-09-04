@@ -1,0 +1,231 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>确认支付</title>
+    <meta name="description" content="" placeholder="微信支付" id="meta_description" />
+
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css">
+
+    <style type="text/css" media="screen">
+        .hide {
+            display: none;
+        }
+    </style>
+
+</head>
+
+
+
+<body style="background-color:#EFEFF3" ontouchstart>
+
+
+    <div class="container">
+        <div class="hd" style="text-align:center;padding:20px 20px 0 20px;">
+            <p style="font-size:18px;font-weight: bold;">微信支付</p>
+            <p style="font-size:40px;line-height: 1;">￥{$goodsPriceTotal}</p>
+        </div>
+
+        <div class="weui_cells">
+            <div class="weui_cell" style="font-size:16px">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>收款方</p>
+                </div>
+                <div class="weui_cell_ft">{$sell_info['nickname']}</div>
+            </div>
+        </div>
+
+        <div class="weui_cells" style="font-size:16px">
+            <!-- LOOP -->
+                                            <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>{$productinfo['goodsName']} <strong>数量：{$orderinfo['goodsNum']}</strong></p>
+                    </div>
+                    <div class="weui_cell_ft">￥{$goodsPriceTotal}</div>
+                </div>
+                        <!-- LOOP -->
+        </div>
+
+        <div class="weui_btn_area">
+            <a id="pay_button" onclick="callpay();" class="weui_btn weui_btn_primary" style="font-size:22px;line-height: 2.4;">立即支付</a>
+        </div>
+        <div class="weui_cells_tips" style="text-align:center;font-size:12px;margin-top:15px">交易流水号: 13635334022017072315580733111153</div>
+    </div>
+
+
+
+
+
+    <div id="waitingPayResultToast" class="weui_loading_toast" style="display:none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <div class="weui_loading">
+                <!-- :) -->
+                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+            </div>
+            <p class="weui_toast_content">等待支付结果…</p>
+        </div>
+    </div>
+
+    <div id="paySuccessToast" style="display: none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <i class="weui_icon_toast"></i>
+            <p class="weui_toast_content">支付成功</p>
+        </div>
+    </div>
+
+
+
+
+
+   <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+   
+
+
+ 
+ <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            function check_result_loop() {
+                check_result();
+                setTimeout(check_result_loop, 1000);
+            }
+            // check_result_loop();
+
+            //调用微信JS api 支付
+            function jsApiCall() {
+                WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest',
+                    {$jsApiParameters},
+                    function(res){
+                        WeixinJSBridge.log(res.err_msg);
+
+                        if (res.err_msg === 'get_brand_wcpay_request:ok') { // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回 ok，但并不保证它绝对可靠。
+                            $('#waitingPayResultToast').show();
+
+                            $('#paySuccessToast').hide();
+
+                            // window.setInterval(check_result, 1000);
+                            check_result_loop();
+
+                        } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                            // 用户取消支付窗口
+                            return;
+                        } else {
+                         //   alert(res.err_code + '|' + res.err_desc + '|' + res.err_msg);
+                        }
+
+                    }
+                );
+
+                $('#pay_button').removeClass('hide');
+            }
+
+            function callpay() {
+                if (typeof WeixinJSBridge == 'object' && typeof WeixinJSBridge.invoke == 'function') {
+                    jsApiCall();
+                } else {
+                    if (document.addEventListener) {
+                        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                    } else if (document.attachEvent) {
+                        document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                    }
+                }
+            }
+
+            function check_result() {
+                var oid = "{$orderinfo['id']}";//http://hefei.hfwxz.com/app/index.php?pid=15&i=22&c=entry&do=dopayresult&m=wxz_easy_pay&oid=
+                var redirect_url_fail = "{php echo $this->createMobileUrl('buyorders')}";
+                var redirect_url_success = "{php echo $this->createMobileUrl('buyorders')}";
+                $.ajax({
+                    type: 'GET',
+                    url: '{php echo $this->createMobileUrl("dopayresult")}&oid=' + oid,
+                    dataType: 'json',
+                    data: '',
+                    success: function(data){
+                        if (data.resultCode === '') {
+                            return;
+                        } else if (data.resultCode === 'SUCCESS') {
+                            $('#waitingPayResultToast').hide();
+                            $('#paySuccessToast').show();
+                            redirect(redirect_url_success);
+                        } else {
+                            $('#waitingPayResultToast').hide();
+                            $('#paySuccessToast').hide();
+                            alert('支付失败！');
+                            redirect(redirect_url_fail);
+                        }
+                        return;
+                    },
+                    error: function(data){}
+                });
+            }
+
+            function redirect(url) {
+                // similar behavior as an HTTP redirect
+                window.location.replace(url);
+                // similar behavior as clicking on a link
+                // window.location.href = url;
+            }
+
+            //获取共享地址
+            function editAddress() {
+                WeixinJSBridge.invoke(
+                    'editAddress',
+                    {$editAddress},
+                    function(res){
+                        var value1 = res.proviceFirstStageName;
+                        var value2 = res.addressCitySecondStageName;
+                        var value3 = res.addressCountiesThirdStageName;
+                        var value4 = res.addressDetailInfo;
+                        var tel = res.telNumber;
+
+                     //   alert(value1 + ' ' + value2 + ' ' + value3 + ' ' + value4 + ' 电话:' + tel);
+                    }
+                );
+            }
+
+            // window.onload = function() {
+                // 调取收货地址
+                // if (typeof WeixinJSBridge == "undefined") {
+                //     if ( document.addEventListener ) {
+                //         document.addEventListener('WeixinJSBridgeReady', editAddress, false);
+                //     } else if (document.attachEvent) {
+                //         document.attachEvent('WeixinJSBridgeReady', editAddress);
+                //         document.attachEvent('onWeixinJSBridgeReady', editAddress);
+                //     }
+                // } else {
+                //  editAddress();
+                // }
+            // }
+
+            $('#pay_button').click(function(){
+                callpay();
+            })
+
+            callpay();
+        });
+
+    </script>
+
+
+</body>
+
+</html>

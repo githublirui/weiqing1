@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>卖家中心</title>
+    <link rel="stylesheet" href="http://weixin.ibanling.com/zhangbin/cdn/css/weui.min.css" />
+    <link rel="stylesheet" href="../css/share.css">
+    <style>
+        .more {}
+        
+       
+        
+        .weui_actionsheet_menu a {
+            display: block;
+        }
+        
+        .info .weui_grid:before {
+            border: 0;
+        }
+        
+        .weui_grid_desc {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .weui_grid {
+            height: 120px;
+        }
+        .weui_grids{
+            background-color: #fff;
+
+        }
+        .weui_grid_2 {
+            padding: 10px;
+            width: 50%;
+            height: 150px;
+        }
+        
+        .page {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #EFEFF3;
+            z-index: 1;
+        }
+        
+        .container,
+        .page {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow-x: hidden;
+        }
+        
+        .tag {
+            -webkit-transform: scale(0.8);
+            display: inline-block;
+            background-color: #ff6600;
+            border-radius: 4px;
+            padding: 4px 6px;
+            color: #fff;
+            font-size: 9px;
+            -webkit-transform-origin-x: -1px;
+        }
+        
+        .weui_media_box.weui_media_appmsg {
+            align-items: flex-start;
+        }
+        .weui_navbar {
+            z-index: 10;
+        }
+        .info p {
+            margin: 4px;
+        }
+        .disable{
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        .weui_grid_icon_block{
+            display: block;
+        }
+        .padding_top_0{
+            padding-top: 0 !important;
+        }
+        .weui_grid_desc a {
+            margin: 3px 3px;
+        }
+    </style>
+</head>
+
+<body>
+    
+   
+
+ 
+    
+
+
+   
+
+
+
+
+    
+        <div class="weui_navbar" >
+            <div class="weui_navbar_item " style="background-color:#00EE76">
+                正在销售
+            </div>
+            
+            
+            <div class="weui_navbar_item">
+                售完商品
+            </div>
+        </div>
+
+        
+
+        <div class="weui_tab_bd">
+           
+            
+
+           
+           
+            <div class="weui_grids">
+{loop $trades_p $index $item}
+<div   class="weui_grid weui_grid_2 js_grid" onclick="window.location='{$item['goodsCode']}'">
+                    <p class="weui_grid_label" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
+                       {$item['goodsName']}
+                    </p>
+                    <p class="weui_grid_icon weui_grid_icon_block" style="width:60px;height:60px;display:block">
+                        <img src="{$item['goodsImg']}">
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc" style="font-size:14px;color:#000">
+                        零售价:{$item['goodsPrice']}元 <span > &nbsp;&nbsp;&nbsp;库存:{$item['goodsStock']}</span>
+                    </p>
+					 <p class="weui_grid_label weui_grid_desc" style="font-size:14px;color:#000">
+                         <span>销量:{$item['sell_num']}</span> &nbsp;&nbsp;&nbsp;<span>删除</span>
+                    </p>
+                </div>
+						
+					{/loop}
+                
+				
+
+        </div>
+
+        
+
+       
+        
+   
+
+   
+</body>
+
+</html>

@@ -1,0 +1,1369 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>卖家中心</title>
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
+    <link rel="stylesheet" href="../css/share.css">
+    <style>
+        .more {}
+        
+        [v-cloak] {
+            display: none;
+        }
+        
+        .weui_actionsheet_menu a {
+            display: block;
+        }
+        
+        .info .weui_grid:before {
+            border: 0;
+        }
+        
+        .weui_grid_desc {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .weui_grid {
+            height: 120px;
+        }
+        .weui_grids{
+            background-color: #fff;
+
+        }
+        .weui_grid_2 {
+            padding: 10px;
+            width: 50%;
+            height: 130px;
+        }
+        
+        .page {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #EFEFF3;
+            z-index: 1;
+        }
+        
+        .container,
+        .page {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow-x: hidden;
+        }
+        
+        .tag {
+            -webkit-transform: scale(0.8);
+            display: inline-block;
+            background-color: #ff6600;
+            border-radius: 4px;
+            padding: 4px 6px;
+            color: #fff;
+            font-size: 9px;
+            -webkit-transform-origin-x: -1px;
+        }
+        
+        .weui_media_box.weui_media_appmsg {
+            align-items: flex-start;
+        }
+        .weui_navbar {
+            z-index: 10;
+        }
+        .info p {
+            margin: 4px;
+        }
+        .disable{
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        .weui_grid_icon_block{
+            display: block;
+        }
+        .padding_top_0{
+            padding-top: 0 !important;
+        }
+        .weui_grid_desc a {
+            margin: 3px 3px;
+        }
+    </style>
+</head>
+
+<body id="app" v-cloak>
+    <div class="container">
+        <router-view keep-alive></router-view>
+    </div>
+
+    <div class="weui_loading_toast" v-show="isLoading">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <div class="weui_loading">
+                <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+                <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+            </div>
+            <p class="weui_toast_content">数据加载中</p>
+        </div>
+    </div>
+    <div id="toast" style="display: none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast" style="padding: 1em;margin-left: -4.2em">
+            <i class="weui_icon_safe weui_icon_safe_warn" style=""></i>
+            <p class="weui_toast_content">已完成</p>
+        </div>
+        <script type="text/javascript">
+            function showToast(txt) {
+                $("#toast .weui_toast_content").text(txt);
+                $('#toast').show();
+                setTimeout(function() {
+                    $('#toast').hide();
+                }, 2000);
+
+            }
+        </script>
+    </div>
+    <script src="http://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="http://weixin.ibanling.com/jdzfpaydev/js/wxshare.js"></script>
+    <script src="http://cdn.bootcss.com/vue/1.0.24/vue.min.js"></script>
+    <script src="http://cdn.bootcss.com/vue-router/0.7.13/vue-router.min.js"></script>
+    <script src='http://cdn.bootcss.com/vue-resource/0.7.0/vue-resource.js'></script>
+    <script src="//cdn.bootcss.com/URI.js/1.18.7/URI.js"></script>
+    <script src="http://www.ibanling.com/cdnjs/arg.js/arg-1.3.1.min.js"></script>
+
+    <script type="text/x-template" id="root">
+        <div class="info" style="text-align:center;padding:20px;font-size:14px;">
+            <p>昨日营收<span style="color:#ff3300">{{seller_data.income/100}}</span>元 昨日成交<span style="color:#ff3300">{{seller_data.order_count}}</span>笔</p>
+            <p v-show="seller_data.unshipped_count>0">交易未发货<span style="color:#ff3300">{{seller_data.unshipped_count}}</span>笔</p> 
+            <p v-show="seller_data.unshipped_count>0"><a class="weui_btn weui_btn_mini weui_btn_primary" v-on:click="shipall()">全部标记为已发货</a></p>
+        </div>
+        <div class="bd">
+            <div class="weui_search_bar" id="search_bar" v-show="showSearchBar" style="z-index:0">
+                <form class="weui_search_outer" v-on:submit.prevent="$router.go({name: 'search',params:{query:query}} )">
+                    <div class="weui_search_inner">
+                        <i class="weui_icon_search"></i>
+                        <input v-model="query" type="search" class="weui_search_input" id="search_input" placeholder="可以输入订单号，买家名称，商品名称，地址，电话" required/>
+                        <a href="javascript:" class="weui_icon_clear" id="search_clear" v-on:click="query=''" v-show="query.length>0"></a>
+                    </div>
+                </form>
+                <a v-link="{ name: 'search',params:{query:query} }" class="weui_search_cancel" style="display:block">搜索</a>
+            </div>
+        </div>
+
+        <div class="bd">
+            <div class="weui_grids">
+                <a href="../items/new" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Interface/svg_64/plus.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        发布商品
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        生成支付码商品图
+                    </p>
+                </a>
+                <a href="../items/new?itemType=tuan" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Gaming/svg_64/front-card.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        接龙拼团
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        群营销拼团神器
+                    </p>
+                </a>
+                <a v-link="{ name: 'items',params:{sell_status:'forsale'} }" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/groceries-bag.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        商品管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        管理删除商品
+                    </p>
+                </a>
+
+                <a v-link="{ name: 'list',params:{shipped:0} }" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/invoice.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        订单管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        未发货{{seller_data.unshipped_count}}笔
+                    </p>
+                </a>
+                <a v-on:click="showSearchBar=true" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Interface/svg_64/zoom.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        查找订单
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        快速搜索某笔订单
+                    </p>
+                </a>
+
+
+                
+                <a v-on:click="showActionBar('download')" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Devices/svg_64/cloud-download.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        下载订单
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        查看订单全部信息
+                    </p>
+                </a>
+                <a href="batchship" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/delivery-truck.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        批量发货
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        一键发货准确通知
+                    </p>
+                </a>
+
+                <a href="../coupons/new" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Celebration/svg_64/candy.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        优惠券
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        社营销营必备神器
+                    </p>
+                </a>
+                <!--a href="../pages/hongbao" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://www.ibanling.com/micro_forum/design/img/hongbao.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        红包工具
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        快速曝光宣传产品
+                    </p>
+                </a-->
+                <a href="../items/0?router=/shop/{{openid}}#!/shop/{{openid}}" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Clothes/svg_64/ankle-booties.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        我的店铺
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        展示你的所有商品
+                    </p>
+                </a>
+                
+
+                <a href="../items/1#!/scores_log_seller" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Celebration/svg_64/bunny.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        积分管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        客户的积分变动
+                    </p>
+                </a>
+
+                <a v-on:click="showActionBar('tips')" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Celebration/svg_64/witch-hat.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        营销技巧
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        微信营销小巧技
+                    </p>
+                </a>
+
+                <a v-show="seller.settings_obj.new_buyer_coupon_id" href="new_customer?coupon_id={{seller.settings_obj.new_buyer_coupon_id}}" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Celebration/svg_64/candy.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        新客户
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        领券的新客户
+                    </p>
+                </a>
+                <a v-show="seller.verified == 5"  v-link="{ name: 'money_log'}" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/coin-yen.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        账户余额
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc" style="color:#f00">
+                        {{seller.money/100}}元
+                    </p>
+                </a>
+
+            </div>
+        </div>
+        <div class="weui_cells_title">成为简单支付会员享有多项增值服务，可以开通分销系统，开通成交后获得多张优惠券功能，开通会员积分抵扣功能</div>
+        <div class="bd">
+            <div class="weui_grids">
+                <a href="../pages/reseller_reg?id={{openid}}" class="weui_grid js_grid" :class="{'disable':seller.privilege==0}">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Miscellaneous/svg_64/basketball.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        招募分销商
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        快速扩大销售网络
+                    </p>
+                </a>
+                <a href="../items/new?itemType=4" class="weui_grid js_grid"  :class="{'disable':seller.privilege==0}">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Interface/svg_64/plus.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        发布分销商品
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        可以设置分销佣金
+                    </p>
+                </a>
+                <a v-link="{ name: 'reseller_items',params:{sell_status:'forsale',sid:openid} }" class="weui_grid js_grid"  :class="{'disable':seller.privilege==0}">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Clothes/svg_64/men-t-shirt.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        分销商品管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        可删除，改库存
+                    </p>
+                </a>
+                <a href="reseller_list" class="weui_grid js_grid"  :class="{'disable':seller.privilege==0}">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/organogram.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        分销商管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        查看你的分销商信息
+                    </p>
+                </a>
+                <a href="http://mp.weixin.qq.com/s?__biz=MzAxMDUwNjA0Mg==&mid=2653386386&idx=1&sn=d41f24adbee4efa6c404283f85b1ade2&chksm=809c8cc7b7eb05d17d41728eccf5abbc7982d3e2f4abb6046a1d52c4f7808fdb2337eb70c9a8#rd" class="weui_grid js_grid"  :class="{'disable':seller.privilege==0}">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Celebration/svg_64/irish-top%20hat.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        分销介绍
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        了解如何使用分销
+                    </p>
+                </a>
+                <a v-link="{ name: 'reseller_orders',params:{shipped:0} }" class="weui_grid js_grid" >
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Gaming/svg_64/dealer.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        分销商订单管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        分销商查看订单
+                    </p>
+                </a>
+                <!--a href="../items/new?itemType=tuan" class="weui_grid js_grid" :class="{'disable':seller.privilege==0}">
+                    <div class="weui_grid_icon" style="">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Celebration/svg_64/balloons.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label" style="">
+                        1+1拉新团购
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc" style="">
+                        让老顾客帮你拉客源
+                    </p>
+                </a-->
+
+
+                
+
+            </div>
+        </div>
+        <div class="weui_btn_area"  v-show="seller.privilege==0">
+            <a class="weui_btn weui_btn_primary" href="../items/11486" >购买简单支付年付会员费</a>
+        </div>
+
+
+
+        <div style="text-align:center;padding:20px;font-size:12px;color:#aaa">
+             <a style="color: #83C383" href="http://mp.weixin.qq.com/s?__biz=MzAxMDUwNjA0Mg==&mid=2653386375&idx=1&sn=54f2331094e2b835c919c22b85b97ae4&chksm=809c8cd2b7eb05c4ebed463b71430923e1ea5087645b1903bf42e57f7422049deb3fbe67d37e&scene=0">最好的收款工具，关于简单支付</a><span style="margin-left:6px">商务合作,意见反馈:010-81576320</span><br/>
+            <img src="http://img1.ibanling.com/weixin/test/20170111/6ced61ce7ef29318fae198cc399dba54a2fb4b20.png" style="width:300px;margin-top:10px">
+        </div>
+
+        <div id="actionSheet_wrap">
+            <div class="weui_mask_transition" id="mask" style="display: none;"></div>
+            <div class="weui_actionsheet" id="weui_actionsheet">
+                <div class="weui_actionsheet_menu" v-show="as_type=='download'">
+                    <a v-link="{ name: 'have_salse_items',params:{sell_status:'have_sales'} }" class="weui_actionsheet_cell">按照不同商品分别下载订单</a>
+                    <a href="../orders/dl?dl=1&otype=all&openid=oOq1ws7TK9eIWZgysTBiNwFCezhA" class="weui_actionsheet_cell">下载全部订单表</a>
+                    <a href="../orders/dl?dl=1&otype=unshipped&openid=oOq1ws7TK9eIWZgysTBiNwFCezhA" class="weui_actionsheet_cell">下载未发货订单表</a>
+                </div>
+                <div class="weui_actionsheet_menu" v-show="as_type=='tips'">
+                    <a href="http://mp.weixin.qq.com/s?__biz=MzAxMDUwNjA0Mg==&mid=2653386235&idx=1&sn=c02b3ba8a36a05f1bbb2ea6bcd6257bd#rd" class="weui_actionsheet_cell">支付码商品图的完美使用</a>
+                    <a href="http://mp.weixin.qq.com/s?__biz=MzAxMDUwNjA0Mg==&mid=2653386336&idx=1&sn=8338d7756d5af8d724bfc9d354f09c9f#rd" class="weui_actionsheet_cell">卖不出去货的微商，我来告诉你为什么</a>
+                </div>
+                <div class="weui_actionsheet_action">
+                    <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/x-template" id="orders">
+        <div class="weui_tab">
+            <div class="weui_navbar" v-show="$route.name=='list'">
+                <div class="weui_navbar_item " v-link="{ name: 'list',params:{shipped:0} }" :class="{weui_bar_item_on:shipped==0 && $route.name=='list'}">
+                    未发货
+                </div>
+                <div class="weui_navbar_item " v-link="{ name: 'list',params:{shipped:1} }" :class="{weui_bar_item_on:shipped==1 && $route.name=='list'}">
+                    已发货
+                </div>
+                <div class="weui_navbar_item" v-link="{ name: 'list',params:{shipped:-1} }" :class="{weui_bar_item_on:shipped==null && $route.name=='list'}">
+                    全部
+                </div>
+            </div>
+
+            <div class="weui_navbar" v-show="$route.name=='reseller_orders'">
+                <div class="weui_navbar_item " v-link="{ name: 'reseller_orders',params:{shipped:0} }" :class="{weui_bar_item_on:shipped==0 && $route.name=='reseller_orders'}">
+                    未发货
+                </div>
+                <div class="weui_navbar_item " v-link="{ name: 'reseller_orders',params:{shipped:1} }" :class="{weui_bar_item_on:shipped==1 && $route.name=='reseller_orders'}">
+                    已发货
+                </div>
+                <div class="weui_navbar_item" v-link="{ name: 'reseller_orders',params:{shipped:-1} }" :class="{weui_bar_item_on:shipped==null && $route.name=='reseller_orders'}">
+                    全部
+                </div>
+            </div>
+
+
+
+            <div class="weui_tab_bd" style="">
+                <div class="weui_search_bar">
+                    <form class="weui_search_outer" v-on:submit.prevent="$router.go({name: 'search',params:{query:query}} )">
+                        <div class="weui_search_inner">
+                            <i class="weui_icon_search"></i>
+                            <input v-model="query" type="search" class="weui_search_input" id="search_input" placeholder="可以输入订单号，买家名称，商品名称，地址，电话" required/>
+                            <a href="javascript:" class="weui_icon_clear" id="search_clear" v-on:click="query=''"></a>
+                        </div>
+                    </form>
+                    <a v-link="{ name: 'search',params:{query:query} }" class="weui_search_cancel" style="display:block">搜索</a>
+                </div>
+                <div style="text-align:center;padding:100px 0;color:#999" v-show="$route.name=='search' && orders.length==0">
+                    没有查到相应的订单
+                </div>
+
+                <div class="weui_media_box weui_media_appmsg" v-for="order in orders">
+                    <a  href="../orders/{{order.key}}" class="weui_media_hd">
+                        <img class="weui_media_appmsg_thumb" :src="order.item_img+'@!square-small'" alt="">
+                    </a>
+                    <div class="weui_media_bd">
+                        <a  href="../orders/{{order.key}}" class="weui_media_desc">
+
+                            <span v-show='order.pick_up==1' class='tag'>自提</span>
+                            <span v-show='order.type==2' class='tag'>虚拟物品</span>
+                            <span v-show='order.reseller>0' class='tag'>分销</span>
+                        </a>
+                        
+                        <a  href="../orders/{{order.key}}" class="weui_media_desc">买家:{{order.buyer_user.nickname}}，收货人:{{order.name}}</a>
+                        <a  href="../orders/{{order.key}}" class="weui_media_desc">电话:{{order.cell}}</a>
+                        <a  href="../orders/{{order.key}}" class="weui_media_desc">{{order.address}}</a>
+                        <a  href="../orders/{{order.key}}" class="weui_media_desc">{{order.pay_time}}</a>
+                        <p class="weui_media_desc">
+                            <a v-on:click="scanOrder(order)" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary"><span v-show="!order.shipped">扫码发货</span><span v-show="order.shipped">重新扫码发货</span></a>   
+                            <a href="../orders/{{order.key}}" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary">详情</a>
+                            <a v-on:click="delete_order(order)" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_warn">删除</a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="itemOrders">
+        <div>
+            <div style="text-align:center;padding:100px 0;color:#999" v-show="orders.length==0">
+                没有相应的订单 
+            </div>
+            <div class="weui_btn_area"  v-show="orders.length>0">
+                <a class="weui_btn weui_btn_primary" href="../orders/dl?dl=1&otype=all&format=kuaida&item_id={{this.$route.params.id}}&openid={{this.$route.params.openid}}" >下载全部订单(我打软件格式)</a>
+                <a class="weui_btn weui_btn_primary" href="../orders/dl?dl=1&otype=all&format=yunda&item_id={{this.$route.params.id}}&openid={{this.$route.params.openid}}" >下载全部订单(热敏打印机地址合一格式)</a>
+                <a class="weui_btn weui_btn_primary" href="../orders/dl?dl=1&otype=unshipped&format=kuaida&item_id={{this.$route.params.id}}&openid={{this.$route.params.openid}}" >下载未发货订单(我打软件格式)</a>
+                <a class="weui_btn weui_btn_primary" href="../orders/dl?dl=1&otype=unshipped&format=yunda&item_id={{this.$route.params.id}}&openid={{this.$route.params.openid}}" >下载未发货订单(热敏打印机地址合一格式)</a>
+                <a class="weui_btn weui_btn_primary" href="../orders/dl?dl=1&otype=all&item_id={{this.$route.params.id}}&openid={{this.$route.params.openid}}" >下载全部订单(普通格式)</a>
+                <a class="weui_btn weui_btn_primary" href="../orders/dl?dl=1&otype=unshipped&item_id={{this.$route.params.id}}&openid={{this.$route.params.openid}}" >下载未发货订单(普通格式)</a>
+                
+            </div>
+            <div style="text-align:center">
+                <a class="weui_btn weui_btn_mini weui_btn_primary" v-link="{name:'itemOrders',params:{id:this.$route.params.id,shipped:'all',openid:$route.params.openid}">
+                    全部
+                </a>
+                <a class="weui_btn weui_btn_mini weui_btn_primary" v-link="{name:'itemOrders',params:{id:this.$route.params.id,shipped:'unshipped',openid:$route.params.openid}}" >
+                    未发货
+                </a>
+
+            </div>
+            <div class="weui_cells_title" style="text-align:center" v-show="shipped=='all'">共{{orders.length}}条订单</div>
+            <div class="weui_cells_title" style="text-align:center" v-show="shipped=='unshipped'">共{{orders.length}}条订单未发货</div>
+            <table style="font-size:12px;text-align:left;word-break: break-all" v-show="false">
+                <tr>
+                    <th>收货人</th>
+                    <th>电话</th>
+                    <th>地址</th>
+                    <th>商品</th>
+                    <th>留言</th>
+                </tr>
+                <tr  v-show="shipped=='all' || (shipped='unshipped' && order.shipped==0)" v-for="order in orders">
+                    <th>{{order.name}}</th>
+                    <th>{{order.cell}}</th>
+                    <th>{{order.address}}</th>
+                    <th>{{order.item_name}}{{order.quantity}}件</th>
+                    <th>{{order.item_name}}{{order.postscript}}件</th>
+                </tr>
+            </table>
+            
+            <div class="weui_cells_title" v-show="orders.length>0">共{{orders.length}}条订单</div>
+            <div v-for="order in orders">
+                <div class="weui_cells_title" v-show="orders.length>0">{{order.buyer_user.nickname}} {{order.address}} <a>详情</a></div>
+                <div class="weui_cells weui_cells_form">
+                    <div class="weui_cell">
+                        <div class="weui_cell_bd weui_cell_primary" style="flex:5">
+                            <input class="weui_input" type="number" placeholder="请输入快递单号"  v-on:input="next_order_trackingid(order.tracking_id,$index+1)" v-model="order.tracking_id ">
+                        </div>
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" v-show="order.shipped==0" v-on:click="shipOrder(order,order.tracking_id)" >
+                                发货
+                            </a>
+                            <a class="weui_btn weui_btn_mini weui_btn_default" v-show="order.shipped==1">
+                                已发
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div v-show="false">
+                <div class="weui_media_box weui_media_appmsg" v-for="order in orders1">
+                    
+                    <div class="weui_media_bd">
+                        <p>{{order.buyer_user.nickname}}{{order.item_name}}</p>
+                        
+                        
+                        <p class="weui_media_desc">
+                            <a v-on:click="scanOrder(order)" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary"><span v-show="!order.shipped">快速扫码发货</span><span v-show="order.shipped">重新扫码发货</span></a>   
+                            <a href="../orders/{{order.key}}" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary">查看详情</a>
+                        </p>
+                    </div>
+                    <div class="weui_media_bd">
+                        <input class="weui_input" type="number" placeholder="" >
+                    </div>
+                </div>
+            </div>       
+        </div>
+    </script>
+    <script type="text/javascript">
+
+        
+        var itemOrdersComponent;
+        var itemOrdersPage = Vue.component('itemOrders', {
+            template: '#itemOrders',
+            data: function() {
+                return {
+                    shipped:'all'
+                }
+            },
+            ready: function() {
+                itemOrdersComponent = this;
+            },
+            route: {
+                data: function(transition) {
+                    this.getList(this.$route.params.id);
+                    weixinAPI_change({title:"商品"+this.$route.params.id+"全部订单",desc:"商品"+this.$route.params.id+"全部订单"});
+                }
+            },
+            methods: {
+                next_order_trackingid:function(value,index){
+                    if(index<this.orders.length)
+                    {
+                        if(value){
+                            this.orders[index].tracking_id = Number(value)+1;
+                        }
+                        else
+
+                        {
+                            this.orders[index].tracking_id = value;
+                        }
+                        this.next_order_trackingid(this.orders[index].tracking_id,index+1);
+                    }
+                },
+                getList: function(item_id) {
+                    
+                    appComponent.isLoading = true;
+                    var params = {};
+                    params.item_id = item_id;
+                    params.openid = this.$route.params.openid;
+                    if(this.$route.params.shipped=="unshipped")
+                    {
+                        params.shipped=0;
+                    }
+
+
+                    this.$http.get('../api/orders', params).then(function(data) {
+                        this.$set("orders", data.data.data);
+                        appComponent.isLoading = false;
+                    });
+                },
+                scanOrder:function(order)
+                {
+
+                    wx.scanQRCode({
+                        needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                        success: function (res) {
+                            var barCode = res.resultStr.split(',')[1]||'000001';
+                            itemOrdersComponent.shipOrder(order,barCode);
+
+                        },
+                    });
+                },
+                shipOrder:function(order,tracking_id){
+                    appComponent.isLoading = true;
+                    this.$http.patch('../api/orders/'+order.id, {
+                        tracking_id: tracking_id
+                    }).then(function(data) {
+                        this.orders.shipped=1;
+                        appComponent.isLoading = false;
+                        showToast("发货成功");
+                    });
+                },
+            }
+        });
+
+    </script>
+
+
+    <script type="text/x-template" id="moneyLog">
+        <div>
+            <div style="text-align:center;padding:20px 0 0 0;color:#999">
+                账户余额<span style="color:#f00">{{moneylogs[0].money_total/100}}</span>元
+            </div>
+            <div class="weui_btn_area">
+                <a class="weui_btn weui_btn_primary" v-on:click="withdraw_money()" >提现</a>
+            </div>
+            
+            <div class="weui_cells" >
+                
+                
+                <div class="weui_cell" v-for="moneylog in moneylogs" style="font-size:12px">
+                    <div class="weui_cell_bd weui_cell_primary" style="flex:5">
+                        <p v-show="moneylog.operate_type==1"><span>入账</span><span style="color:red">+{{moneylog.money/100}}元</span>，商品{{moneylog.detail}} {{moneylog.insert_time}}</p>
+                        <p v-show="moneylog.operate_type==2"><span>退款</span><span style="color:green">-{{moneylog.money/100}}元</span>，商品{{moneylog.detail}} {{moneylog.insert_time}}</p>
+                        <p v-show="moneylog.operate_type==3"><span>提现</span><span style="color:green">-{{moneylog.money/100}}元</span>，{{moneylog.insert_time}}</p> 
+                    </div>
+                    <div class="weui_cell_ft">余额{{moneylog.money_total/100}}元</div>
+                </div>
+            </div>       
+        </div>
+    </script>
+    <script type="text/javascript">
+
+        
+        var moneyLogComponent;
+        var moneyLogPage = Vue.component('moneyLog', {
+            template: '#moneyLog',
+            data: function() {
+                return {
+                    moneylogs:[]
+                }
+            },
+            ready: function() {
+                moneyLogComponent = this;
+            },
+            route: {
+                data: function(transition) {
+                    this.get_money_log(this.$route.params.id);
+                    
+                }
+            },
+            methods: {
+                
+                get_money_log: function() {
+                    
+                    appComponent.isLoading = true;
+                    var params = {};
+                    this.$http.get('../api/moneylogs', params).then(function(data) {
+                        this.$set("moneylogs", data.data.data);
+                        appComponent.isLoading = false;
+                    });
+                },
+                withdraw_money: function() {
+                    
+                    appComponent.isLoading = true;
+                    var params = {};
+                    this.$http.get('../api/withdraw', params).then(function(data) {
+                        
+                        appComponent.isLoading = false;
+                        this.get_money_log();
+                        alert(data.data.message);
+                    });
+                },
+                
+            }
+        });
+
+    </script>
+
+
+
+
+    <script type="text/x-template" id="items">
+        <div class="weui_navbar" v-show="$route.name=='items'">
+            <div class="weui_navbar_item " v-link="{ name: 'items',params:{sell_status:'forsale'} }" :class="{weui_bar_item_on:sell_status=='forsale' }">
+                正在销售
+            </div>
+            <div class="weui_navbar_item " v-link="{ name: 'items',params:{sell_status:'in_showcase'} }" :class="{weui_bar_item_on:sell_status=='in_showcase' }">
+                橱窗推荐
+            </div>
+            <!--div class="weui_navbar_item " v-link="{ name: 'items',params:{sell_status:'offshelf'} }" :class="{weui_bar_item_on:sell_status=='offshelf' }">
+                删除商品
+            </div-->
+            <div class="weui_navbar_item" v-link="{ name: 'items',params:{sell_status:'soldout'} }" :class="{weui_bar_item_on:sell_status=='soldout' }">
+                售完商品
+            </div>
+        </div>
+
+        <div class="weui_navbar" v-show="false " >
+            <div class="weui_navbar_item " v-link="{ name: 'reseller_items',params:{sell_status:'forsale'} }" :class="{weui_bar_item_on:sell_status=='forsale' }">
+                分销正在销售
+            </div>
+            
+            <div class="weui_navbar_item " v-link="{ name: 'reseller_items',params:{sell_status:'offshelf'} }" :class="{weui_bar_item_on:sell_status=='offshelf' }">
+                分销删除商品
+            </div>
+            
+        </div>
+
+        <div class="weui_tab_bd" v-bind:class="{'padding_top_0':$route.name=='reseller_items'}">
+            <div class="weui_cells_title"  v-show="$route.name=='reseller_items' && openid != $route.params.sid" style="background-color:#48c23d;color:#fff;text-align:center;font-size:16px;padding:10px;margin-top:0">简单支付-分销平台
+            </div>
+            <div class="weui_cells_title"  v-show="items.length>0">
+            <span v-show="$route.name=='reseller_items' && openid == $route.params.sid ">你可以将本页转发给你的分销商，让他们领取商品的分销二维码</span>
+            </div>
+
+            <div class="weui_cells_title" >
+            <span v-show="$route.name=='reseller_items' && openid != $route.params.sid">供应商{{seller.nickname}}的联系方式</span>
+            </div>
+
+            <div class="weui_cells" v-show="$route.name=='reseller_items' && openid != $route.params.sid">
+                <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>电话</p>
+                    </div>
+                    <div class="weui_cell_ft">{{seller.phone}}</div>
+                </div>
+                <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>微信</p>
+                    </div>
+                    <div class="weui_cell_ft">{{seller.weixin}}</div>
+                </div>
+            </div>
+            <div class="weui_cells_title" >
+            <span style="color:green" v-show="$route.name=='reseller_items'">供应商{{seller.nickname}}的分销商品</span>
+            </div>
+            <div class="weui_grids">
+
+                <div v-on:click="showActionBar(item)"  class="weui_grid weui_grid_2 js_grid" v-for="item in items">
+                    <p class="weui_grid_label" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
+                        {{item.skitemgroups_shortname}}{{item.name}}
+                    </p>
+                    <p class="weui_grid_icon weui_grid_icon_block" style="width:60px;height:60px;display:block">
+                        <img :src="item.img+'@!square-small'">
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc" style="font-size:14px;color:#000">
+                        零售价:{{item.price/100}}元 <span v-show="item.reseller_money>0">佣金:{{item.reseller_money/100}}元</span> <span v-show="item.inventory<100 && $route.name!='reseller_items'"> 库存:{{item.inventory}}</span> <span v-show="item.sales>0 && $route.name!='reseller_items'">销量:{{item.sales}}</span>
+                    </p>
+                </div>
+                <div class="weui_cells_tips"  v-show="items.length>0">
+
+                </div>
+            </div>
+            <div class="weui_cells_title"  style="margin-top:20px;margin-bottom:20px;">
+            
+            <span v-show="$route.name=='reseller_items'">1.分销商登记后，方可以自动生成［分销支付码商品图］<br/>
+2.支付码商品图可以分享到朋友圈以及微信群里中，引导买家购买<br/>
+3.买家长按识别二维码后即可下单以及支付<br/>
+4.分销佣金自动到帐<br/>
+5.订单以及供应商后台订单同步更新<br/>
+6.订单供应商发货后，买家，分销商，供应商订单同步更新</span>
+            </div>
+
+            <div style="text-align:center;padding:20px;font-size:12px;color:#aaa">
+             <a style="color: #83C383" href="http://mp.weixin.qq.com/s?__biz=MzAxMDUwNjA0Mg==&mid=2653386375&idx=1&sn=54f2331094e2b835c919c22b85b97ae4&chksm=809c8cd2b7eb05c4ebed463b71430923e1ea5087645b1903bf42e57f7422049deb3fbe67d37e&scene=0">最好的收款工具，关于简单支付</a><span style="margin-left:6px">商务合作,意见反馈:010-81576320</span><br/>
+            <img src="http://img1.ibanling.com/weixin/test/20170111/6ced61ce7ef29318fae198cc399dba54a2fb4b20.png" style="width:300px;margin-top:10px">
+        </div>
+
+        </div>
+
+        
+
+        <div class="weui_dialog_confirm" v-show="item_editing!=null">
+            <div class="weui_mask" style="z-index: 10"></div>
+            <div class="weui_dialog">
+                <div class="weui_dialog_hd"><strong class="weui_dialog_title">修改商品库存</strong></div>
+                <div class="">
+                    <div class="weui_cells weui_cells_form">
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd"><label class="weui_label">名称</label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input class="weui_input" type="text" placeholder="" v-model="item_editing.name">
+                            </div>
+                        </div>
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd"><label class="weui_label">价格</label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input class="weui_input" type="number" placeholder="" v-model="item_editing.price | currencyDisplay">
+                            </div>
+                        </div>
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd"><label class="weui_label">库存</label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input class="weui_input" type="number" placeholder="" v-model="item_editing.inventory">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+         
+                <div class="weui_dialog_ft">
+                    <a v-on:click="item_editing=null" class="weui_btn_dialog default">取消</a>
+                    <a v-on:click="editItem(item_editing)" class="weui_btn_dialog primary">确定</a>
+                </div>
+            </div>
+        </div>
+        <div id="actionSheet_wrap">
+            <div class="weui_mask_transition" id="mask" style="display: none;"></div>
+                <div class="weui_actionsheet" id="weui_actionsheet">
+                    <div class="weui_actionsheet_menu">
+                        <a href="../items/new#!/card/{{itemSelected.id}}" class="weui_actionsheet_cell" v-show=" is_seller_self">查看商品二维码</a>
+                        <a v-on:click="item_editing=itemSelected" class="weui_actionsheet_cell" v-show="is_seller_self">修改商品库存价格</a>
+                        <a v-on:click="removeItem(itemSelected)"  v-show="sell_status=='forsale' && is_seller_self" class="weui_actionsheet_cell">删除商品</a>
+                        <a v-on:click="addItem(itemSelected)"  v-show="sell_status=='offshelf' &&  is_seller_self" class="weui_actionsheet_cell">重新上架</a>
+                        <a v-on:click="showcase(itemSelected)" v-show="itemSelected.in_showcase==0 && $route.name=='items'" class="weui_actionsheet_cell">设置成为推荐商品</a>
+                        <a v-on:click="removeShowcase(itemSelected)" v-show="itemSelected.in_showcase!=0 && $route.name=='items'"  class="weui_actionsheet_cell">取消推荐商品</a>
+
+                        <a href="reseller_list?itemid={{itemSelected.id}}" class="weui_actionsheet_cell" v-show="$route.name=='reseller_items'">查看分销二维码</a>
+                        <a v-show="itemSelected.sales>0 && $route.name!='reseller_items'" href="../html/ship#!/orders/item/{{itemSelected.id}}/oOq1ws7TK9eIWZgysTBiNwFCezhA/unshipped" class="weui_actionsheet_cell">下载本商品订单</a>
+                    </div>
+
+                    <div class="weui_actionsheet_action">
+                        <div class="weui_actionsheet_cell" id="actionsheet_cancel">取消</div>
+                    </div>
+                </div>
+            </div>
+    </script>
+   
+
+    <script>
+        var rootComponent;
+        var ordersComponent;
+        var itemsComponent;
+        var appComponent;
+        var itemsOrdersPage;
+        $(function() {
+            var openid = "oOq1ws7TK9eIWZgysTBiNwFCezhA";
+
+
+            Vue.filter('currencyDisplay', {
+              // model -> view
+              // 在更新 `<input>` 元素之前格式化值
+              read: function(val) {
+                if(val==null)
+                {
+                    return null
+                }
+                else
+                {
+                    return val/100;
+                }
+              },
+              // view -> model
+              // 在写回数据之前格式化值
+              write: function(val, oldVal) {
+                
+                return val*100;
+              }
+            });
+
+            Vue.http.options.emulateJSON = true;
+            //weixinAPI_change({title:this.item.name+this.computedPrice+"元",imgUrl:this.item.img + "@!square-small",desc:this.item.name+this.computedPrice+"元"});
+
+            var ordersPage = Vue.component('orders', {
+                template: '#orders',
+                data: function() {
+                    return {
+                        shipped: 0,
+                        query: '',
+                    }
+                },
+                ready: function() {
+                    ordersComponent = this;
+                    //this.getList(0);
+                },
+                route: {
+                    data: function(transition) {
+                        if (this.$route.name == "search") {
+                            this.search(this.$route.params.query);
+                        } else if (this.$route.name == "list" || this.$route.name == "reseller_orders") {
+                            if (this.$route.params.shipped == -1) {
+                                this.getList(null);
+                            } else {
+                                this.getList(this.$route.params.shipped);
+                            }
+                        }
+                    }
+                },
+                methods: {
+                    getList: function(shipped) {
+                        this.shipped = shipped;
+                        appComponent.isLoading = true;
+                        var params = {};
+                        params.shipped = shipped;
+                        if(this.$route.name=='reseller_orders')
+                        {
+                            params.type='resell';
+                        }
+                        this.$http.get('../api/orders', params).then(function(data) {
+
+                            this.$set("orders", data.data.data);
+                            appComponent.isLoading = false;
+                        });
+                    },
+                    scanOrder:function(order)
+                    {
+
+                        wx.scanQRCode({
+                            needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function (res) {
+                                var barCode = res.resultStr.split(',')[1]||'000001';
+                                ordersComponent.shipOrder(order,barCode);
+
+                            },
+                        });
+                    },
+                    shipOrder:function(order,tracking_id)
+                    {
+
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/orders/'+order.id, {
+                            tracking_id: tracking_id
+                        }).then(function(data) {
+                            this.orders.$remove(order);
+                            appComponent.isLoading = false;
+                            showToast("发货成功");
+                        });
+                    },
+                    delete_order:function(order){
+                        if(!window.confirm('确认删除？'))
+                        {
+                            return;
+                        }
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/orders/'+order.id, {
+                            paid: 4
+                        }).then(function(data) {
+                            this.orders.$remove(order);
+                            appComponent.isLoading = false;
+                            showToast("删除订单");
+                        });
+                    },
+                    search: function(q) {
+                        this.query = q;
+                        appComponent.isLoading = true;
+                        var item_id = Number(q);
+                        if (item_id > 0 && item_id < 9999999) {
+                            this.$http.get('../api/orders', {
+                                id: q
+                            }).then(function(data) {
+                                this.$set("orders", data.data.data);
+                                appComponent.isLoading = false;
+                            });
+                        } else {
+                            this.$http.get('../api/orders', {
+                                keyword: q
+                            }).then(function(data) {
+                                this.$set("orders", data.data.data);
+                                appComponent.isLoading = false;
+                            });
+                        }
+                    }
+                }
+            });
+
+            var itemsPage = Vue.component('items', {
+                template: '#items',
+                data: function() {
+                    return {
+                        items: [],
+                        sell_status: '',
+                        itemSelected: null,
+                        seller:null,
+                        item_editing:null,
+                        openid:openid,
+                        is_seller_self:true,
+                    }
+                },
+                ready: function() {
+                    itemsComponent = this;
+                    
+                },
+                route: {
+                    data: function(transition) {
+                        if(this.$route.params.sell_status)
+                        {
+                            this.getItems(this.$route.params.sell_status);
+                        }
+                        if(this.$route.params.sid)
+                        {
+                            this.is_seller_self = this.$route.params.sid ==this.openid
+                        }
+                         
+                        this.get_seller();   
+                    }
+                },
+                methods: {
+                    get_seller:function(){
+                        appComponent.isLoading = true;
+                        this.$http.get('../api/users/'+this.$route.params.sid).then(function(data) {
+                            this.seller = data.data.data;
+                            var router_param = "?router="+this.$route.path;
+                            if(window.location.href.indexOf("?")>0)
+                            {
+                                router_param = "&router="+this.$route.path;
+                            }
+
+                            if(this.$route.name=='reseller_items')
+                            {
+                                weixinAPI_change({
+                                    title:this.seller.nickname+"的分销商品",
+                                    desc:"电话:"+this.seller.phone+",微信:"+this.seller.weixin,
+                                    link:window.location.href.replace(window.location.hash,"") + router_param,
+                                    imgUrl:this.seller.headimgurl,
+                                });
+                            }
+
+                        });
+                    },
+                    
+                    getItems: function(sell_status) {
+                        this.sell_status = sell_status;
+                        appComponent.isLoading = true;
+                        var params ={};
+                        if(sell_status=="in_showcase")
+                        {
+                            params.in_showcase =1;
+                            
+                        }
+                        else if(sell_status=="have_sales")
+                        {
+                            params.have_sales =1;
+                        }
+                        else
+                        {
+                            params.sell_status=sell_status;
+                        }
+
+                        if(this.$route.name=='reseller_items')
+                        {
+                            params.reseller_money_min = 1;
+                            params.sid = this.$route.params.sid;
+                        }
+                        params.perpage = 500;
+
+
+
+                      
+                        
+
+                        this.$http.get('../api/items', params).then(function(data) {
+                            this.$set("items", data.data.data);
+                            appComponent.isLoading = false;
+                        });
+                    },
+                    removeItem: function(item) {
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/items/' + item.id, {
+                            status: 0
+                        }).then(function(data) {
+                            this.items.$remove(item);
+                            appComponent.isLoading = false;
+                            showToast('删除成功');
+                        });
+                    },
+                    addItem: function(item) {
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/items/' + item.id, {
+                            status: 1
+                        }).then(function(data) {
+                            this.items.$remove(item);
+                            appComponent.isLoading = false;
+                            showToast('上架成功');
+                        });
+
+                    },
+                    editItem: function(item) {
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/items/' + item.id, {
+                            inventory: item.inventory,
+                            price: item.price,
+                            name: item.name,
+                        }).then(function(data) {
+                            appComponent.isLoading = false;
+                            showToast('修改成功');
+                            this.item_editing = null;
+                        });
+
+                    },
+                    showcase:function(item){
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/items/' + item.id, {
+                            in_showcase: 1
+                        }).then(function(data) {
+                            item.in_showcase = 1;
+                            appComponent.isLoading = false;
+                            showToast('橱窗推荐成功');
+                        });
+                    },
+                    removeShowcase:function(item){
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/items/' + item.id, {
+                            in_showcase: 0
+                        }).then(function(data) {
+                            item.in_showcase = 0;
+                            appComponent.isLoading = false;
+                            showToast('取消橱窗推荐成功');
+                        });
+                    },
+                    showActionBar: function(item) {
+
+                        this.itemSelected = item;
+                        var mask = $('#mask');
+                        var weuiActionsheet = $('#weui_actionsheet');
+                        weuiActionsheet.addClass('weui_actionsheet_toggle');
+                        mask.show().addClass('weui_fade_toggle').one('click', function() {
+                            hideActionSheet(weuiActionsheet, mask);
+                        });
+                        $('.weui_actionsheet_menu').one('click', function() {
+                            hideActionSheet(weuiActionsheet, mask);
+                        });
+
+                        $('#actionsheet_cancel').one('click', function() {
+                            hideActionSheet(weuiActionsheet, mask);
+                        });
+                        weuiActionsheet.unbind('transitionend').unbind('webkitTransitionEnd');
+
+                        function hideActionSheet(weuiActionsheet, mask) {
+                            weuiActionsheet.removeClass('weui_actionsheet_toggle');
+                            mask.removeClass('weui_fade_toggle');
+                            weuiActionsheet.on('transitionend', function() {
+                                mask.hide();
+                            }).on('webkitTransitionEnd', function() {
+                                mask.hide();
+                            })
+                            this.itemSelected = null;
+                        }
+                    }
+                }
+            });
+
+            
+
+            var root = Vue.component('root', {
+                template: '#root',
+                ready: function() {
+                    rootComponent = this;
+                    this.getSellerData();
+                    this.getuser();
+
+                },
+                data: function() {
+                    return {
+                        seller_data: {},
+                        showSearchBar: false,
+                        as_type: '',
+                        openid:openid,
+                        seller:null,
+                    }
+
+                },
+                methods: {
+                    getuser:function(){
+                        appComponent.isLoading = true;
+                        this.$http.get('../api/users/'+this.openid).then(function(data) {
+                            this.seller = data.data.data;
+                            appComponent.isLoading = false;
+
+                        });
+                    },
+                    shipall:function(){
+                        if(!window.confirm('确认标记为全部发货？'))
+                        {
+                            return;
+                        }
+                        appComponent.isLoading = true;
+                        this.$http.patch('../api/orders/ship_all').then(function(data) {
+                            this.getSellerData();
+                        });
+                    },
+                    getSellerData: function() {
+                        appComponent.isLoading = true;
+                        this.$http.get('../api/seller_data', {}).then(function(data) {
+
+                            this.$set("seller_data", data.data.data);
+                            appComponent.isLoading = false;
+                        });
+                    },
+                    showActionBar: function(flag) {
+                        this.as_type = flag;
+                        var mask = $('#mask');
+                        var weuiActionsheet = $('#weui_actionsheet');
+                        weuiActionsheet.addClass('weui_actionsheet_toggle');
+                        mask.show().addClass('weui_fade_toggle').one('click', function() {
+                            hideActionSheet(weuiActionsheet, mask);
+                        });
+                        $('#actionsheet_cancel').one('click', function() {
+                            hideActionSheet(weuiActionsheet, mask);
+                        });
+                        weuiActionsheet.unbind('transitionend').unbind('webkitTransitionEnd');
+
+                        function hideActionSheet(weuiActionsheet, mask) {
+                            weuiActionsheet.removeClass('weui_actionsheet_toggle');
+                            mask.removeClass('weui_fade_toggle');
+                            weuiActionsheet.on('transitionend', function() {
+                                mask.hide();
+                            }).on('webkitTransitionEnd', function() {
+                                mask.hide();
+                            })
+                        }
+                    }
+
+                },
+                computed: {
+
+                }
+            });
+
+            var App = {
+
+                data: function() {
+                    return {
+                        isLoading: false,
+                    }
+                },
+                ready: function() {
+                    appComponent = this;
+                },
+                methods: {
+
+                }
+
+            }
+            var router = new VueRouter({
+                
+                
+            });
+            router.map({
+                '': {
+                    component: root
+                },
+                '/orders/shipped/:shipped': {
+                    name: 'list',
+                    component: ordersPage
+                },
+                '/orders/:query': {
+                    name: 'search', // 给这条路径加上一个名字
+                    component: ordersPage
+                },
+                '/money_log': {
+                    name: 'money_log', // 给这条路径加上一个名字
+                    component: moneyLogPage
+                },
+                '/items/:sell_status': {
+                    name: 'items', // 给这条路径加上一个名字
+                    component: itemsPage
+                },
+                '/orders/item/:id/:openid/:shipped': {
+                    name: 'itemOrders', // 给这条路径加上一个名字
+                    component: itemOrdersPage
+                },
+                '/reseller_items/:sell_status/:sid': {
+                    name: 'reseller_items', // 给这条路径加上一个名字
+                    component: itemsPage
+                },
+                '/have_salse_items/:sell_status': {
+                    name: 'have_salse_items', // 给这条路径加上一个名字
+                    component: itemsPage
+                },
+                '/reseller_orders/shipped/:shipped': {
+                    name: 'reseller_orders', // 给这条路径加上一个名字
+                    component: ordersPage
+                },
+            })
+            router.start(App, '#app');
+
+            if(Arg('router'))
+            {
+                router.go(Arg('router'));
+            }
+            else
+            {
+                router.go("")
+            }
+
+            
+
+
+        });
+    </script>
+</body>
+
+</html>

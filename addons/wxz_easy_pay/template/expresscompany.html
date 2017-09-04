@@ -1,0 +1,133 @@
+{template 'common/header'}
+
+<style>
+    .l_tableWrap .l_table_tit .l_formBar {
+        border: 0;
+        float: left;
+        font-size: 0;
+    }
+    .y_sele {
+        display: inline-block;
+        padding: 5px 0 12px 12px;
+    }
+    .y_sele_tit {
+        font-size: 14px;
+        padding: 0 0 0 10px;
+    }
+    .l_table_search{
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+</style>
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $('#order_time_start').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+        $('#order_time_end').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+    });
+</script>
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            快递公司列表
+        </div>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+           
+
+            <table class="table table-hover">
+                <tr>
+                    
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>状态</th>
+                   
+                </tr>
+                
+                <tr>
+                  
+                    <td>
+                        <p class="form-control-static">
+                            1
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            顺丰快递
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                          启用
+                        </p>
+                    </td>
+					
+					 
+                </tr>
+				
+				<tr>
+                  
+                    <td>
+                        <p class="form-control-static">
+                            2
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            圆通
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                          启用
+                        </p>
+                    </td>
+					
+					 
+                </tr>
+				<tr>
+                  
+                    <td>
+                        <p class="form-control-static">
+                            3
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            申通
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                          启用
+                        </p>
+                    </td>
+					
+					 
+                </tr>
+               
+            </table>
+        </div>
+	
+       
+    </div>
+</div>
+{template 'common/footer'}

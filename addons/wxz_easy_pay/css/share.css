@@ -1,0 +1,111 @@
+body {
+  background-color: #EFEFF3;
+}
+a {
+  color: inherit;
+}
+.weui_text_success {
+  color: #04BE02;
+}
+.weui_text_warning {
+  color: #EF4F4F;
+}
+.weui_label_median {
+  width: 4em;
+}
+.weui_label_wide {
+  width: 5em;
+}
+.weui_media_bd:after {
+  content: " ";
+  display: inline-block;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #C7C7CC;
+  border-style: solid;
+  position: relative;
+  top: -2px;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  margin-top: -4px;
+}
+.weui_cell_ft {
+  -webkit-box-flex: 2;
+  -webkit-flex: 2;
+  flex: 2;
+}
+.weui_hint_plain_outer {
+  display: block;
+  margin-top: 1.17647059em;
+  color: #61749B;
+  width: 100%;
+  text-align: center;
+}
+.weui_hint_plain_outer > span:after {
+  content: " ";
+  display: inline-block;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #61749B;
+  border-style: solid;
+  position: relative;
+  top: -0.1em;
+  left: 0.1em;
+}
+.weui_hint_primary {
+  color: #04be02;
+  text-align: center;
+  margin: 1em auto;
+}
+.weui_hint_primary i {
+  font-style: normal;
+}
+.weui_hint_primary .weui_icon_info_circle:before {
+  font-size: 20px;
+}
+.number-input {
+  font-size: 20px;
+  color: #666;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 3px 0;
+  text-align: center;
+  border-radius: 1px;
+}
+.number-input,
+.number-selector {
+  float: left;
+  height: 20px;
+  border: 1px solid #ececec;
+}
+.number-selector {
+  font-size: 25px;
+  line-height: 18px;
+  color: #3cc51f;
+}
+.number-selector.number-disabled {
+  color: #ccc;
+}
+.number-selector-sub {
+  border-right: none;
+  padding: 3px 10px;
+  border-radius: 2px 0 0 2px;
+}
+.number-selector-plus {
+  border-left: none;
+  margin-right: 5px;
+  padding: 3px 8px;
+  border-radius: 0 2px 2px 0;
+}
+.weui_navbar_item.weui_bar_item_on {
+  color: #ffffff;
+  background-color: #04BE02;
+}

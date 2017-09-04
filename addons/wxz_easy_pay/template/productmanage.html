@@ -1,0 +1,161 @@
+{template 'common/header'}
+<style>
+    .l_tableWrap .l_table_tit .l_formBar {
+        border: 0;
+        float: left;
+        font-size: 0;
+    }
+    .y_sele {
+        display: inline-block;
+        padding: 5px 0 12px 12px;
+    }
+    .y_sele_tit {
+        font-size: 14px;
+        padding: 0 0 0 10px;
+    }
+    .l_table_search{
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+</style>
+<script>
+    require(['jquery', 'util', 'datetimepicker'], function ($, u) {
+        $('#order_time_start').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+        $('#order_time_end').datetimepicker({
+            format: 'Y-m-d',
+            language: 'zh-CN',
+            pickDate: false,
+            pickTime: false,
+            hourStep: 1,
+            autoclose: true,
+            inputMask: true,
+            minView: "month",
+            timepicker: false,
+        });
+    });
+</script>
+<div class="clearfix">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            商品管理 <a style="cursor:pointer;" href="{php echo $this->createWebUrl('productmanage')}&showorder=1">&nbsp;&nbsp;&nbsp;按销量排序</a><a style="cursor:pointer;" href="{php echo $this->createWebUrl('productmanage')}&showorder=2">&nbsp;&nbsp;&nbsp;按时间排序</a>
+        </div>
+        <div class="table-responsive panel-body" style="overflow:visible;">
+           <style>
+.table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    white-space: normal;
+}
+</style>
+            <table class="table table-hover">
+               <tr>
+					<th style="width:5%;">ID</th>
+					<th style="width:20%;" id="titled">商品标题</th>
+					<th style="width:20%;" id="titled">商品图片</th>
+					<th style="width:20%;">商品介绍</th>
+					<th style="width:10%;">库存</th>
+					<th style="width:10%;">销量</th>
+					<th style="width:10%;">邮费</th>
+					<th style="width:10%;">价格</th>
+					<th style="text-align:center; width:20%;">操作</th>
+				</tr>
+                {loop $list $row} 
+                <tr id="tr_{$row['id']}">
+                  
+                    <td>
+                        <p class="form-control-static">
+                            {$row['id']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            {$row['goodsName']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                             <img src="{$row['goodsImg']}" style="width:60px;height:60px;"/>
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            {$row['goodsInfo']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                           {$row['goodsStock']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                             {$row['sell_num']}
+                        </p>
+                    </td>
+					<td>
+                        <p class="form-control-static">
+                            {$row['postage']}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="form-control-static">
+						{$row['goodsPrice']}
+                            
+                        </p>
+                    </td>
+                  
+                    <td style="text-align:center;">
+                         <p class="form-control-static btn btn-success" style="text-align:center;" onclick="deleproduct({$row['id']});">
+                            删除
+                        </p>
+                    </td>
+                   
+					 
+                </tr>
+                {/loop}
+            </table>
+        </div>
+        <div class="panel-body text-right">
+            {$pager}
+        </div>
+    </div>
+</div>
+{template 'common/footer'}
+<script type="text/javascript">
+function deleproduct(id){
+	if(id){
+	  if(confirm("确定删除该商品吗？")){
+		
+		var thisp = this;
+		
+		$.ajax({
+             type: "post",
+             url: "{php echo $this->createWebUrl('productmanage')}&ajaxac=1",
+             data: {'id':id},
+             dataType: "html",
+             success: function(data){
+                if(data){
+					alert("删除成功");
+					$("#tr_"+id).remove();
+				}
+             }
+         });
+		
+		
+		
+		
+	  
+	  }
+	}else{
+		alert("参数错误");
+	}
+}
+</script>
