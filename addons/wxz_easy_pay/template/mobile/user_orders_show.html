@@ -1,60 +1,41 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-	<link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css"/>
-	<title>我的订单</title>
-    
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css"/>
+        <title>我的订单</title>
+    </head>
+    <body>
+        <div class="weui_cells_title">最近一个月的订单</div>
+        <div class="weui_cells weui_cells_access">
+            {loop $trades_p $index $item}
+            <div class="weui_cell" href="{php echo $this->createMobileUrl('buy_orders_detail')}&id={$item['id']}" style="align-items: flex-start">
+                <div class="weui_cell_hd">
+                    <img src="{$item['goodsImg']}" alt="" style="width:48px;margin-right:8px;display:block">
+                </div>
+                <div class="weui_cell_bd weui_cell_primary" onclick="window.location.href = '{php echo $this->createMobileUrl('buy_orders_detail')}&id={$item['id']}'">
+                    <p style="font-size:14px;">
+                        <a href="{php echo $this->createMobileUrl('buy_orders_detail')}&id={$item['id']}">
+                            {if $item['order_status']==2}
+                            <img src="http://img1.ibanling.com/images%2Fyifahuo.svg" style="height:16px;margin-bottom:-3px;margin-right:4px"/>
 
-  
+                            {else if $item['order_status']==1}
+                            <img src="http://img1.ibanling.com/images%2Fweifahuo.svg" style="height:16px;margin-bottom:-3px;margin-right:4px"/>
 
-    <div class="weui_cells_title">最近一个月的订单</div>
-    <div class="weui_cells weui_cells_access">
-{loop $trades_p $index $item}
-
-
-
-  <div class="weui_cell" href="{php echo $this->createMobileUrl('buy_orders_detail')}&id={$item['id']}" style="align-items: flex-start">
-            <div class="weui_cell_hd">
-				<img src="{$item['goodsImg']}" alt="" style="width:48px;margin-right:8px;display:block">
-			</div>
-            <div class="weui_cell_bd weui_cell_primary" onclick="window.location.href='{php echo $this->createMobileUrl('buy_orders_detail')}&id={$item['id']}'">
-                <p style="font-size:14px;">
-					<a href="{php echo $this->createMobileUrl('buy_orders_detail')}&id={$item['id']}">
-					{if $item['order_status']==2}
-					<img src="http://img1.ibanling.com/images%2Fyifahuo.svg" style="height:16px;margin-bottom:-3px;margin-right:4px"/>
-							
-					{else if $item['order_status']==1}
-					<img src="http://img1.ibanling.com/images%2Fweifahuo.svg" style="height:16px;margin-bottom:-3px;margin-right:4px"/>
-						
-					{/if}
-						{$item['goodsName']}
-						<span style="color:green">详情</span>
-					</a>
-				</p>
-                <p style="font-size:12px;color:#999">{php echo date('Y-m-d H:i:s', $item['pay_time'])}</p>
-               {if $item['tracking_number']}<p style="font-size:12px;color:green"><a href="http://m.kuaidi100.com/result.jsp?nu={$item['tracking_number']}">单号{$item['tracking_number']}</a>{else}<span>没有单号</span>{/if}</p>
-            </div> 
-            {if $item['tracking_number']}<div ><a href="http://m.kuaidi100.com/result.jsp?nu={$item['tracking_number']}"  class="weui_btn weui_btn_mini weui_btn_primary">查看物流</a></div>{/if}
+                            {/if}
+                            {$item['goodsName']}
+                            <span style="color:green">详情</span>
+                        </a>
+                    </p>
+                    <p style="font-size:12px;color:#999">{php echo date('Y-m-d H:i:s', $item['pay_time'])}</p>
+                    {if $item['tracking_number']}<p style="font-size:12px;color:green"><a href="http://m.kuaidi100.com/result.jsp?nu={$item['tracking_number']}">单号{$item['tracking_number']}</a>{else}<span>没有单号</span>{/if}</p>
+                </div> 
+                {if $item['tracking_number']}<div ><a href="http://m.kuaidi100.com/result.jsp?nu={$item['tracking_number']}"  class="weui_btn weui_btn_mini weui_btn_primary">查看物流</a></div>{/if}
+            </div>
+            {/loop}
         </div>
-        
-				
-						
-					{/loop}
-      
-    </div>
-    <div class="weui_btn_area" style="margin:15px">
-     <!--   <a class="weui_btn weui_btn_default">更多订单</a>-->
-    </div>
-
-   
-
-
-
-
-   
-</body>
+        <div class="weui_btn_area" style="margin:15px">
+        </div>
+    </body>
 </html>

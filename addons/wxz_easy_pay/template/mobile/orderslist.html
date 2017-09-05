@@ -1,105 +1,98 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>卖家中心</title>
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+        <style>
+            .more {}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>卖家中心</title>
-    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
-    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-    <style>
-        .more {}
-        
-        .weui_actionsheet_menu a {
-            display: block;
-        }
-        
-        .info .weui_grid:before {
-            border: 0;
-        }
-        
-        .weui_grid_desc {
-            font-size: 12px;
-            color: #999;
-        }
-        
-        .weui_grid {
-            height: 120px;
-        }
-        .weui_grids{
-            background-color: #fff;
+            .weui_actionsheet_menu a {
+                display: block;
+            }
 
-        }
-        .weui_grid_2 {
-            padding: 10px;
-            width: 50%;
-            height: 130px;
-        }
-        
-        .page {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            background-color: #EFEFF3;
-            z-index: 1;
-        }
-        
-        .container,
-        .page {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            overflow-x: hidden;
-        }
-        
-        .tag {
-            -webkit-transform: scale(0.8);
-            display: inline-block;
-            background-color: #ff6600;
-            border-radius: 4px;
-            padding: 4px 6px;
-            color: #fff;
-            font-size: 9px;
-            -webkit-transform-origin-x: -1px;
-        }
-        
-        .weui_media_box.weui_media_appmsg {
-            align-items: flex-start;
-        }
-        .weui_navbar {
-            z-index: 10;
-        }
-        .info p {
-            margin: 4px;
-        }
-        .disable{
-            pointer-events: none;
-            opacity: 0.25;
-        }
-        .weui_grid_icon_block{
-            display: block;
-        }
-        .padding_top_0{
-            padding-top: 0 !important;
-        }
-        .weui_grid_desc a {
-            margin: 3px 3px;
-        }
-    </style>
-</head>
+            .info .weui_grid:before {
+                border: 0;
+            }
 
-<body>
-    
+            .weui_grid_desc {
+                font-size: 12px;
+                color: #999;
+            }
 
-   
-    
-   
+            .weui_grid {
+                height: 120px;
+            }
+            .weui_grids{
+                background-color: #fff;
 
-  
-   
+            }
+            .weui_grid_2 {
+                padding: 10px;
+                width: 50%;
+                height: 130px;
+            }
+
+            .page {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                background-color: #EFEFF3;
+                z-index: 1;
+            }
+
+            .container,
+            .page {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                overflow-x: hidden;
+            }
+
+            .tag {
+                -webkit-transform: scale(0.8);
+                display: inline-block;
+                background-color: #ff6600;
+                border-radius: 4px;
+                padding: 4px 6px;
+                color: #fff;
+                font-size: 9px;
+                -webkit-transform-origin-x: -1px;
+            }
+
+            .weui_media_box.weui_media_appmsg {
+                align-items: flex-start;
+            }
+            .weui_navbar {
+                z-index: 10;
+            }
+            .info p {
+                margin: 4px;
+            }
+            .disable{
+                pointer-events: none;
+                opacity: 0.25;
+            }
+            .weui_grid_icon_block{
+                display: block;
+            }
+            .padding_top_0{
+                padding-top: 0 !important;
+            }
+            .weui_grid_desc a {
+                margin: 3px 3px;
+            }
+        </style>
+    </head>
+    <body>
         <div class="weui_tab">
             <div class="weui_navbar">
+                <div class="weui_navbar_item ">
+                    待付款 
+                </div>
                 <div class="weui_navbar_item ">
                     未发货
                 </div>
@@ -112,13 +105,16 @@
             </div>
 
             <div class="weui_navbar">
+                <div class="weui_navbar_item " {if $_GPC['pay_status']!==NULL} style="background-color:#71C671"{/if}>
+                     <a href="{php echo $this->createMobileUrl('orderslist')}&pay_status=0" style="color:#333">待付款</a>
+                </div>
                 <div class="weui_navbar_item " {if $_GPC['order_status']==1} style="background-color:#71C671"{/if}>
-                    <a href="{php echo $this->createMobileUrl('orderslist')}&order_status=1" style="color:#333">未发货</a>
+                     <a href="{php echo $this->createMobileUrl('orderslist')}&order_status=1" style="color:#333">未发货</a>
                 </div>
                 <div class="weui_navbar_item " {if $_GPC['order_status']==2} style="background-color:#71C671"{/if}>
                      <a href="{php echo $this->createMobileUrl('orderslist')}&order_status=2" style="color:#333">已发货</a>
                 </div>
-                <div class="weui_navbar_item" {if $_GPC['order_status'] !=1 && $_GPC['order_status'] !=2} style="background-color:#71C671"{/if}>
+                <div class="weui_navbar_item" {if $_GPC['pay_status']===NULL && $_GPC['order_status'] !=1 && $_GPC['order_status'] !=2} style="background-color:#71C671"{/if}>
                      <a href="{php echo $this->createMobileUrl('orderslist')}" style="color:#333">全部</a>
                 </div>
             </div>
@@ -131,139 +127,124 @@
                         <div class="weui_search_inner">
                             <i class="weui_icon_search"></i>
                             <input type="search" class="weui_search_input" id="search_input" placeholder="可以输入订单号，买家名称，商品名称，地址，电话" required/>
-                            
+
                         </div>
                     </form>
                     <a class="weui_search_cancel" style="display:block" id="submit">搜索</a>
                 </div>
-               
-		 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-         <script type="text/javascript">
-		 wx.config({
-                debug: false,
-                appId: "{$_W['account']['jssdkconfig']['appId']}",
-                timestamp: "{$_W['account']['jssdkconfig']['timestamp']}",
-                nonceStr: "{$_W['account']['jssdkconfig']['nonceStr']}",
-                signature: "{$_W['account']['jssdkconfig']['signature']}",
-                jsApiList: ["scanQRCode"]
-            });
-		  $("#submit").click(function(){ 
-				var search_input;
-				{if $_GPC['order_status']}
-				search_input = $("#search_input").val();
-				order_status = {$_GPC['order_status']};
-				window.location.href="{php echo $this->createMobileUrl('orderslist')}&search="+search_input+"&order_status="+order_status;
-				{else}
-				search_input = $("#search_input").val();
-				window.location.href="{php echo $this->createMobileUrl('orderslist')}&search="+search_input;
-				{/if}
-				
-		  }); 
-		  function delete_order(id){
-		  
-			 if(id){
-				$.ajax({
-					url:"{php echo $this->createMobileUrl('orderslist')}",
-					type:"post",
-					data:{"id":id,"ac":"ajaxdele"},
-					success: function(re){
-						if(re){
-							alert("删除成功");
-							window.location.reload()
-						}else{
-							alert("删除失败");
-						}
-					},
-					async:false
-				});
-			  }
-		  
-		  }
-		  function fhles(id){
-			if(confirm("确认发货")){
-				$.ajax({
-									url:"{php echo $this->createMobileUrl('orderslist')}",
-									type:"post",
-									data:{"id":id,"ac":"ajaxsend","barCode":""},
-									success: function(re){
-										if(re){
-											alert("发货成功");
-											window.location.reload();
-										}else{
-											alert("发货失败");
-										}
-									},
-									async:false
-								});
-			}
-		  
-		  }
-		  function fhle(id){
-		  
-		  
-					wx.scanQRCode({
-                            needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+
+                <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+                <script type="text/javascript">
+                            wx.config({
+                            debug: false,
+                                    appId: "{$_W['account']['jssdkconfig']['appId']}",
+                                    timestamp: "{$_W['account']['jssdkconfig']['timestamp']}",
+                                    nonceStr: "{$_W['account']['jssdkconfig']['nonceStr']}",
+                                    signature: "{$_W['account']['jssdkconfig']['signature']}",
+                                    jsApiList: ["scanQRCode"]
+                            });
+                            $("#submit").click(function(){
+                    var search_input;
+                    {if $_GPC['order_status']}
+                    search_input = $("#search_input").val();
+                            order_status = {$_GPC['order_status']};
+                            window.location.href = "{php echo $this->createMobileUrl('orderslist')}&search=" + search_input + "&order_status=" + order_status;
+                    { else}
+                    search_input = $("#search_input").val();
+                            window.location.href = "{php echo $this->createMobileUrl('orderslist')}&search=" + search_input;
+                    {/if}
+
+                    });
+                            function delete_order(id){
+
+                            if (id){
+                            $.ajax({
+                            url:"{php echo $this->createMobileUrl('orderslist')}",
+                                    type:"post",
+                                    data:{"id":id, "ac":"ajaxdele"},
+                                    success: function(re){
+                                    if (re){
+                                    alert("删除成功");
+                                            window.location.reload()
+                                    } else{
+                                    alert("删除失败");
+                                    }
+                                    },
+                                    async:false
+                            });
+                            }
+
+                            }
+                    function fhles(id){
+                    if (confirm("确认发货")){
+                    $.ajax({
+                    url:"{php echo $this->createMobileUrl('orderslist')}",
+                            type:"post",
+                            data:{"id":id, "ac":"ajaxsend", "barCode":""},
+                            success: function(re){
+                            if (re){
+                            alert("发货成功");
+                                    window.location.reload();
+                            } else{
+                            alert("发货失败");
+                            }
+                            },
+                            async:false
+                    });
+                    }
+
+                    }
+                    function fhle(id){
+
+
+                    wx.scanQRCode({
+                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
                             scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
                             success: function (res) {
-                                var barCode = res.resultStr.split(',')[1]||'000001';
-                            //    ordersComponent.shipOrder(order,barCode);
-								
-								$.ajax({
-									url:"{php echo $this->createMobileUrl('orderslist')}",
-									type:"post",
-									data:{"id":id,"ac":"ajaxsend","barCode":barCode},
-									success: function(re){
-										if(re){
-											alert("发货成功");
-											window.location.reload();
-										}else{
-											alert("发货失败");
-										}
-									},
-									async:false
-								});
-												
+                            var barCode = res.resultStr.split(',')[1] || '000001';
+                                    //    ordersComponent.shipOrder(order,barCode);
 
+                                    $.ajax({
+                                    url:"{php echo $this->createMobileUrl('orderslist')}",
+                                            type:"post",
+                                            data:{"id":id, "ac":"ajaxsend", "barCode":barCode},
+                                            success: function(re){
+                                            if (re){
+                                            alert("发货成功");
+                                                    window.location.reload();
+                                            } else{
+                                            alert("发货失败");
+                                            }
+                                            },
+                                            async:false
+                                    });
                             },
-                        });
-		  
-			
-			  
-		  }
-</script>      
-				
-				{loop $trades_or $index $item}
-				 <div class="weui_media_box weui_media_appmsg">
+                    });
+                    }
+                </script>      
+
+                {loop $trades_or $index $item}
+                <div class="weui_media_box weui_media_appmsg">
                     <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_hd">
                         <img class="weui_media_appmsg_thumb" src="{$item['goodsImg']}" alt="">
                     </a>
                     <div class="weui_media_bd">
-                      
-                        
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">买家:{$item['nickname']}，收货人:{$item['buy_nick']}</a>
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">电话:{$item['cell']}</a>
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">{$item['address']}</a>
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">{php echo date('Y-m-d H:i', $item['pay_time'])}</a>
                         <p class="weui_media_desc">
-                           {if $item['order_status'] ==1} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhle('{$item['id']}');"><span>扫码发货</span></a>  {/if} 
-                           {if $item['order_status'] ==1} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhles('{$item['id']}');"><span>发货</span></a>  {/if} 
-                           {if $item['order_status'] ==2} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhle('{$item['id']}');"><span>重新扫码发货</span></a>  {/if} 
+                            {if $item['order_status'] ==1} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhle('{$item['id']}');"><span>扫码发货</span></a>  {/if} 
+                            {if $item['order_status'] ==1} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhles('{$item['id']}');"><span>发货</span></a>  {/if} 
+                            {if $item['order_status'] ==2} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhle('{$item['id']}');"><span>重新扫码发货</span></a>  {/if} 
                             <a href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary">详情</a>
                             <a onclick="delete_order('{$item['id']}')" style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_warn">删除</a>
                         </p>
                     </div>
                 </div>
-						
-					{/loop}
-
+                {/loop}
             </div>
         </div>
- 
-
-    
-   
-
-   
-</body>
+    </body>
 
 </html>
