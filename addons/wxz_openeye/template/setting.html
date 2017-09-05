@@ -77,6 +77,66 @@
                     </div>
                 </div>
             </div>
+            <div class="panel-heading">
+                分享设置（首页）
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文标题</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="title1" value="{$settings['share']['title1']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文图片</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_form_field_image('img1',$settings['share']['img1'])}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文描述</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <textarea style="height:60px;" name="desc1" class="form-control span7" cols="60">{$settings['share']['desc1']}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel-heading">
+                分享设置（发现页）
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文标题</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <input type="text" id="scan_title" class="form-control span7" placeholder="" name="title2" value="{$settings['share']['title2']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文图片</label>
+                    <div class="col-sm-9 col-xs-12">
+                        {php echo tpl_form_field_image('img2',$settings['share']['img2'])}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">图文描述</label>
+                    <div class="col-sm-9 col-xs-12">
+                        <textarea style="height:60px;" name="desc2" class="form-control span7" cols="60">{$settings['share']['desc2']}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+                    <div class="col-md-2 col-lg-1">
+                        <input name="submit" type="submit" value="保存" class="btn btn-primary btn-block" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

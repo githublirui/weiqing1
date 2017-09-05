@@ -8,9 +8,9 @@ class Wxz_openeyeModuleSite extends WeModuleSite {
     protected function auth() {
         global $_W, $_GPC;
         session_start();
-        if (getip() == '127.0.0.1') {
-            $_SESSION['__:proxy:openid'] = 'o5YC3t6MD1CjD2U_3dJQkMUjDQBA1';
-        }
+        $ip = getip();
+
+        $_SESSION['__:proxy:openid'] = $ip;
         $openid = $_SESSION['__:proxy:openid'];
         require_once WXZ_OPENEYE . '/source/Fans.class.php';
         $f = new Fans();
@@ -18,9 +18,17 @@ class Wxz_openeyeModuleSite extends WeModuleSite {
             $exists = $f->getOne($openid, true);
             if (!empty($exists)) {
                 return $exists;
+            } else {
+                $user = array();
+                $user['uniacid'] = $_W['uniacid'];
+                $user['openid'] = getip();
+                $f = new Fans();
+                $f->save($user);
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
             }
         }
-
+        exit;
         //查询appid和appsecret
         $api = $this->module['config']['api'];
         $callback = $_W['siteroot'] . "app/index.php?i={$_GPC['i']}&c=entry&do=auth&m={$_GPC['m']}";

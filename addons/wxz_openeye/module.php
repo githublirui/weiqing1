@@ -38,8 +38,14 @@ class Wxz_openeyeModule extends WeModule {
             $data = array(
                 'share' => array(
                     'title' => $_GPC['title'],
+                    'title1' => $_GPC['title1'],
+                    'title2' => $_GPC['title2'],
                     'img' => $_GPC['img'],
+                    'img1' => $_GPC['img1'],
+                    'img2' => $_GPC['img2'],
                     'desc' => $_GPC['desc'],
+                    'desc1' => $_GPC['desc1'],
+                    'desc2' => $_GPC['desc2'],
                 ),
                 'logo' => $_GPC['logo'],
                 'qrcodetxt' => $_GPC['qrcodetxt'],

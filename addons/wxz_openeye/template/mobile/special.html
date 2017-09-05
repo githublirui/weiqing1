@@ -81,6 +81,35 @@
         </div>
         <div class="kyt-modal kyt-share-modal-wechat">
         </div>
+        
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    wx.config({
+        debug: false,
+        appId: "{$_W['account']['jssdkconfig']['appId']}",
+        timestamp: "{$_W['account']['jssdkconfig']['timestamp']}",
+        nonceStr: "{$_W['account']['jssdkconfig']['nonceStr']}",
+        signature: "{$_W['account']['jssdkconfig']['signature']}",
+        jsApiList: ["onMenuShareAppMessage", "onMenuShareTimeline", "onMenuShareQQ","chooseImage", "uploadImage", "downloadImage", "onMenuShareTimeline", "showAllNonBaseMenuItem"]
+    });
+    wx.ready(function () {
+        sharedata = {
+            title: "{$special_info['name']}",
+            desc: "{$special_info['desc']}",
+//            link: "{$attach_url}/{$info['desc']}",
+            imgUrl: "{$attach_url}/{$special_info['pic']}",
+            success: function () {
+            },
+            cancel: function () {
+                //                        alert('分享取消');
+            }
+        };
+        //            wx.onMenuShareAppMessage(sharedata);
+        wx.onMenuShareTimeline(sharedata);
+        wx.onMenuShareAppMessage(sharedata);
+        //            wx.onMenuShareQQ(sharedata);
+    });
+</script>
         <script>
             $(".download-footer .install").click(function () {
                 location.href = 'http://www.kaiyanapp.com/?kyt_download_option_source=web';

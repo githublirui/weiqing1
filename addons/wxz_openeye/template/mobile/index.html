@@ -146,4 +146,32 @@
             </li>
         </ul>
     </body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    wx.config({
+        debug: false,
+        appId: "{$_W['account']['jssdkconfig']['appId']}",
+        timestamp: "{$_W['account']['jssdkconfig']['timestamp']}",
+        nonceStr: "{$_W['account']['jssdkconfig']['nonceStr']}",
+        signature: "{$_W['account']['jssdkconfig']['signature']}",
+        jsApiList: ["onMenuShareAppMessage", "onMenuShareTimeline", "onMenuShareQQ","chooseImage", "uploadImage", "downloadImage", "onMenuShareTimeline", "showAllNonBaseMenuItem"]
+    });
+    wx.ready(function () {
+        sharedata = {
+            title: "{php echo $this->module['config']['share']['title1'];}",
+            desc: "{php echo $this->module['config']['share']['desc1'];}",
+//            link: "{$attach_url}/{$result['list1'][0]['desc']}",
+            imgUrl: "{$attach_url}/{php echo $this->module['config']['share']['img1'];}",
+            success: function () {
+            },
+            cancel: function () {
+                //                        alert('分享取消');
+            }
+        };
+        //            wx.onMenuShareAppMessage(sharedata);
+        wx.onMenuShareTimeline(sharedata);
+        wx.onMenuShareAppMessage(sharedata);
+        //            wx.onMenuShareQQ(sharedata);
+    });
+</script>
 </html>
