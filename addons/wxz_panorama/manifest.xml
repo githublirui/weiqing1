@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[2.0.0]]></version>
+        <version><![CDATA[3.0.0]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -169,7 +169,6 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_page` (
   `desc` TEXT NOT NULL COMMENT '描述',
   `img` VARCHAR(255) NOT NULL COMMENT '图片',
   `link` VARCHAR(255) NOT NULL COMMENT '链接地址',
-  `isdel` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
   `update_at` INT(11) NOT NULL,
   `create_at` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
