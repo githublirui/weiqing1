@@ -48,6 +48,11 @@ class Page {
             'name' => '底部二维码说明',
             'placeholder' => '扫描上面的二维码，加简单支付客服微信',
         ),
+        10 => array(
+            'name' => '使用帮助地址',
+            'type' => 'link',
+            'placeholder' => '请输入帮助页面跳转链接',
+        ),
     );
 
     /**

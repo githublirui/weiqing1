@@ -71,6 +71,7 @@ CREATE TABLE `ims_hangyi_hbset` (
   `uniacid` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        
 CREATE TABLE `ims_hangyi_my_rate` (
   `id` int(10) DEFAULT NULL,
   `uniacid` int(10) DEFAULT NULL,
@@ -131,6 +132,7 @@ CREATE TABLE `ims_hangyi_peizhi` (
   `uniacid` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        
 CREATE TABLE `ims_hangyi_product` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `goodsName` varchar(255) DEFAULT NULL,
