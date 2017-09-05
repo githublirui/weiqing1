@@ -4,7 +4,7 @@ global $_GPC, $_W;
 $orderid = (int)$_GPC['orderid'];
 $uniacid = $_W['uniacid'];
 
-$orderinfo = pdo_get('hangyi_order', array('uniacid' => $uniacid));
+$orderinfo = pdo_get('hangyi_order', array('id' =>$orderid));
 $orderinfo_pay = pdo_get('core_paylog', array('tid' => $orderid,"status"=>1,"module"=>"wxz_easy_pay"));
 $my_rate = pdo_get('hangyi_my_rate', array('uniacid' => $uniacid));
 if(empty($orderinfo)){

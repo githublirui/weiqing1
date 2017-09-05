@@ -314,9 +314,9 @@
                             <input name="goodsPriceTotal" id="goodsPriceTotal" value="{$product['goodsPrice']}" class="weui_input" type="type" placeholder="和卖家商议后的付款金额" v-model="item.num">
                         </div>
                     </div>
-                    <div class="weui_cell" v-if="item.type==3">
+                    <div class="weui_cell">
                         <div class="weui_cell_bd weui_cell_primary">
-                            <textarea name="postscript" id="postscript" class="weui_textarea" placeholder="买家购买什么商品的留言(必填)" rows="2"></textarea>
+                            <textarea name="postscript" id="postscript" class="weui_textarea" placeholder="买家购买什么商品的留言(选填)" rows="2"></textarea>
                         </div>
                     </div>
 
@@ -412,8 +412,8 @@
 			return false;
 		}
 		if(!postscript){
-			alert("买家留言没有填写");
-			return false;
+			//alert("买家留言没有填写");
+			//return false;
 		}
 		 $.ajax({
                         url: "{php echo $this->createMobileUrl('productdetail')}&ajax=1}",

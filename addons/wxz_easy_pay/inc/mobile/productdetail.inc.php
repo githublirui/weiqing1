@@ -65,6 +65,7 @@ if($_GPC['ajax']){
 			$user_data = array(
 				'realname' => $buyer_name,
 				'tel' => $cell,
+				'weixin' => $weixin,
 				'order_address' => $address,
 			);
 			$result = pdo_update('hangyi_user', $user_data, array('uid' => $buy_info['uid']));
