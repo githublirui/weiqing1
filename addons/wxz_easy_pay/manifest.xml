@@ -48,7 +48,7 @@
             <entry title="文案设置" do="fontset" state="" direct="false" />
             <entry title="付款卖家设置" do="paysell" state="" direct="false" />
             <entry title="模板消息设置" do="tplset" state="" direct="false" />
-			
+            <entry title="数据配置" do="page_list" state="" direct="false" />	
         </menu>
 		
     </bindings>
@@ -187,7 +187,20 @@ CREATE TABLE `ims_hangyi_tplset` (
   `status` int(1) DEFAULT '0' COMMENT '0停用通知，1启用通知',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-        
+
+CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_page` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `type` VARCHAR(50) NOT NULL COMMENT '页面类型',
+  `title` VARCHAR(500) NOT NULL COMMENT '标题',
+  `desc` TEXT NOT NULL COMMENT '描述',
+  `img` VARCHAR(255) NOT NULL COMMENT '图片',
+  `link` VARCHAR(255) NOT NULL COMMENT '链接地址',
+  `update_at` INT(11) NOT NULL,
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;    
+               
 ]]></install>
     <uninstall><![CDATA[
 	DROP TABLE IF EXISTS `ims_hangyi_user`;
@@ -198,6 +211,7 @@ CREATE TABLE `ims_hangyi_tplset` (
 	DROP TABLE IF EXISTS `ims_hangyi_peizhi`;
 	DROP TABLE IF EXISTS `ims_hangyi_order`;
         DROP TABLE IF EXISTS `ims_hangyi_tplset`;
+        DROP TABLE IF EXISTS `wxz_easy_pay_page`;
 	]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>
