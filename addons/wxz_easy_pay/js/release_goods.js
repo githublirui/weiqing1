@@ -14,9 +14,13 @@ var releaseGoods = (function () {
 				if (text === "收起") {
 					$(this).text("更多选项+");
 					$(".release-goods-more").hide();
+					$(".goodsDetailLi").hide();
+					$(".goodsAtrLi").hide();
 				} else {
 					$(this).text("收起");
 					$(".release-goods-more").show();
+                                        $(".goodsDetailLi").show();
+					$(".goodsAtrLi").show();
 				}
 			});
 			//图片上传
@@ -62,36 +66,6 @@ var releaseGoods = (function () {
 			$('#J_setPriceBtn').click(function () {
 				$('#release-goods-container').hide();
 				$('#setPriceContainer').show();
-			});
-			$('.add-btn', '#setPriceContainer').click(function () {
-				setPriceNum++;
-				var priceHtml = '<div class="setPrice-item">'
-					+'	<h4>第'+ setPriceNum +'套价格与规则</h4>'
-					+'	<ul class="message-list">'
-					+'		<li>'
-					+'			<div class="label-cell">说明</div>'
-					+'			<input type="text" class="input-cell" placeholder="例如iphone6港行，国行">'
-					+'			<a href="#" class="set_btn">设置多种价格</a>'
-					+'		</li>'
-					+'		<li>'
-					+'			<div class="label-cell">价格</div>'
-					+'			<input type="number" class="input-cell" placeholder="单位（元）" onkeyup="this.value=this.value.replace(/\D/g,\'\')" onafterpaste="this.value=this.value.replace(/\D/g,\'\')">'
-					+'			<a href="#" class="set_btn">设置多种价格</a>'
-					+'		</li>'
-					+'		<li>'
-					+'			<div class="label-cell">库存数</div>'
-					+'			<input type="number" class="input-cell" value="10" onkeyup="this.value=this.value.replace(/\D/g,\'\')" onafterpaste="this.value=this.value.replace(/\D/g,\'\')">'
-					+'		</li>'
-					+'	</ul>'
-					+'</div>';
-				$('#setPriceList').append(priceHtml);
-			});
-			$('.cancel', '#setPriceContainer').click(function () {
-				$('#setPriceContainer').hide();
-				$('#release-goods-container').show();
-			});
-			$('.submit', '#setPriceContainer').click(function () {
-				alert('提交')
 			});
 
 			//设置邮费价格

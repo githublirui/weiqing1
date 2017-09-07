@@ -53,6 +53,10 @@ class Page {
             'type' => 'link',
             'placeholder' => '请输入帮助页面跳转链接',
         ),
+        11 => array(
+            'name' => '底部左侧关于文案链接',
+            'type' => 'link',
+        ),
     );
 
     /**

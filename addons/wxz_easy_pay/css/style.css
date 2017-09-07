@@ -687,3 +687,10 @@ a,input,button,img,textarea{outline:none;}
 	border-right: 0;
 	color: #04be02;
 }
+
+.goodsPriceMoreLi li {
+    font-size: 0.18rem;
+    border: none;
+    height:0.28rem;
+    line-height:0.28rem;
+}
