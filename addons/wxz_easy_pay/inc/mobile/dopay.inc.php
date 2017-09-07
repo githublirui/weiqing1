@@ -15,10 +15,8 @@ if (!empty($fan) && !empty($fan['openid'])) {
     $userinfo = mc_oauth_userinfo();
 }
 
-
 $i = $_GPC['i'];
 $gzhinfo = $_W['cache']['uniaccount:' . $i];
-
 
 $orderid = (INT) $_GPC['orderid'];
 if ($orderid) {
@@ -29,12 +27,6 @@ if (!$orderinfo) {
 }
 if ($orderinfo['sell_id'] && $orderinfo['sell_openid']) {
     $sell_info = pdo_get('hangyi_user', array('uid' => $orderinfo['sell_id']));
-}
-
-if ($sell_info['nickname'] && $sell_info['openid'] == $orderinfo['sell_openid']) {
-    
-} else {
-    exit();
 }
 
 $peizhi = pdo_get('hangyi_peizhi', array('uniacid' => $uniacid));
@@ -59,8 +51,6 @@ if (!$orderinfo['out_trade_no']) {
 } else {
     $trade_no = $orderinfo['out_trade_no'];
 }
-
-
 
 $pay_log = pdo_get('core_paylog', array('tid' => $orderinfo['id'], 'type' => 'wechat', 'module' => $_GPC['m']));
 
