@@ -80,6 +80,7 @@ CREATE TABLE `ims_hangyi_my_rate` (
 
 CREATE TABLE `ims_hangyi_order` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
   `price` varchar(10) DEFAULT NULL,
   `buy_id` int(10) DEFAULT NULL,
   `pay_status` int(1) DEFAULT '0' COMMENT '0未付款2已付款',
@@ -135,6 +136,7 @@ CREATE TABLE `ims_hangyi_peizhi` (
         
 CREATE TABLE `ims_hangyi_product` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
   `goodsName` varchar(255) DEFAULT NULL,
   `goodsUnit` varchar(20) DEFAULT NULL,
   `goodsPrice` varchar(10) DEFAULT '0',
@@ -156,6 +158,7 @@ CREATE TABLE `ims_hangyi_product` (
         
 CREATE TABLE `ims_hangyi_user` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
   `nickname` varchar(255) DEFAULT NULL,
   `tel` varchar(255) DEFAULT NULL,
   `headimgurl` varchar(255) DEFAULT NULL,
@@ -172,6 +175,7 @@ CREATE TABLE `ims_hangyi_user` (
 
 CREATE TABLE `ims_hangyi_tplset` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `title_color` varchar(50) DEFAULT NULL,
   `tpl_word_1` varchar(255) DEFAULT NULL,
