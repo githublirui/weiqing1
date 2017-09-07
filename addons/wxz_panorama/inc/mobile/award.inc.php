@@ -49,7 +49,7 @@ $is_fans = pdo_fetch($sql, $pars);
 //}
 //
 //判断用户是否中过奖
-if (count($wins) >= $activityInfo['max_award_num']) {
+if ($wins && count($wins) >= $activityInfo['max_award_num']) {
     $show_msg = "<p>很可惜没中奖，前往下一个场景，找宝藏吧！<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&pid={$next_pano}&aid={$aid}'>点击进入下一个场景</a></p>";
     include $this->template(get_real_tpl('msg_fail'));
     die;
