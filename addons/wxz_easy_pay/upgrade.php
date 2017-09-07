@@ -93,6 +93,15 @@ if (!pdo_fieldexists('hangyi_order', 'pids')) {
 if (!pdo_fieldexists('hangyi_order', 'goodsNums')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `goodsNums` varchar(50) DEFAULT 0;");
 }
+if (!pdo_fieldexists('hangyi_order', 'city')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `city` varchar(50) DEFAULT '';");
+}
+if (!pdo_fieldexists('hangyi_user', 'city')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_user') . " ADD `city` varchar(50) DEFAULT '';");
+}
+if (!pdo_fieldexists('hangyi_order', 'uniacid')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `uniacid` int(11) DEFAULT 0;");
+}
 
 if (!pdo_tableexists('wxz_easy_pay_post_tpl')) {
     pdo_query("CREATE TABLE " . tablename('wxz_easy_pay_post_tpl') . " (

@@ -30,6 +30,7 @@ if (!$orderinfo) {
 if ($orderinfo['sell_id'] && $orderinfo['sell_openid']) {
     $sell_info = pdo_get('hangyi_user', array('uid' => $orderinfo['sell_id']));
 }
+
 if ($sell_info['nickname'] && $sell_info['openid'] == $orderinfo['sell_openid']) {
     
 } else {
@@ -41,15 +42,14 @@ $peizhi = pdo_get('hangyi_peizhi', array('uniacid' => $uniacid));
 $pids = $orderinfo['pids'];
 $pids = explode(',', $pids);
 $productinfos = array();
-foreach($pids as $pid) {
-   $productinfos[$pid] = pdo_get('hangyi_product', array('id' => $pid));
-   if ($productinfo['goodsStock'] <= 0) {
+foreach ($pids as $pid) {
+    $productinfos[$pid] = pdo_get('hangyi_product', array('id' => $pid));
+    if ($productinfos[$pid]['goodsStock'] <= 0) {
         message('该商品已经售完');
         exit();
-   }
+    }
 }
 
-//$goodsPriceTotal = $productinfo['goodsPrice']*$orderinfo['goodsNum'];
 $goodsPriceTotal = $orderinfo['goodsPriceTotalReal'];
 
 
