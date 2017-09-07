@@ -42,6 +42,7 @@ foreach ($pids as $pid) {
     }
 }
 
+$productinfo = reset($productinfos);
 $goodsPriceTotal = $orderinfo['goodsPriceTotalReal'];
 
 
@@ -70,6 +71,7 @@ $params = array(
     'user' => $_W['member']['uid'], //付款用户, 付款的用户名(选填项)
     'encrypt_code' => time(), //付款用户, 付款的用户名(选填项)
 );
+
 //调用pay方法
 $this->pay($params);
 
