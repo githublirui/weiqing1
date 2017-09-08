@@ -17,7 +17,7 @@
             title: "{$user['nickname']}: 参加{$_W['module_config']['active_name']}活动，赢现金。",
             {/if}
             desc: "{$_W['module_config']['active_name']}赢现金，更多奖品等你来",
-			link:"{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}",
+			link:"{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=index&m={$_GPC['m']}&aid={$aid}",
             imgUrl: "{$user['avatar']}",
             success: function () {
                 $.post("{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=share").success(function (dat) {
