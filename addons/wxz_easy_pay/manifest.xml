@@ -138,10 +138,15 @@ CREATE TABLE `ims_hangyi_product` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
   `goodsName` varchar(255) DEFAULT NULL,
+  `goodsNameExt` varchar(255) DEFAULT NULL,
+  `goodsDetail` varchar(500) DEFAULT NULL,
+  `remark` varchar(500) DEFAULT NULL,
+  `goodsAtr` varchar(500) DEFAULT NULL,
   `goodsUnit` varchar(20) DEFAULT NULL,
   `goodsPrice` varchar(10) DEFAULT '0',
   `goodsStock` varchar(255) DEFAULT '0',
   `goodsSince` int(1) DEFAULT '1' COMMENT '1快递送，2自提',
+  `tpl_id` int(11) DEFAULT '0' COMMENT '模版ID',
   `goodsImg` varchar(255) DEFAULT NULL,
   `uid` int(10) DEFAULT '0' COMMENT '产品所属人',
   `goodsCode` varchar(255) DEFAULT NULL COMMENT '生成产品支付二维码',
@@ -150,6 +155,7 @@ CREATE TABLE `ims_hangyi_product` (
   `openid` varchar(255) DEFAULT NULL,
   `headimgurl` varchar(255) DEFAULT NULL,
   `sell_num` int(10) DEFAULT '0',
+  `promotion` tinyint(1) DEFAULT '0',
   `add_time` int(10) DEFAULT NULL,
   `postage` varchar(20) DEFAULT NULL COMMENT '邮费',
   `goodsPostNum` int(10) DEFAULT '0',
@@ -206,7 +212,16 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_page` (
   `create_at` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;    
-               
+
+ CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_post_tpl` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `desc` VARCHAR(255) NOT NULL COMMENT '模版详情',
+  `postage` varchar(20) DEFAULT NULL COMMENT '邮费',
+  `goodsPostNum` int(10) DEFAULT '0',
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;                   
 ]]></install>
     <uninstall><![CDATA[
 	DROP TABLE IF EXISTS `ims_hangyi_user`;

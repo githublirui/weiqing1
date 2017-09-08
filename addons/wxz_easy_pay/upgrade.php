@@ -49,3 +49,34 @@ if (!pdo_tableexists('wxz_easy_pay_page')) {
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;");
 }
+
+
+if (!pdo_fieldexists('hangyi_product', 'goodsDetail')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `goodsDetail` varchar(500) DEFAULT '';");
+}
+if (!pdo_fieldexists('hangyi_product', 'goodsNameExt')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `goodsNameExt` varchar(250) DEFAULT '';");
+}
+if (!pdo_fieldexists('hangyi_product', 'goodsAtr')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `goodsAtr` varchar(500) DEFAULT '';");
+}
+if (!pdo_fieldexists('hangyi_product', 'remark')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `remark` varchar(500) DEFAULT '';");
+}
+if (!pdo_fieldexists('hangyi_product', 'promotion')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `promotion` tinyint(1) DEFAULT 0;");
+}
+
+if (!pdo_fieldexists('hangyi_product', 'tpl_id')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `tpl_id` int(11) DEFAULT 0;");
+}
+
+if (!pdo_tableexists('wxz_easy_pay_page')) {
+    pdo_query("CREATE TABLE " . tablename('`ims_wxz_easy_pay_post_tpl`') . " (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `desc`  VARCHAR(500) NOT NULL COMMENT '模版详情',
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;");
+}

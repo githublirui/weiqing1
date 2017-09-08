@@ -30,7 +30,7 @@ var releaseGoods = (function () {
 				var files = Array.prototype.slice.call(this.files);
 				console.log(files)
 				files.forEach(function(file, i) {
-				  if (!/\/(?:jpeg|png|gif)/i.test(file.type)) return;
+//				  if (!/\/(?:jpeg|png|gif)/i.test(file.type)) return;
 				  var reader = new FileReader();
 				  reader.onload = function() {
 					var result = this.result;
@@ -39,7 +39,7 @@ var releaseGoods = (function () {
 				  reader.readAsDataURL(file);
 				})
 				$(this).hide();
-				$('<input type="file" accept="image/*" class="file" name="file">').insertAfter($(this));
+				$('<input type="file" accept="image/*" class="file" name="file[]">').insertAfter($(this));
 
 			});
 			//支付协议弹窗
@@ -72,18 +72,17 @@ var releaseGoods = (function () {
 			$('#J_setPostageBtn').click(function () {
 				$('#release-goods-container').hide();
 				$('#setpostageContainer').show();
-				releaseGoods.addPostageHtml();
 			});
-			$('.add-btn', '#setpostageContainer').click(function () {
-				releaseGoods.addPostageHtml();
-			});
-			$('.cancel', '#setpostageContainer').click(function () {
-				$('#setpostageContainer').hide();
-				$('#release-goods-container').show();
-			});
-			$('.submit', '#setpostageContainer').click(function () {
-				alert('提交')
-			});
+//			$('.add-btn', '#setpostageContainer').click(function () {
+//				releaseGoods.addPostageHtml();
+//			});
+//			$('.cancel', '#setpostageContainer').click(function () {
+//				$('#setpostageContainer').hide();
+//				$('#release-goods-container').show();
+//			});
+//			$('.submit', '#setpostageContainer').click(function () {
+//				alert('提交')
+//			});
 
 			//点击以前使用过邮费模板
 			$('#goHistoryPostage').click(function () {

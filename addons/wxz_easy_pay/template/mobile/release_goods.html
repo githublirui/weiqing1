@@ -46,7 +46,7 @@
                         <ul class="upLoadList" id="upLoadList">
                             <li>
                                 <a href="javascript:;" class="upLoadImg">+</a>
-                                <input type="file" accept="image/*" class="file" id="file" name="file">
+                                <input type="file" accept="image/*" class="file" id="file" name="file[]">
                             </li>
                         </ul>
                         <ul class="message-list">
@@ -79,14 +79,20 @@
                     <div class="release-goods-more">
                         <div class="session" style="margin:0.3rem 0;">
                             <ul class="message-list">
-                                <li>
+                                <li class="goodsPostLi">
                                     <div class="label-cell">邮费</div>
-                                    <input type="number" class="input-cell" placeholder="默认免邮费,单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                    <input type="number" name="post_price" class="input-cell post_price" placeholder="默认免邮费,单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                                     <a href="#" class="set_btn" id="J_setPostageBtn">不同地区邮费</a>
+                                </li>
+                                <li style="height:auto;display:none" class="goodsPostMoreLi">
+                                    <ul>
+                                    </ul>
+                                    <div class="label-cell">&nbsp;</div>
+                                    <a href="javascript:void(0)" class="set_btn" id="changePostBtn">修改</a>
                                 </li>
                                 <li>
                                     <div class="label-cell">包邮件数</div>
-                                    <input type="text" class="input-cell"  placeholder="例如：几件包邮" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                    <input type="text" name="post_num" class="input-cell post_num"  placeholder="例如：几件包邮" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                                 </li>
                                 <li>
                                     <div class="label-cell">可否自提</div>
@@ -106,7 +112,7 @@
                                     </div>
                                 </li>
                                 <li style="height:auto;">
-                                    <textarea placeholder="货源备注" class="goodsName"></textarea>
+                                    <textarea name="remark" placeholder="货源备注" class="goodsName"></textarea>
                                 </li>
                             </ul>
                         </div>
@@ -152,15 +158,15 @@
                         <ul class="message-list">
                             <li>
                                 <div class="label-cell">说明</div>
-                                <input type="text" name="moreDesc" class="input-cell" placeholder="例如iphone6港行，国行">
+                                <input type="text" name="moreDesc[]" class="input-cell moreDesc" placeholder="例如iphone6港行，国行">
                             </li>
                             <li>
                                 <div class="label-cell">价格</div>
-                                <input type="number" name="morePrice" class="input-cell" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <input type="number" name="morePrice[]" class="input-cell morePrice" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                             </li>
                             <li>
                                 <div class="label-cell">库存数</div>
-                                <input type="number"  name="moreStock" class="input-cell" value="10" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <input type="number"  name="moreStock[]" class="input-cell moreStock" value="10" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                             </li>
                         </ul>
                     </div>
@@ -171,15 +177,15 @@
                         <ul class="message-list">
                             <li>
                                 <div class="label-cell">说明</div>
-                                <input type="text" name="moreDesc" class="input-cell" placeholder="例如iphone6港行，国行">
+                                <input type="text" name="moreDesc[]" class="input-cell moreDesc" placeholder="例如iphone6港行，国行">
                             </li>
                             <li>
                                 <div class="label-cell">价格</div>
-                                <input type="number" name="morePrice" class="input-cell" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <input type="number" name="morePrice[]" class="input-cell morePrice" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                             </li>
                             <li>
                                 <div class="label-cell">库存数</div>
-                                <input type="number" name="moreStock" class="input-cell" value="10" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <input type="number" name="moreStock[]" class="input-cell moreStock" value="10" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                             </li>
                         </ul>
                     </div>
@@ -198,13 +204,29 @@
                     <ul class="message-list">
                         <li>
                             <div class="label-cell">邮费</div>
-                            <input type="number" class="input-cell" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                            <input type="number" name="more_post_price" class="input-cell more_post_price" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                         </li>
                         <li>
                             <div class="label-cell">包邮件数</div>
-                            <input type="number" class="input-cell" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                            <input type="number" name="more_post_num" class="input-cell more_post_num" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                         </li>
                     </ul>
+                </div>
+                <div style="display:none;" class="setPost-item-default">
+                    <div class="setPrice-item">
+                        <h4>第1套地区与邮费</h4>
+                        <ul class="message-list">
+                            <li>
+                                <div class="label-cell">地区</div>
+                                <input type="text" name="moreCity[]" class="input-cell setArea moreCity" readonly="true" />
+                                <!--<span class="dir-right"></span>-->
+                            </li>
+                            <li>
+                                <div class="label-cell">邮费</div>
+                                <input type="number" name="morePostPrice[]" class="input-cell morePostPrice" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="setpostageList">
                     <div class="setPrice-item">
@@ -212,21 +234,21 @@
                         <ul class="message-list">
                             <li>
                                 <div class="label-cell">地区</div>
-                                <input type="text" class="input-cell setArea" readonly="true" />
-                                <span class="dir-right"></span>
+                                <input type="text"  name="moreCity[]"  class="input-cell setArea moreCity" readonly="true" />
+                                <!--<span class="dir-right"></span>-->
                             </li>
                             <li>
                                 <div class="label-cell">邮费</div>
-                                <input type="number" class="input-cell" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <input type="number" name="morePostPrice[]" class="input-cell morePostPrice" placeholder="单位（元）" onkeyup="this.value = this.value.replace(/\D/g, '')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
                             </li>
                         </ul>
                     </div>
                 </div>
                 <p id="goHistoryPostage" style="padding-top:0.3rem;color:#1ac219;text-align:center;">以前使用过邮费模板</p>
                 <div class="btnLists">
-                    <a href="javascript:;" class="btn default-btn add-btn">再增加一个地区的邮费</a>
-                    <a href="javascript:;" class="btn submit">确定所有邮费设置</a>
-                    <a href="javascript:;" class="btn default-btn cancel">取消</a>
+                    <a href="javascript:;" class="btn default-btn add-btn add_btn_post">再增加一个地区的邮费</a>
+                    <a href="javascript:;" class="btn submit submit_btn_post">确定所有邮费设置</a>
+                    <a href="javascript:;" class="btn default-btn cancel cancel_btn_post">取消</a>
                 </div>
             </div>
 
@@ -242,7 +264,6 @@
             <div id="setAreaPop" style="display:none;">
                 <div class="setAreaPop-inner">
                     <ul>
-                        <li><input type="radio" name="areaPostage" /><span>无</li>
                         <li><input type="radio" name="areaPostage" /><span>江浙沪</span></li>
                         <li><input type="radio" name="areaPostage" /><span>偏远地区，新疆，西装</span></li>
                         <li><input type="radio" name="areaPostage" /><span>北京市</span></li>
@@ -272,9 +293,9 @@
                 var i = 1;
                 $(".goodsPriceMoreLi ul").html('');
                 $("#setPriceContainer .setPrice-item-list .setPrice-item").each(function () {
-                    var moreDesc = $(this).find("input[name='moreDesc']").val();
-                    var morePrice = $(this).find("input[name='morePrice']").val();
-                    var moreStock = $(this).find("input[name='moreStock']").val();
+                    var moreDesc = $(this).find(".moreDesc").val();
+                    var morePrice = $(this).find(".morePrice").val();
+                    var moreStock = $(this).find(".moreStock").val();
                     if (moreDesc && morePrice && moreStock) {
                         html = "<li><span>" + moreDesc + "</span>: <span>" + morePrice + "</span>元,库存:<span>" + moreStock + "</span></li>";
                         $(".goodsPriceMoreLi ul").append(html);
@@ -299,12 +320,61 @@
             });
             $(".cancel_btn_price").on('click', function () {
                 var html = $(".setPrice-item-default").html();
-                $(".setPrice-item-list").html(html);
+                $("#setPriceContainer .setPrice-item-list").html(html);
                 $(".goodsPriceMoreLi ul").html('');
                 $('#release-goods-container').show();
                 $('.goodsPriceMoreLi').hide();
                 $('#setPriceContainer').hide();
                 $('.goodsPriceLi').show();
+            });
+
+            //多种邮费JS
+            $(".add_btn_post").click(function () {
+                var html = $(".setPost-item-default").html();
+                var price_num = $("#setpostageList .setPrice-item").length + 1;
+                html = html.replace('第1套地区与邮费', '第' + price_num + '套地区与邮费');
+                $("#setpostageList").append(html);
+            });
+            $(".submit_btn_post").on('click', function () {
+                var html = '';
+                var i = 1;
+                $(".goodsPostMoreLi ul").html('');
+                $("#setpostageList .setPrice-item").each(function () {
+                    var morePostPrice = $(this).find(".morePostPrice").val();
+                    var moreCity = $(this).find(".moreCity").val();
+                    if (morePostPrice && moreCity) {
+                        html = "<li><span>" + moreCity + "</span>: <span>" + morePostPrice + "</span>元</li>";
+                        $(".goodsPostMoreLi ul").append(html);
+                    } else {
+                        $(this).remove();
+                    }
+                    $('#release-goods-container').show();
+                    $('.goodsPostMoreLi').show();
+                    $('#setPostContainer').hide();
+                    $('.goodsPostLi').hide();
+                });
+                var more_post_num = $(".more_post_num").val();
+                var more_post_price = $(".more_post_price").val();
+                $(".post_num").val(more_post_num);
+                $(".goodsPostMoreLi ul").append("<li>其他地区默认邮费" + more_post_price + "元</li>");
+                var i = 1;
+                $("#setpostageList .setPrice-item").each(function () {
+                    $(this).find('h4').html('第' + i + '套价格与规则');
+                    i++;
+                })
+            });
+            $("#changePostBtn").on('click', function () {
+                $('#release-goods-container').hide();
+                $('#setPostContainer').show();
+            });
+            $(".cancel_btn_post").on('click', function () {
+                var html = $(".setPost-item-default").html();
+                $("#setpostageList .setPrice-item").html(html);
+                $(".goodsPostMoreLi ul").html('');
+                $('#release-goods-container').show();
+                $('.goodsPostMoreLi').hide();
+                $('#setPostContainer').hide();
+                $('.goodsPostLi').show();
             });
         </script>
     </body>
