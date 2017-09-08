@@ -94,6 +94,7 @@ if ($_GPC['order_status']) {
     } else {
         $condition = "o.sell_id = {$uid} AND o.uniacid={$_W['uniacid']} and o.`order_status`='" . $_GPC['order_status'] . "' ";
     }
+   $condition .= " AND o.pay_status=2";
 } else {
     if ($search) {
         $condition = "o.sell_id = {$uid} AND o.uniacid={$_W['uniacid']} and (p.goodsName like '%" . $search . "%' or u.nickname like '%" . $search . "%' or o.buy_nick like '%" . $search . "%')";

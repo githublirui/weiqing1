@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-简单支付交易平台]]></name>
         <identifie><![CDATA[wxz_easy_pay]]></identifie>
-        <version><![CDATA[3.0.2]]></version>
+        <version><![CDATA[3.4.0]]></version>
         <type><![CDATA[business]]></type>
         <ability><![CDATA[小智-简单支付]]></ability>
         <description><![CDATA[小智-简单支付]]></description>
