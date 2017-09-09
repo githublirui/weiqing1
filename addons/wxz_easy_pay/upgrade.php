@@ -77,8 +77,8 @@ if (!pdo_fieldexists('hangyi_product', 'goodsPostNum')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `goodsPostNum` int(10) DEFAULT 0;");
 }
 
-if (!pdo_tableexists('ims_wxz_easy_pay_post_tpl')) {
-    pdo_query("CREATE TABLE " . tablename('`ims_wxz_easy_pay_post_tpl`') . " (
+if (!pdo_tableexists('wxz_easy_pay_post_tpl')) {
+    pdo_query("CREATE TABLE " . tablename('wxz_easy_pay_post_tpl') . " (
    `id` INT(11) NOT NULL AUTO_INCREMENT,
   `uniacid` INT(11) NOT NULL,
     `uid` int(10) DEFAULT '0' COMMENT '用户id',

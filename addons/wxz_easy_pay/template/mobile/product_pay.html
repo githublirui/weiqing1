@@ -1,470 +1,479 @@
-﻿
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>微信支付</title>
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/share.css">
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/vux.css">
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/styleb.css">
+        <!-- head 中 -->
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css">
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/jquery-weui.min.css">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>微信支付</title>
-    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
-    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/share.css">
-    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/vux.css">
-    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/styleb.css">
-    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+        <!-- body 最后 -->
+        <script src="../addons/wxz_easy_pay/js/jquery.min.js"></script>
+        <script src="../addons/wxz_easy_pay/js/jquery-weui.min.js"></script>
 
-    <style>
-        *{
-            -webkit-overflow-scrolling: touch;
-        }
-        .weui_dialog_bd {
-            padding: 0 20px;
-            font-size: 15px;
-            color: #888;
-            word-wrap: break-word;
-            word-break: break-all;
-            max-height: 300px;
-            overflow-y: scroll;
-            text-align: left;
-            -webkit-overflow-scrolling: touch;
-        }
-        .weui_dialog{
-            width: 280px;
-        }
+        <!-- 如果使用了某些拓展插件还需要额外的JS -->
+        <script src="../addons/wxz_easy_pay/js/swiper.min.js"></script>
+        <script src="../addons/wxz_easy_pay/js/city-picker.min.js"></script>
 
-        .vux-tap-active .weui_cell_hd {
-            padding: 0;
-        }
+        <style>
+            *{
+                -webkit-overflow-scrolling: touch;
+            }
+            .weui_dialog_bd {
+                padding: 0 20px;
+                font-size: 15px;
+                color: #888;
+                word-wrap: break-word;
+                word-break: break-all;
+                max-height: 300px;
+                overflow-y: scroll;
+                text-align: left;
+                -webkit-overflow-scrolling: touch;
+            }
+            .weui_dialog{
+                width: 280px;
+            }
 
-        [v-cloak] {
-            display: none;
-        }
+            .vux-tap-active .weui_cell_hd {
+                padding: 0;
+            }
 
-        #dialog2 {
-            display: none;
-        }
+            [v-cloak] {
+                display: none;
+            }
 
-        #item_img img {
-            width: 100%;
-        }
+            #dialog2 {
+                display: none;
+            }
 
-        .vux-popup-picker-value {
-            font-size: 14px;
-        }
+            #item_img img {
+                width: 100%;
+            }
 
-        .hd {
-            text-align: center;
-            padding: 20px 20px 0 20px;
-            color: #1f8a58;
-        }
+            .vux-popup-picker-value {
+                font-size: 14px;
+            }
 
-        .weui_icon_info:before {
-            font-size: 16px;
-        }
+            .hd {
+                text-align: center;
+                padding: 20px 20px 0 20px;
+                color: #1f8a58;
+            }
 
-        .weui_icon_circle:before {
-            font-size: 16px;
-        }
+            .weui_icon_info:before {
+                font-size: 16px;
+            }
 
-        .weui_icon_success_circle:before {
-            font-size: 16px;
-        }
+            .weui_icon_circle:before {
+                font-size: 16px;
+            }
 
-        #trade_name {
-            font-size: 24px;
-        }
+            .weui_icon_success_circle:before {
+                font-size: 16px;
+            }
 
-        .money {
-            font-size: 16px;
-        }
+            #trade_name {
+                font-size: 24px;
+            }
 
-        .money span#price {
-            font-size: 64px;
-            font-weight: 300;
-        }
+            .money {
+                font-size: 16px;
+            }
 
-
-        .specs-item {
-            font-size: 14px;
-            padding: 4px 6px;
-            border: 1px solid #000;
-            margin: 4px 4px 4px 0;
-            display: inline-block;
-            border-radius: 4px;
-            color: #000;
-        }
-
-        .specs-item.disable {
-            font-size: 14px;
-            padding: 4px 6px;
-            border: 1px solid #ccc;
-            margin: 4px 4px 4px 0;
-            display: inline-block;
-            border-radius: 4px;
-            color: #ccc;
-            pointer-events: none;
-        }
-
-        .specs-item.active {
-            background-color: #ff9900;
-            color: #fff;
-            border-color: #ff6600;
-        }
-
-        .tag {
-            border: 1px solid #1f8a58;
-            font-size: 12px;
-            border-radius: 4px;
-            padding: 3px;
-            margin: 0 3px;
-            background-color: #1f8a58;
-            color: #fff;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 48px;
-            border: 3px solid #fff;
-            display: inline-block;
-            margin: 0 10px 10px 10px;
-        }
-
-        .page_desc {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
-        }
-
-        box {
-            display: flex;
-            flex-direction: row;
-        }
-
-        centerbox {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row;
-        }
-        .weui_label{
-            white-space: pre-line;
-        }
+            .money span#price {
+                font-size: 64px;
+                font-weight: 300;
+            }
 
 
-        .sm-btn {
-            display: flex;
-            background-color: limegreen;
-            color: #fff;
-            border-radius: 4px;
-            width: 24px;
-            height: 24px;
-            justify-content: center;
-            align-items: center;
-        }
+            .specs-item {
+                font-size: 14px;
+                padding: 4px 6px;
+                border: 1px solid #000;
+                margin: 4px 4px 4px 0;
+                display: inline-block;
+                border-radius: 4px;
+                color: #000;
+            }
 
-        .sm-text {
-            display: flex;
-            border-radius: 4px;
-            margin: 0 10px;
-            height: 24px;
-            justify-content: center;
-            align-items: center;
-        }
+            .specs-item.disable {
+                font-size: 14px;
+                padding: 4px 6px;
+                border: 1px solid #ccc;
+                margin: 4px 4px 4px 0;
+                display: inline-block;
+                border-radius: 4px;
+                color: #ccc;
+                pointer-events: none;
+            }
 
-        .cell_tag {
-            font-size: 12px;
-            color: #c5a14e;
-        }
+            .specs-item.active {
+                background-color: #ff9900;
+                color: #fff;
+                border-color: #ff6600;
+            }
 
+            .tag {
+                border: 1px solid #1f8a58;
+                font-size: 12px;
+                border-radius: 4px;
+                padding: 3px;
+                margin: 0 3px;
+                background-color: #1f8a58;
+                color: #fff;
+            }
 
-        .tuantext {
-            text-align: center;
-            font-size: 12px;
-        }
+            .avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 48px;
+                border: 3px solid #fff;
+                display: inline-block;
+                margin: 0 10px 10px 10px;
+            }
 
-        .weui_btn_area2 {
-            display: flex;
-        }
+            .page_desc {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+            }
 
-        html,
-        body,
-        .container {
-            min-height: 100%;
-            background-color: #eff5ea;
-            height: 100%;
-        }
-        .weui_tabbar{
-            position: fixed;
-        }
-        .weui_tabbar:before{
-            border: 0px;
-        }
-        .fixed{
-            position: fixed;
-        }
-        .relative{
-            position: relative;
-        }
-        #item_list.weui_cells:after{
-            display: none;
-        }
-        .weui_cell_select{
-            padding: 0 0 0 15px;
-        }
-    </style>
-</head>
+            box {
+                display: flex;
+                flex-direction: row;
+            }
 
-<body id="app" class="">
-   
-
-  
-
-    
+            centerbox {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+            }
+            .weui_label{
+                white-space: pre-line;
+            }
 
 
-   
-    
+            .sm-btn {
+                display: flex;
+                background-color: limegreen;
+                color: #fff;
+                border-radius: 4px;
+                width: 24px;
+                height: 24px;
+                justify-content: center;
+                align-items: center;
+            }
 
-    
+            .sm-text {
+                display: flex;
+                border-radius: 4px;
+                margin: 0 10px;
+                height: 24px;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .cell_tag {
+                font-size: 12px;
+                color: #c5a14e;
+            }
+
+
+            .tuantext {
+                text-align: center;
+                font-size: 12px;
+            }
+
+            .weui_btn_area2 {
+                display: flex;
+            }
+
+            html,
+            body,
+            .container {
+                min-height: 100%;
+                background-color: #eff5ea;
+                height: 100%;
+            }
+            .weui_tabbar{
+                position: fixed;
+            }
+            .weui_tabbar:before{
+                border: 0px;
+            }
+            .fixed{
+                position: fixed;
+            }
+            .relative{
+                position: relative;
+            }
+            #item_list.weui_cells:after{
+                display: none;
+            }
+            .weui_cell_select{
+                padding: 0 0 0 15px;
+            }
+        </style>
+    </head>
+
+    <body id="app" class="">
         <div>
-
-  <div v-show="item && item.status==1 && seller.verified!=3">
-
-
-          
-            <div class="hd" style="">
-                <div style="margin:0 0 5px 0 " v-show="openid==seller.openid" >
-                    <a class="tag" href="{php echo $this->createMobileUrl('orders')}">管理我的商品</a> 
+            <div v-show="item && item.status==1 && seller.verified!=3">
+                <div class="hd" style="">
+                    <div style="margin:0 0 5px 0 " v-show="openid==seller.openid" >
+                        <a class="tag" href="{php echo $this->createMobileUrl('orders')}">管理我的商品</a> 
+                    </div>
+                    <p v-show="items.length==1"><span class="page_desc">{$product['goodsName']}</span></p>
+                    <h1 class="money" v-on:click="click_num++"><span style="font-size:64px;font-weight: 300;line-height:1.2" id="totalmoney">
+                            {if $product['goodsPostNum']==1}
+                            {$product['goodsPrice']}
+                            {else}
+                            {php echo $product['goodsPrice'] + $product['postage'];}
+                            {/if}
+                        </span>元</h1>
+                    <div style="margin:0 0 5px 0 ">
+                        </span>
+                        {if $product['postage']}
+                        <span class="tag" v-show="shipping_cost_total>0">
+                            邮费{$product['postage']}元{if $product['goodsPostNum']}满{$product['goodsPostNum']}件包邮{/if}
+                        </span>
+                        {else}
+                        <span class="tag" v-show="shipping_cost_total==0 && item.type==1 && pick_up==0">包邮
+                            {/if}
+                            <!--
+                                               <span class="tag" v-show="coupons.length>0">优惠券已减1元</span>
+                                               <span class="tag" v-show="discount_money>0">店家优惠1元</span>
+                                             <span class="tag" v-show="score>0" v-link="{ name: 'scores_log',params:{seller:this.item.openid}}">查看积分抵扣{{score/100}}元</span>-->  
+                    </div>
+                    <div style="font-size:12px" v-show="item.nickname && !item.company  && reseller==null">
+                        <span style="margin:0 10px">收款人:{$sell_info['nickname']}</span>
+                        <span style="margin:0 10px">电话:{$sell_info['tel']}</span>
+                        <span v-show="item.weixin" style="margin:0 10px">微信:{$sell_info['weixin']}</span>
+                    </div>
                 </div>
-                <p v-show="items.length==1"><span class="page_desc">{$product['goodsName']}</span></p>
-                <h1 class="money" v-on:click="click_num++"><span style="font-size:64px;font-weight: 300;line-height:1.2" id="totalmoney">{$product['goodsPrice']}</span>元</h1>
-             
-                <div style="margin:0 0 5px 0 ">
-                    
-                   
-				 
-                   
-                    </span>
-					{if $product['postage']}
-                    <span class="tag" v-show="shipping_cost_total>0">
-                        邮费{$product['postage']}元{if $product['goodsPostNum']}超过{$product['goodsPostNum']}{$product['goodsUnit']}包邮{/if}
-                    </span>
-					{else}
-					 <span class="tag" v-show="shipping_cost_total==0 && item.type==1 && pick_up==0">包邮
-					{/if}
- <!--
-                    <span class="tag" v-show="coupons.length>0">优惠券已减1元</span>
-                    <span class="tag" v-show="discount_money>0">店家优惠1元</span>
-                  <span class="tag" v-show="score>0" v-link="{ name: 'scores_log',params:{seller:this.item.openid}}">查看积分抵扣{{score/100}}元</span>-->  
-                </div>
-                <div style="font-size:12px" v-show="item.nickname && !item.company  && reseller==null">
-                    <span style="margin:0 10px">收款人:{$sell_info['nickname']}</span>
-                    <span style="margin:0 10px">电话:{$sell_info['tel']}</span>
-                    <span v-show="item.weixin" style="margin:0 10px">微信:{$sell_info['weixin']}</span>
-                </div>
-              
-                
-            </div>
-           
-            
-            <form id="orderform" class="" action="{php echo $this->createMobileUrl('dopay')}" method="POST">
-                <div class="weui_cells">
-                    <input type="hidden" name="pid" value="{$pid}">
-                   
-                   
 
 
-                    <box class="weui_cell" style="justify-content:flex-end;align-items:center;padding:10px 15px" v-for="gitem in items" v-show="(gitem.type!=2 && gitem.type!=12 && gitem.type!=101) || items.length>1" v-if="item.type!=3">
-                        <box style="flex:1;padding-right:10px;flex-direction: column">
-                            <box style="align-items: center">
-                                
-                                <span v-show="items.length==1">购买数量 </span>
-                               
-                               
+                <form id="orderform" class="" action="{php echo $this->createMobileUrl('dopay')}" method="POST">
+                    <!--默认值-->
+                    <input type="hidden" value="{$product['goodsPrice']}" class="defaultGoodsPrice" />
+                    <input type="hidden" value="{$product['postage']}" class="defaultPostage" />
+                    <input type="hidden" value="{$product['goodsPostNum']}" class="defaultGoodsPostNum" />
+                    <input type="hidden" value="{$product['goodsStock']}" class="defaultGoodsStock" />
+                    <!--/默认值-->
+
+                    <div class="weui_cells">
+                        <input type="hidden" name="pid" value="{$pid}">
+                        <box class="weui_cell" style="justify-content:flex-end;align-items:center;padding:10px 15px" v-for="gitem in items" v-show="(gitem.type!=2 && gitem.type!=12 && gitem.type!=101) || items.length>1" v-if="item.type!=3">
+                            <box style="flex:1;padding-right:10px;flex-direction: column">
+                                <box style="align-items: center">
+                                    <span v-show="items.length==1">购买数量 </span>
+                                </box>
                             </box>
-                            
+                            <box>
+                                <a class="sm-btn"  onclick="remove_item()">-</a>
+                                <input class="weui_input" style="width:44px;text-align:center" id="goodsNum" name="goodsNum" value="1" />
+                                <a class="sm-btn" onclick="add_item()">+</a>
+                            </box>
                         </box>
-                        
-                        <box>
-                            <a class="sm-btn"  onclick="remove_item()">-</a>
-                            <input class="weui_input" style="width:44px;text-align:center" id="goodsNum" name="goodsNum" value="1" />
-                            <a class="sm-btn" onclick="add_item()">+</a>
-                        </box>
-                    </box>
-                    <div class="weui_cell">
-                        <div class="weui_cell_hd"><label class="weui_label weui_label_wide">付款金额</label></div>
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <input name="goodsPriceTotal" id="goodsPriceTotal" value="{$product['goodsPrice']}" class="weui_input" type="type" placeholder="和卖家商议后的付款金额" v-model="item.num">
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd"><label class="weui_label weui_label_wide">付款金额</label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input name="goodsPriceTotal" id="goodsPriceTotal" value="{if $product['goodsPostNum']==1}{$product['goodsPrice']}{else}{php echo $product['goodsPrice'] + $product['postage'];}{/if}" class="weui_input" type="type" placeholder="和卖家商议后的付款金额" v-model="item.num">
+                            </div>
                         </div>
-                    </div>
-                    <div class="weui_cell">
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <textarea name="postscript" id="postscript" class="weui_textarea" placeholder="买家购买什么商品的留言(选填)" rows="2"></textarea>
+                        <div class="weui_cell">
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <textarea name="postscript" id="postscript" class="weui_textarea" placeholder="买家购买什么商品的留言(选填)" rows="2"></textarea>
+                            </div>
                         </div>
                     </div>
 
+                    <div class="weui_cells_title" style="text-align:center">
 
-                    
+                    </div>
+
+                    <div class="weui_cells vux-no-group-title">
+                        <div class="weui_cell" id="name_cell">
+                            <div class="weui_cell_hd"><label class="weui_label weui_label_wide">收货人</label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="buyer_name" name="buyer_name"  class="weui_input" type="text" placeholder="请输入" value="{$realname}">
+                            </div>
+                        </div>
+                        <div class="weui_cell" v-show="page_setting.phone_label">
+                            <div class="weui_cell_hd"><label class="weui_label weui_label_wide">手机号码</label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="cell" name="cell" class="weui_input" type="text" placeholder="请输入号码" v-model="cell" value="{$tel}">
+                            </div>
+                        </div>
+                        <div class="weui_cell" v-show="item.type==7">
+                            <div class="weui_cell_hd"><label class="weui_label weui_label_wide"><span >微信号</span></label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="weixin" name="weixin" class="weui_input" type="text" placeholder="填写你的微信号或手机号让群主邀请你" value="{$weixin}">
+                            </div>
+                        </div>
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd"><label class="weui_label weui_label_wide"><span>选择省市</span></label></div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="weixin" name="city" class="weui_input city" type="text" placeholder="请选择省市" value="">
+                            </div>
+                        </div>
+                        <div class="weui_cell" id="address_cell" v-show="items[0].need_address==1">
+                            <div class="weui_cell_hd"><label class="weui_label weui_label_wide">收货地址</label></div>
+                            <div class="weui_cell_bd weui_cell_primary" style="display:flex;flex-direction: column;">
+                                <textarea v-show="pick_up==0" id="address" name="address" class="weui_textarea" placeholder="收货地址(如需快递请填写）" v-model="address" rows="2">{$order_address}</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <div class="weui_cells_title" style="color:#ff6600;text-align:center;font-size:12px;">
+                    {$setting_font['add_three']}
+                    <!--<span>简单支付是熟人交易平台，不做担保<br/>请确认收款方真实可信</span><span v-show="seller.verified == 3">注意：货款将直接支付给卖家，请确认收款方真实可信<br/>简单支付平台未进行交易担保，谨防上当受骗</span>!--></div>
+                <div class="weui_btn_area">
+                    <a class="weui_btn weui_btn_primary" onclick="postOrder()"><span>立即支付</span></a>
+
                 </div>
-
-                <div class="weui_cells_title" style="text-align:center">
-                   
-                </div>
-
-                <div class="weui_cells vux-no-group-title">
-                    <div class="weui_cell" id="name_cell">
-                        <div class="weui_cell_hd"><label class="weui_label weui_label_wide">收货人</label></div>
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <input id="buyer_name" name="buyer_name"  class="weui_input" type="text" placeholder="请输入" value="{$realname}">
-                        </div>
-                    </div>
-                    <div class="weui_cell" v-show="page_setting.phone_label">
-                        <div class="weui_cell_hd"><label class="weui_label weui_label_wide">手机号码</label></div>
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <input id="cell" name="cell" class="weui_input" type="text" placeholder="请输入号码" v-model="cell" value="{$tel}">
-                        </div>
-                    </div>
-                    <div class="weui_cell" v-show="item.type==7">
-                        <div class="weui_cell_hd"><label class="weui_label weui_label_wide"><span >微信号</span></label></div>
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <input id="weixin" name="weixin" class="weui_input" type="text" placeholder="填写你的微信号或手机号让群主邀请你" value="{$weixin}">
-                        </div>
-                    </div>
-                    <address title="选择省市" :value.sync="value2" raw-value :list="addressData" v-if="items[0].need_address==1 && pick_up==0"></address>
-                    <div class="weui_cell" id="address_cell" v-show="items[0].need_address==1">
-                        <div class="weui_cell_hd"><label class="weui_label weui_label_wide">收货地址</label></div>
-                        <div class="weui_cell_bd weui_cell_primary" style="display:flex;flex-direction: column;">
-
-                            <textarea v-show="pick_up==0" id="address" name="address" class="weui_textarea" placeholder="收货地址(如需快递请填写）" v-model="address" rows="2">{$order_address}</textarea>
-                            
-                        </div>
-                    </div>
-                   
-                    
-                    
-                  
-                 
-                </div>
-            </form>
-            <div class="weui_cells_title" style="color:#ff6600;text-align:center;font-size:12px;">
-              {$setting_font['add_three']}
-                <!--<span>简单支付是熟人交易平台，不做担保<br/>请确认收款方真实可信</span><span v-show="seller.verified == 3">注意：货款将直接支付给卖家，请确认收款方真实可信<br/>简单支付平台未进行交易担保，谨防上当受骗</span>!--></div>
-            <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" onclick="postOrder()"><span>立即支付</span></a>
-               
             </div>
-			</div>
-    <script>
-	function postOrder(){
-		var pid = {$pid};
-		var goodsNum = parseInt($("#goodsNum").val());
-		var goodsStock = parseInt({$product['goodsStock']});
-		
-		
-		var goodsPriceTotal = $("#goodsPriceTotal").val();
-		var buyer_name = $("#buyer_name").val();
-		
-		if(!buyer_name){
-			alert("收货人没有填写");
-			return false;
-		}
-		
-		var cell = $("#cell").val();
-		if(!cell){
-			alert("手机号码没有填写");
-			return false;
-		}
-		var reg = /^1[0-9]{10}$/;
+            <script>
+                function postOrder() {
+                    var pid = {$pid};
+                    var goodsNum = parseInt($("#goodsNum").val());
+                    var buyer_name = $("#buyer_name").val();
+                    var goodsPriceTotal = $("#goodsPriceTotal").val();
 
-		if(!reg.test(cell)){
-			alert("手机号码格式不正确");
-			return false;
-		}
-		var weixin = $("#weixin").val();
-		var address = $("#address").val();
-		
-		if(!address){
-			alert("收货地址必须填写");
-			return false;
-		}
-		
-		var postscript = $("#postscript").val();
-		
-		if(goodsStock && goodsNum > goodsStock){
-			alert("商品库存不够");
-			return false;
-		}
-		if(!postscript){
-			//alert("买家留言没有填写");
-			//return false;
-		}
-		 $.ajax({
+                    if (!buyer_name) {
+                        alert("收货人没有填写");
+                        return false;
+                    }
+
+                    var cell = $("#cell").val();
+                    if (!cell) {
+                        alert("手机号码没有填写");
+                        return false;
+                    }
+
+                    var reg = /^1[0-9]{10}$/;
+                    if (!reg.test(cell)) {
+                        alert("手机号码格式不正确");
+                        return false;
+                    }
+
+                    var weixin = $("#weixin").val();
+                    var address = $("#address").val();
+                    var city = $(".city").val();
+                    if (!city) {
+                        alert("请选择省市");
+                        return false;
+                    }
+                    if (!address) {
+                        alert("收货地址必须填写");
+                        return false;
+                    }
+                    var postscript = $("#postscript").val();
+                    if (!postscript) {
+                        //alert("买家留言没有填写");
+                        //return false;
+                    }
+                    $.ajax({
                         url: "{php echo $this->createMobileUrl('productdetail')}&ajax=1}",
                         type: 'POST',
-                        data: {'postscript':postscript,'pid':pid,'goodsNum':goodsNum,'goodsPriceTotal':goodsPriceTotal,'buyer_name':buyer_name,'cell':cell,'weixin':weixin,'address':address},
-                     
-                        success: function(res) {
-							if(res){
-								window.location.href="{php echo $this->createMobileUrl('dopay')}&orderid="+res; 
-								//$("#orderform").submit();
-							}else{
-								alert("订单生成失败");
-							}
-							
+                        data: {'postscript': postscript, 'pid': pid, 'goodsNum': goodsNum, 'goodsPriceTotal': goodsPriceTotal, 'buyer_name': buyer_name, 'cell': cell, 'weixin': weixin, 'city': city, 'address': address},
+                        success: function (res) {
+                            if (res) {
+                                window.location.href = "{php echo $this->createMobileUrl('dopay')}&orderid=" + res;
+                                //$("#orderform").submit();
+                            } else {
+                                alert("订单生成失败");
+                            }
                         }
                     })
-		
-	}
-	function remove_item(){
-	
-	  var goodsNum = parseInt($("#goodsNum").val());
-	  var goodsMoney = parseFloat({$product['goodsPrice']});
-	  goodsNum = goodsNum-1;
-	  if(goodsNum>0){
-		$("#goodsNum").attr("value",goodsNum);
-		
-		var total_money = goodsMoney*goodsNum;
-		$("#totalmoney").text(total_money);
-		$("#goodsPriceTotal").attr("value",total_money);
-	  }
-	}
-	function add_item(){
-	  var goodsNum = parseInt($("#goodsNum").val());
-	   var goodsMoney = parseFloat({$product['goodsPrice']});
-	   var goodsStock = parseInt({$product['goodsStock']});
-			
-		 goodsNum = goodsNum+1;
-		 if(goodsStock < goodsNum){
-				alert("商品库存不够");
-				return false;
-			}
-		if(goodsNum>0){
-			
-		  $("#goodsNum").attr("value",goodsNum);
-		    var total_money = goodsMoney*goodsNum;
-			$("#totalmoney").text(total_money);
-			$("#goodsPriceTotal").attr("value",total_money);
-	    }
-	}
-	</script>
-</div>
-</body>
+
+                }
+
+                //删除购买数量
+                function remove_item() {
+                    var goodsNum = parseInt($("#goodsNum").val());
+                    var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
+                    var defaultPostage = $(".defaultPostage").val();
+                    var defaultGoodsPrice = $(".defaultGoodsPrice").val();
+                    var goodsStock = parseInt($(".defaultGoodsStock").val());
+                    goodsNum = goodsNum - 1;
+                    if (goodsNum > 0) {
+                        $("#goodsNum").attr("value", goodsNum);
+                        var total_money = getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum);
+                        $("#totalmoney").text(total_money);
+                        $("#goodsPriceTotal").val(total_money);
+                    }
+                }
+
+                //添加购买数量
+                function add_item() {
+                    var goodsNum = parseInt($("#goodsNum").val());
+                    var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
+                    var defaultPostage = $(".defaultPostage").val();
+                    var defaultGoodsPrice = $(".defaultGoodsPrice").val();
+                    var goodsStock = parseInt($(".defaultGoodsStock").val());
+                    goodsNum = goodsNum + 1;
+                    if (goodsStock < goodsNum) {
+                        alert("商品库存不够");
+                        return false;
+                    }
+                    if (goodsNum > 0) {
+                        $("#goodsNum").attr("value", goodsNum);
+                        var total_money = getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum);
+                        $("#totalmoney").text(total_money);
+                        $("#goodsPriceTotal").val(total_money);
+                    }
+                }
+
+                //计算价格
+                function getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum) {
+                    var result = 0;
+                    if (goodsNum <= 0) {
+                        return 0;
+                    }
+
+                    if (goodsNum >= defaultGoodsPostNum) {
+                        //包邮
+                        result = defaultGoodsPrice * goodsNum;
+                    } else {
+                        result = defaultGoodsPrice * goodsNum * 100 + defaultPostage * 100;
+                        result = result / 100;
+                    }
+                    return result;
+                }
+
+                $(".city").cityPicker({
+                    title: "请选择省市",
+                    onChange: function (data, e, b) {
+                        var pid = {$product['id']};
+                        $.ajax({
+                            url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=getCityPost&pid=" + pid + "&city="+b[0],
+                            type: "post",
+                            dataType: "json",
+                            success: function (dat) {
+                                $(".defaultPostage").val(dat.postage);
+                                var goodsNum = parseInt($("#goodsNum").val());
+                                var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
+                                var defaultPostage = $(".defaultPostage").val();
+                                var defaultGoodsPrice = $(".defaultGoodsPrice").val();
+                                var goodsStock = parseInt($(".defaultGoodsStock").val());
+                                 var total_money = getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum);
+                                $("#totalmoney").text(total_money);
+                                $("#goodsPriceTotal").val(total_money);
+                            }
+                        });
+                    },
+                });
+            </script>
+        </div>
+    </body>
 
 </html>

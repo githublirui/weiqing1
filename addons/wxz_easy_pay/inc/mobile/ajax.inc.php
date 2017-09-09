@@ -16,7 +16,7 @@ if ($do == 'defaultTpl') {
     $i = 1;
     foreach ($info['desc'] as $city => $price) {
         $i++;
-      
+
         $result['setpostageList'] .=
                 <<<EOF
          <div class="setPrice-item">
@@ -34,6 +34,21 @@ if ($do == 'defaultTpl') {
                         </ul>
                     </div>
 EOF;
+    }
+    echo json_encode($result);
+} else if ($do == 'getCityPost') {
+    $result = array();
+    $pid = $_GPC['pid'];
+    $city = $_GPC['city'];
+    $product = pdo_get('hangyi_product', array('id' => $pid));
+    $tplId = $product['tpl_id'];
+    $result['postage'] = $product['postage'];
+    if ($tplId) {
+        $tpl = pdo_get('wxz_easy_pay_post_tpl', array('id' => $tplId));
+        $tpl['desc'] = json_decode($tpl['desc'], true);
+        if (isset($tpl['desc'][$city])) {
+            $result['postage'] = $tpl['desc'][$city];
+        }
     }
     echo json_encode($result);
 }
