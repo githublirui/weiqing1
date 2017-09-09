@@ -15,7 +15,7 @@
             function toVaild() {
                 var goodsName = $("#goodsName").val();
                 var goodsPrice = $("#goodsPrice").val();
-                var goodsInfo = $("#goodsInfo").val();
+                var goodsDetail = $("#goodsDetail").val();
                 if (goodsPrice) {
                     goodsPrice = parseFloat(goodsPrice);
                     if (goodsPrice < 1) {
@@ -120,8 +120,8 @@
                 </div>
 
                 <div class="center">
-                    <a href="#" class="more-open">更多选项+</a>
-                    <a href="#" class="btn" onclick="toVaild();">生成支付码图</a>
+                    <a href="javascript:;" class="more-open">更多选项+</a>
+                    <a href="javascript:;" class="btn" onclick="toVaild();">生成支付码图</a>
                     <p class="agreement"><span class="ico"></span>{$pageInfo[1]['title']}</p>
                     <p class="footer"><a href="{$pageInfo[11]['link']}"><span class="greenClr">{$pageInfo[3]['title']}</span></a> {$pageInfo[4]['title']}</p>
                 </div>
@@ -254,10 +254,20 @@
 
             <!-- 设置最近邮费模板-->
             <div id="newlyPostage" style="display:none;">
-                <h4>最近设置1个邮费模块</h4>
+                <h4>最近设置{php echo count($postTpls);}个邮费模块</h4>
                 <ul>
-                    <li>默认邮费0，</li>
-                    <li>默认邮费0，</li>
+                    {php foreach($postTpls as $postTpl) {}
+                    <li data-tplid="{$postTpl['id']}">
+                        <dl>
+                            <dt>默认邮费{$postTpl['postage']},包邮数量{$postTpl['goodsPostNum']}</dt>
+                        </dl> 
+                        <dl>
+                            {php foreach($postTpl['desc'] as $city=>$postPrice) {}
+                            <span>{$city}:{$postPrice}</span>
+                            {php } }
+                        </dl> 
+                    </li>
+                    {php } }
                 </ul>
             </div>
             <!-- 设置地区弹窗-->
@@ -350,7 +360,7 @@
                     }
                     $('#release-goods-container').show();
                     $('.goodsPostMoreLi').show();
-                    $('#setPostContainer').hide();
+                    $('#setpostageContainer').hide();
                     $('.goodsPostLi').hide();
                 });
                 var more_post_num = $(".more_post_num").val();
@@ -365,7 +375,7 @@
             });
             $("#changePostBtn").on('click', function () {
                 $('#release-goods-container').hide();
-                $('#setPostContainer').show();
+                $('#setpostageContainer').show();
             });
             $(".cancel_btn_post").on('click', function () {
                 var html = $(".setPost-item-default").html();
@@ -373,8 +383,28 @@
                 $(".goodsPostMoreLi ul").html('');
                 $('#release-goods-container').show();
                 $('.goodsPostMoreLi').hide();
-                $('#setPostContainer').hide();
+                $('#setpostageContainer').hide();
                 $('.goodsPostLi').show();
+            });
+
+            //默认邮费设置
+            $('li', '#newlyPostage').click(function () {
+                var tplid = $(this).attr('data-tplid');
+                $.ajax({
+                    url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=defaultTpl&id=" + tplid,
+                    type: "post",
+                    dataType: "json",
+                    success: function (dat) {
+                        $(".post_price").val(dat.postage);
+                        $(".more_post_price").val(dat.postage);
+                        $(".post_num").val(dat.goodsPostNum);
+                        $(".more_post_num").val(dat.goodsPostNum);
+                        $("#setpostageList").html(dat.setpostageList);
+                    }
+                });
+
+                $('#newlyPostage').hide();
+                $('#setpostageContainer').show();
             });
         </script>
     </body>

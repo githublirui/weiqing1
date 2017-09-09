@@ -89,12 +89,6 @@ var releaseGoods = (function () {
 				$('#setpostageContainer').hide();
 				$('#newlyPostage').show();
 			});
-			$('li','#newlyPostage').click(function () {
-				$('#newlyPostage').hide();
-				$('#setpostageContainer').show();	
-				$('#setpostageList').empty();
-				setPostageNum = 0;	
-			});
 		},
 		//添加邮费模块
 		addPostageHtml: function () {

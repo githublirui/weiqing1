@@ -40,6 +40,13 @@ $setting = pdo_get('hangyi_peizhi', array('uniacid' => $uniacid));
 if (!$userinfo) {
     $result = pdo_insert('hangyi_user', $dat['set']);
 }
-//$id = pdo_insertid();
+
+//获取历史邮费
+$condition = "uid={$userinfo['uid']}";
+$postTpls = pdo_getall('wxz_easy_pay_post_tpl', $condition);
+foreach ($postTpls as $k => $postTpl) {
+    $postTpls[$k]['desc'] = json_decode($postTpl['desc'], true);
+}
+
 include $this->template('release_goods');
 
