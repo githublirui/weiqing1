@@ -11,13 +11,6 @@ if (!empty($fan) && !empty($fan['openid'])) {
 } else {
     $userinfo = mc_oauth_userinfo();
 }
-
-$uniacid = $_W['uniacid'];
-$setting_font = pdo_get('hangyi_add_font', array('uniacid' => $uniacid));
-
-//获取页面配置
-require_once WXZ_EASY_PAY . '/source/Page.class.php';
-$pageInfo = Page::getPage(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11));
 //获取图片域名
 setting_load('remote');
 if ($_W['setting']['remote']['type']) {
@@ -25,7 +18,12 @@ if ($_W['setting']['remote']['type']) {
 } else {
     $attach_url = $_W['siteroot'] . $_W['config']['upload']['attachdir'];
 }
+$uniacid = $_W['uniacid'];
+$setting_font = pdo_get('hangyi_add_font', array('uniacid' => $uniacid));
 
+//获取页面配置
+require_once WXZ_EASY_PAY . '/source/Page.class.php';
+$pageInfo = Page::getPage(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11));
 $fans = $_W['fans'];
 $openid = $fans['openid'];
 $dat['set'] = array(

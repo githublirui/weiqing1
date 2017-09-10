@@ -696,8 +696,21 @@ a,input,button,img,textarea{outline:none;}
 }
 
 .goodsPriceMoreLi li,.goodsPostMoreLi li {
-    font-size: 0.18rem;
     border: none;
-    height:0.28rem;
-    line-height:0.28rem;
+    height:0.38rem;
+    line-height:0.38rem;
+    font-size: 0.30rem;
+}
+
+.goodsPriceMoreLi li:first-child,.goodsPostMoreLi li:first-child {
+    margin-top: 0.2rem;
+}
+.defaultSetPost{
+    height: 1rem;
+    line-height: 1rem;
+    text-indent: 0.3rem;
+    background: #fff;
+    border-top:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    margin-bottom: 0.2rem;
 }

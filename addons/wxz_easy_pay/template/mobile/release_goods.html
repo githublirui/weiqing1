@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0"/>
         <title>发布商品</title>
-        <link href="../addons/wxz_easy_pay/css/style.css" rel="stylesheet" type="text/css">
+        <link href="../addons/wxz_easy_pay/css/style.css?t=244315411" rel="stylesheet" type="text/css">
         <link href="../addons/wxz_easy_pay/css/mui-switch.css" rel="stylesheet" type="text/css">
         <script src="../addons/wxz_easy_pay/js/jquery-1.11.1.min.js"></script>
         <script src="../addons/wxz_easy_pay/js/common.js"></script>
@@ -256,6 +256,7 @@
             <div id="newlyPostage" style="display:none;">
                 <h4>最近设置{php echo count($postTpls);}个邮费模块</h4>
                 <ul>
+                    <li class="defaultSetPost">默认邮费0，</li>
                     {php foreach($postTpls as $postTpl) {}
                     <li data-tplid="{$postTpl['id']}">
                         <dl>
@@ -426,6 +427,10 @@
                     }
                 });
 
+                $('#newlyPostage').hide();
+                $('#setpostageContainer').show();
+            });
+            $(".defaultSetPost").click(function () {
                 $('#newlyPostage').hide();
                 $('#setpostageContainer').show();
             });
