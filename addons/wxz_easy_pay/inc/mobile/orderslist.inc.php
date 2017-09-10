@@ -12,7 +12,7 @@ if (!empty($fan) && !empty($fan['openid'])) {
 }
 
 $uid = $userinfo['uid'];
-
+//$uid = 0;//debug
 $search = $_GPC['search'];
 if ($_GPC['ac'] == 'ajaxdele') {
 
