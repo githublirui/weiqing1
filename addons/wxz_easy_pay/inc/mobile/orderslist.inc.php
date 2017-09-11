@@ -102,9 +102,10 @@ if ($_GPC['order_status']) {
     }
 }
 
-if ($_GPC['pay_status'] !== NULL) {
-    $condition .= " AND o.pay_status={$_GPC['pay_status']}";
-}
+//待付款
+//if ($_GPC['pay_status'] !== NULL) {
+//    $condition .= " AND o.pay_status={$_GPC['pay_status']}";
+//}
 
 $order = " order by o.id desc";
 //echo $sql;

@@ -105,9 +105,9 @@
             </div>
 
             <div class="weui_navbar">
-                <div class="weui_navbar_item " {if $_GPC['pay_status']!==NULL} style="background-color:#71C671"{/if}>
+<!--                <div class="weui_navbar_item " {if $_GPC['pay_status']!==NULL} style="background-color:#71C671"{/if}>
                      <a href="{php echo $this->createMobileUrl('orderslist')}&pay_status=0" style="color:#333">待付款</a>
-                </div>
+                </div>-->
                 <div class="weui_navbar_item " {if $_GPC['order_status']==1} style="background-color:#71C671"{/if}>
                      <a href="{php echo $this->createMobileUrl('orderslist')}&order_status=1" style="color:#333">未发货</a>
                 </div>
