@@ -86,29 +86,28 @@ if ($_GPC['ac'] == 'ajaxsend') {
     exit();
 }
 
-$sqlPre = 'SELECT u.nickname as nickname,o.order_status as order_status,p.goodsName as goodsName,o.id as id,p.goodsImg as goodsImg,o.buy_nick as buy_nick, o.cell as cell,o.address as address,o.pay_time as pay_time FROM ' . tablename('hangyi_order') . " as o left join " . tablename('core_paylog') . " as  pl on o.id=pl.tid left join " . tablename('hangyi_product') . " as  p on o.pid=p.id left join " . tablename('hangyi_user') . " as u on u.uid=o.buy_id WHERE ";
+$sqlPre = 'SELECT u.nickname as nickname,o.order_status as order_status,p.goodsName as goodsName,o.id as id,p.goodsImg as goodsImg,o.buy_nick as buy_nick, o.cell as cell,o.address as address,o.pay_time as pay_time FROM ' . tablename('hangyi_order') . " as o left join " . tablename('hangyi_product') . " as  p on o.pid=p.id left join " . tablename('hangyi_user') . " as u on u.uid=o.buy_id WHERE ";
 
 if ($_GPC['order_status']) {
     if ($search) {
-        $condition = "o.sell_id ={$uid} and pl.`status`='1'  and pl.`module`='wxz_easy_pay' and pl.uniacid={$_W['uniacid']} and o.`order_status`='" . $_GPC['order_status'] . "' and (p.goodsName like '%" . $search . "%' or u.nickname like '%" . $search . "%' or o.buy_nick like '%" . $search . "%')";
+        $condition = "o.sell_id ={$uid} AND o.uniacid={$_W['uniacid']} and o.`order_status`='" . $_GPC['order_status'] . "' and (p.goodsName like '%" . $search . "%' or u.nickname like '%" . $search . "%' or o.buy_nick like '%" . $search . "%')";
     } else {
-        $condition = "o.sell_id = {$uid} and pl.`status`='1' and pl.`module`='wxz_easy_pay' and pl.uniacid={$_W['uniacid']} and o.`order_status`='" . $_GPC['order_status'] . "' ";
+        $condition = "o.sell_id = {$uid} AND o.uniacid={$_W['uniacid']} and o.`order_status`='" . $_GPC['order_status'] . "' ";
     }
 } else {
     if ($search) {
-        $condition = "o.sell_id = {$uid} and pl.`status`='1' and pl.`module`='wxz_easy_pay' and pl.uniacid={$_W['uniacid']} and (p.goodsName like '%" . $search . "%' or u.nickname like '%" . $search . "%' or o.buy_nick like '%" . $search . "%')";
+        $condition = "o.sell_id = {$uid} AND o.uniacid={$_W['uniacid']} and (p.goodsName like '%" . $search . "%' or u.nickname like '%" . $search . "%' or o.buy_nick like '%" . $search . "%')";
     } else {
-        $condition = "o.sell_id = {$uid} and pl.`status`='1' and pl.`module`='wxz_easy_pay' and pl.uniacid={$_W['uniacid']}";
+        $condition = "o.sell_id = {$uid} AND o.uniacid={$_W['uniacid']}";
     }
 }
 
 //待付款
-//if ($_GPC['pay_status'] !== NULL) {
-//    $condition .= " AND o.pay_status={$_GPC['pay_status']}";
-//}
+if ($_GPC['pay_status'] !== NULL) {
+    $condition .= " AND o.pay_status={$_GPC['pay_status']}";
+}
 
 $order = " order by o.id desc";
-//echo $sql;
 
 $sql = $sqlPre . $condition . $order;
 

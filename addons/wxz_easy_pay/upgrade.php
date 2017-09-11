@@ -12,6 +12,9 @@ if (!pdo_fieldexists('hangyi_tplset', 'uniacid')) {
 if (!pdo_fieldexists('hangyi_my_rate', 'uniacid')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_my_rate') . " ADD `uniacid` int(10) DEFAULT 0;");
 }
+if (!pdo_fieldexists('hangyi_order', 'uniacid')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `uniacid` int(10) DEFAULT 0;");
+}
 
 if (!pdo_tableexists('hangyi_tplset')) {
     pdo_query("CREATE TABLE " . tablename('hangyi_tplset') . " (

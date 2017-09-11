@@ -74,6 +74,7 @@ if (count($_GPC['morePostPrice']) > 0) {
 //添加商品
 $pids = array();
 $commData = array(
+    'uniacid' => $_W['uniacid'],
     'goodsName' => $_GPC['goodsName'],
     'goodsAtr' => $_GPC['goodsAtr'],
     'remark' => $_GPC['remark'],

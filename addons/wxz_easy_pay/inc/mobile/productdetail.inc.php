@@ -53,6 +53,7 @@ if ($_GPC['ajax']) {
     $goodsPriceTotal = $_GPC['goodsPriceTotal'];
     //生成订单
     $dat['set'] = array(
+        'uniacid' => $_W['uniacid'],
         'buy_openid' => $userinfo['openid'],
         'add_time' => time(),
         'price' => $product['goodsPrice'],
