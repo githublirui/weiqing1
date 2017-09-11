@@ -260,7 +260,7 @@
                             </box>
                             <box>
                                 <a class="sm-btn lessGoodsNum" >-</a>
-                                <input class="weui_input goodsNum" style="width:44px;text-align:center" name="goodsNum" value="0" />
+                                <input readonly="readonly" class="weui_input goodsNum" style="width:44px;text-align:center" name="goodsNum" value="0" />
                                 <a class="sm-btn addGoodsNum">+</a>
                             </box>
                             <!--默认值-->
@@ -434,8 +434,9 @@
                     if (goodsTotal < defaultGoodsPostNum && defaultGoodsPostPrice == 0) {
                          total_money_ret += defaultPostage * 100;
                          $(".defaultGoodsPostPrice").val(defaultPostage);
-                    } else {
+                    } else if(goodsTotal >= defaultGoodsPostNum && defaultGoodsPostPrice != 0) {
                          $(".defaultGoodsPostPrice").val(0);
+                         total_money_ret -= defaultPostage * 100; 
                     }
                     
                     total_money_ret = total_money_ret / 100;
@@ -476,15 +477,18 @@
                     var total_money_ret = (total_money * 100 - goodRet);//新总价
                     
                     //邮费计算
-                    if(goodsNum > 0) {
-                        
-                    }
-                    var defaultGoodsPostPrice = $(".defaultGoodsPostPrice").val() * 1;
-                    if (goodsTotal < defaultGoodsPostNum && defaultGoodsPostPrice == 0) {
-                         total_money_ret += defaultPostage * 100;
-                         $(".defaultGoodsPostPrice").val(defaultPostage);
+                    if(goodsTotal >0) {
+                        var defaultGoodsPostPrice = $(".defaultGoodsPostPrice").val() * 1;
+                        if (goodsTotal < defaultGoodsPostNum && defaultGoodsPostPrice == 0) {
+                             total_money_ret += defaultPostage * 100;
+                             $(".defaultGoodsPostPrice").val(defaultPostage);
+                        } else if(goodsTotal >= defaultGoodsPostNum && defaultGoodsPostPrice != 0) {
+                             $(".defaultGoodsPostPrice").val(0);
+                             total_money_ret -= defaultPostage * 100; 
+                        }
                     } else {
-                         $(".defaultGoodsPostPrice").val(0);
+                        $(".defaultGoodsPostPrice").val(0);
+                        total_money_ret = 0;
                     }
                     
                     total_money_ret = total_money_ret / 100;
@@ -494,41 +498,6 @@
                     $("#goodsTotal").val(goodsTotal);
                 });
                 
-                //重新设置价格
-                function setGoodPrice() {
-                    var total_money = 0;
-                    
-                    $(".product_list").each( function() {
-                        parent = $(this);
-                        var goodsNum = parseInt(parent.find(".goodsNum").val());
-                        var goodPrice = parent.find(".goodPrice").val();
-
-                        //邮费
-                        var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
-                        var defaultPostage = $(".defaultPostage").val();
-
-                        //价格库存
-                        var defaultGoodsPrice = parent.find(".defaultGoodsPrice").val();
-
-                        var goodsTotal = $("#goodsTotal").val() * 1;//商品总数
-                        goodsTotal = goodsTotal <= 0 ? 0 : goodsTotal;
-
-                        var goodPriceNew = getGoodPrice(defaultGoodsPrice,goodsNum,defaultPostage,defaultGoodsPostNum,goodsTotal);
-                       
-                        parent.find(".goodPrice").val(goodPriceNew);//设置新价格
-                        total_money += goodPriceNew * 100;//新总价
-                    });
-                    
-                    if (goodsTotal < defaultGoodsPostNum) {
-                        total_money = defaultPostage * 100;
-                    }
-                    $(".defaultGoodsPostPrice").val(0);
-                    total_money = total_money / 100;
-                    $("#totalmoney").text(total_money);
-                    $("#goodsPriceTotal").val(total_money);
-                    return total_money;
-                }
-
                 //计算价格
                 function getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum,goodsTotal) {
                     var result = 0;
@@ -551,15 +520,24 @@
 
                 $(".city").cityPicker({
                     title: "请选择省市",
-                    onChange: function (data, e, b) {
+                    onClose: function (data) {
                         var pid = {php echo $products[0]['id'];};
                         $.ajax({
-                            url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=getCityPost&pid=" + pid + "&city="+b[0],
+                            url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=getCityPost&pid=" + pid + "&city="+data.displayValue[0],
                             type: "post",
                             dataType: "json",
                             success: function (dat) {
+                                var total_money = $("#goodsPriceTotal").val() * 100;//商品总价
+                                var defaultGoodsPostPrice = $(".defaultGoodsPostPrice").val() * 1;//邮费价格
+                                if(defaultGoodsPostPrice) {
+                                    total_money = total_money - defaultGoodsPostPrice * 100 + dat.postage * 100;
+                                }
+                                
+                                total_money = total_money / 100;
+                                
+                                $("#totalmoney").text(total_money);
                                 $(".defaultPostage").val(dat.postage);
-                                setGoodPrice();
+                                $("#goodsPriceTotal").val(total_money);
                             }
                         });
                     },

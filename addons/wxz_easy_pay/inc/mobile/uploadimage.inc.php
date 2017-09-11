@@ -19,8 +19,6 @@ if (!empty($fan) && !empty($fan['openid'])) {
     $userinfo = mc_oauth_userinfo();
 }
 
-//$userinfo['uid'] = 0; //debug
-        
 if (empty($_GPC['goodsName'])) {
     message('产品名称不能为空');
 }
@@ -79,7 +77,7 @@ $commData = array(
     'goodsName' => $_GPC['goodsName'],
     'goodsAtr' => $_GPC['goodsAtr'],
     'remark' => $_GPC['remark'],
-    'promotion' => (int) $_GPC['promotion'] == 'on' ? 1 : 0,
+    'promotion' => $_GPC['promotion'] == 'on' ? 1 : 0,
     'postage' => $_GPC['post_price'],
     'goodsPostNum' => (int) $_GPC['post_num'],
     'goodsImg' => $p_img_url,
