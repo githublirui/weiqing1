@@ -8,6 +8,14 @@
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/style.css" />
         <script type="text/javascript" src="../addons/wxz_easy_pay/js/jquery.min.js"></script>
         <script type="text/javascript" src="../addons/wxz_easy_pay/js/common.js"></script>
+        <style>
+            .order_manager_list a{
+                color:#000;
+            }
+            .order_manager_list h4{
+                font-weight: normal;
+            }
+        </style>
     </head>
     <body class="order_manager">
         <p class="order_manager_top">昨日营收<span class="red-Clr">{$yestodayMoney}</span>元 昨日成交<span class="red-Clr">{$alltotal}</span>笔</p>
@@ -31,6 +39,13 @@
                     <span class="manager-ico"><img src="../addons/wxz_easy_pay/images/invoice.svg"/></span>
                     <h4>订单管理</h4>
                     <p>未发货{$weifah}笔</p>
+                </a>
+            </li>
+            <li id="shipall">
+                <a href="javascript:void(0)" class="weui_grid js_grid">
+                    <span class="manager-ico"><img src="../addons/wxz_easy_pay/images/delivery-truck.svg"/></span>
+                    <h4>批量发货</h4>
+                    <p>一键发货准确通知</p>
                 </a>
             </li>
         </ul>

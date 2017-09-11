@@ -16,22 +16,32 @@ $setting_font = pdo_get('hangyi_add_font', array('uniacid' => $uniacid));
 
 $products = pdo_getall('hangyi_product', array('batch_id' => $pid));
 
-$sell_info = pdo_get('hangyi_user', array('uid' => $product['uid']));
+$sell_info = pdo_get('hangyi_user', array('uid' => $products[0]['uid']));
 $buy_info = pdo_get('hangyi_user', array('uid' => $userinfo['uid']));
 
 
 if ($_GPC['ajax']) {
-    if (empty($product)) {
-        exit();
-    }
     $buyer_name = $_GPC['buyer_name'];
     $cell = $_GPC['cell'];
     $weixin = $_GPC['weixin'];
     $address = $_GPC['address'];
+    $pids = $_GPC['pids'];
+    $goodsNums = $_GPC['goodsNums'];
     $postscript = $_GPC['postscript'];
     $goodsNum = (int) $_GPC['goodsNum'];
     $sell_openid = $product['openid'];
     $sell_id = $product['uid'];
+    
+    //多价格
+    $buyPids = array();
+    $buyGoodsNums = array();
+    foreach($goodsNums as $k=>$goodsNum) {
+        if($goodsNum > 0) {
+            $buyPids[] = $pids[$k];
+            $buyGoodsNums[] = $goodsNums[$k];
+        }
+    }
+    
     if ($goodsNum < 1) {
         $goodsNum = 1;
     }
@@ -57,6 +67,8 @@ if ($_GPC['ajax']) {
         'pay_status' => 1,
         'order_status' => 1,
         'pid' => $pid,
+        'pids' => implode(',', $buyPids),
+        'goodsNums' => implode(',', $buyGoodsNums),
         'postscript' => $postscript,
         'sell_openid' => $sell_openid,
         'buy_nickname' => $userinfo['nickname'],

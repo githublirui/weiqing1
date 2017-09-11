@@ -267,6 +267,7 @@
                             <input type="hidden" value="{$product['goodsPrice']}" class="defaultGoodsPrice" />
                             <input type="hidden" value="{$product['goodsStock']}" class="defaultGoodsStock" />
                             <input type="hidden" value="{$product['promotion']}" class="defaultPromotion" />
+                            <input type="hidden" value="{$product['id']}" class="pids" />
                             <!--/默认值-->
                             <input type="hidden" value="0" class="goodPrice" />
                         </box>
@@ -335,31 +336,44 @@
             </div>
             <script>
                 function postOrder() {
-                    var pid = {$pid};
-                    var goodsNum = parseInt($("#goodsNum").val());
+                    var pids = new Array();
+                    var goodsNums = new Array();
+                    
+                    $(".product_list").each( function() {
+                        pids.push($(this).find(".pids").val());
+                        goodsNums.push($(this).find(".goodsNum").val());
+                    });
+                 
                     var buyer_name = $("#buyer_name").val();
                     var goodsPriceTotal = $("#goodsPriceTotal").val();
-
+                    var cell = $("#cell").val();
+                    var reg = /^1[0-9]{10}$/;
+                    var weixin = $("#weixin").val();
+                    var address = $("#address").val();
+                    var city = $(".city").val();
+                    var postscript = $("#postscript").val();
+                    
+                    if(goodsPriceTotal ==0) {
+                        alert("未选择商品");
+                        return false; 
+                    }
                     if (!buyer_name) {
                         alert("收货人没有填写");
                         return false;
                     }
 
-                    var cell = $("#cell").val();
+           
                     if (!cell) {
                         alert("手机号码没有填写");
                         return false;
                     }
 
-                    var reg = /^1[0-9]{10}$/;
+               
                     if (!reg.test(cell)) {
                         alert("手机号码格式不正确");
                         return false;
                     }
 
-                    var weixin = $("#weixin").val();
-                    var address = $("#address").val();
-                    var city = $(".city").val();
                     if (!city) {
                         alert("请选择省市");
                         return false;
@@ -368,15 +382,14 @@
                         alert("收货地址必须填写");
                         return false;
                     }
-                    var postscript = $("#postscript").val();
                     if (!postscript) {
                         //alert("买家留言没有填写");
                         //return false;
                     }
                     $.ajax({
-                        url: "{php echo $this->createMobileUrl('productdetail')}&ajax=1}",
+                        url: "{php echo $this->createMobileUrl('productdetail')}&ajax=1",
                         type: 'POST',
-                        data: {'postscript': postscript, 'pid': pid, 'goodsNum': goodsNum, 'goodsPriceTotal': goodsPriceTotal, 'buyer_name': buyer_name, 'cell': cell, 'weixin': weixin, 'city': city, 'address': address},
+                        data: {'postscript': postscript,'pid':{$products[0]['id']}, 'pids': pids, 'goodsNums': goodsNums, 'goodsPriceTotal': goodsPriceTotal, 'buyer_name': buyer_name, 'cell': cell, 'weixin': weixin, 'city': city, 'address': address},
                         success: function (res) {
                             if (res) {
                                 window.location.href = "{php echo $this->createMobileUrl('dopay')}&orderid=" + res;

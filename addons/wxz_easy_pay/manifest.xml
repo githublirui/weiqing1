@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-简单支付交易平台]]></name>
         <identifie><![CDATA[wxz_easy_pay]]></identifie>
-        <version><![CDATA[3.0.0]]></version>
+        <version><![CDATA[3.0.1]]></version>
         <type><![CDATA[business]]></type>
         <ability><![CDATA[小智-简单支付]]></ability>
         <description><![CDATA[小智-简单支付]]></description>
@@ -90,6 +90,8 @@ CREATE TABLE `ims_hangyi_order` (
   `add_time` int(10) DEFAULT NULL,
   `fh_time` int(10) DEFAULT NULL,
   `sell_id` int(11) DEFAULT NULL,
+  `pids` varchar(50) DEFAULT NULL,
+  `goodsNums`  varchar(50) DEFAULT '' COMMENT '产品数',
   `goodsName` varchar(255) DEFAULT NULL,
   `goodsNum` int(11) DEFAULT '1' COMMENT '产品数',
   `goodsPriceTotal` varchar(255) DEFAULT NULL,

@@ -42,17 +42,22 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
         global $_GPC, $_W;
         $uniacid = $_W['uniacid'];
         if ($params['result'] == 'success' && $params['from'] == 'notify') {
-            $pid = $params['tid'];
+            $oid = $params['tid'];
             $account = $_W['account'];
-            $orders = pdo_get('hangyi_order', array('id' => $pid));
-            $orders_pay_log = pdo_get('core_paylog', array('tid' => $pid, 'uniacid' => $uniacid));
+            $orders = pdo_get('hangyi_order', array('id' => $oid));
+            $orders_pay_log = pdo_get('core_paylog', array('tid' => $oid, 'uniacid' => $uniacid));
             if ($orders_pay_log['status'] == 1) {
-                $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `pay_time`='" . time() . "',`pay_status`=2  WHERE id = '" . $pid . "' limit 1");
+                $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `pay_time`='" . time() . "',`pay_status`=2  WHERE id = '" . $oid . "' limit 1");
             } else {
                 exit();
             }
-            //$result = pdo_query("UPDATE ".tablename('hangyi_order')." SET `pay_time`='".time()."'  WHERE id = '".$pid."' limit 1");
-            $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `sell_num`=`sell_num`+1,`goodsStock`=`goodsStock`-1  WHERE id = '" . $pid . "' limit 1");
+            
+            $pids = $orders['pids'];
+            $goodsNums = $orders['goodsNums'];
+            foreach ($pids as $k => $pid) {
+                $sellNum = $goodsNums[$k];
+                $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `sell_num`=`sell_num`+{$sellNum},`goodsStock`=`goodsStock`-{$sellNum}  WHERE id = '" . $pid . "' limit 1");
+            }
 
             load()->classs('weixin.account');
             $acc = new WeiXinAccount($account);
@@ -61,7 +66,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             if ($setting_fh['status']) {
                 $data = array(
                     'first' => array(
-                        'value' => "单号" . $pid . "，买家" . $orders['buy_nickname'] . "支付成功",
+                        'value' => "单号" . $oid . "，买家" . $orders['buy_nickname'] . "支付成功",
                         'color' => $setting_fh['title_color']
                     ),
                     'orderMoneySum' => array(
@@ -81,7 +86,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             } else {
                 $data = array(
                     'first' => array(
-                        'value' => "单号" . $pid . "，买家" . $orders['buy_nickname'] . "支付成功",
+                        'value' => "单号" . $oid . "，买家" . $orders['buy_nickname'] . "支付成功",
                         'color' => '#ff510'
                     ),
                     'orderMoneySum' => array(
@@ -102,7 +107,6 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
 
 
             //企业付款
-
             $setting = pdo_get('hangyi_peizhi', array('id' => 1));
             if (empty($setting['paysell_isauto'])) {
                 exit();
@@ -110,11 +114,11 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             if ($setting['paysell_isauto'] != 1) {
                 exit();
             }
-            $orders = pdo_get('hangyi_order', array('id' => $pid));
+            $orders = pdo_get('hangyi_order', array('id' => $oid));
             $uniacid = $_W['uniacid'];
             //file_put_contents(IA_ROOT."/1.txt","uniacid=>".$uniacid);
             $orderinfo = $orders;
-            $orderinfo_pay = pdo_get('core_paylog', array('tid' => $pid, "status" => 1, "uniacid" => $uniacid, "module" => "wxz_easy_pay"));
+            $orderinfo_pay = pdo_get('core_paylog', array('tid' => $oid, "status" => 1, "uniacid" => $uniacid, "module" => "wxz_easy_pay"));
             //file_put_contents(IA_ROOT."/2.txt","orderinfo_pay=>".json_encode($orderinfo_pay));die;
             $my_rate = pdo_get('hangyi_my_rate', array('id' => 1));
 
@@ -227,7 +231,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
 
             if ($responseObj->return_code == "SUCCESS" && $responseObj->result_code == "SUCCESS") {
 
-                $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `give_money`='" . ($send_money) . "',`we_pay_sell_status`='2',`qi_pay_time`='" . time() . "'  WHERE id = '" . $pid . "' and `we_pay_sell_status`=1 limit 1");
+                $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `give_money`='" . ($send_money) . "',`we_pay_sell_status`='2',`qi_pay_time`='" . time() . "'  WHERE id = '" . $oid . "' and `we_pay_sell_status`=1 limit 1");
                 //	echo "ok";
             } else {
                 //	echo ($responseObj->err_code_des);
@@ -252,7 +256,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
         //如果是JS版的支付此处的跳转则没有意义
         if ($params['from'] == 'return') {
             if ($params['result'] == 'success') {
-                $pid = $params['tid'];
+                $oid = $params['tid'];
 
 
 

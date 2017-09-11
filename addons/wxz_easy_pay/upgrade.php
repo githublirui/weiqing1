@@ -80,6 +80,13 @@ if (!pdo_fieldexists('hangyi_product', 'batch_id')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `batch_id` int(10) DEFAULT 0;");
 }
 
+if (!pdo_fieldexists('hangyi_order', 'pids')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `pids` varchar(50) DEFAULT 0;");
+}
+if (!pdo_fieldexists('hangyi_order', 'goodsNums')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `goodsNums` varchar(50) DEFAULT 0;");
+}
+
 if (!pdo_tableexists('wxz_easy_pay_post_tpl')) {
     pdo_query("CREATE TABLE " . tablename('wxz_easy_pay_post_tpl') . " (
    `id` INT(11) NOT NULL AUTO_INCREMENT,

@@ -10,13 +10,12 @@ if (!empty($fan) && !empty($fan['openid'])) {
 }
 
 $uid = $userinfo['uid'];
+//$uid = 1; //debug
 
 if ($_GPC['ac'] == 'ajaxshipall' && $uid) {
     $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `order_status`='2'  WHERE `sell_id` = '" . $uid . "'  and `order_status`=1 ");
-    if ($result) {
-        echo "ok";
-    }
-    exit();
+    echo "ok";
+    exit;
 }
 
 $today = date("Y-m-d");
