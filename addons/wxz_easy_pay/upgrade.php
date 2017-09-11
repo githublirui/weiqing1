@@ -76,6 +76,9 @@ if (!pdo_fieldexists('hangyi_product', 'postage')) {
 if (!pdo_fieldexists('hangyi_product', 'goodsPostNum')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `goodsPostNum` int(10) DEFAULT 0;");
 }
+if (!pdo_fieldexists('hangyi_product', 'batch_id')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_product') . " ADD `batch_id` int(10) DEFAULT 0;");
+}
 
 if (!pdo_tableexists('wxz_easy_pay_post_tpl')) {
     pdo_query("CREATE TABLE " . tablename('wxz_easy_pay_post_tpl') . " (

@@ -19,6 +19,8 @@ if (!empty($fan) && !empty($fan['openid'])) {
     $userinfo = mc_oauth_userinfo();
 }
 
+//$userinfo['uid'] = 0; //debug
+        
 if (empty($_GPC['goodsName'])) {
     message('产品名称不能为空');
 }
@@ -168,6 +170,7 @@ if ($setting['img_text']) {
 $font = '../addons/wxz_easy_pay/font/msyhbd.ttf';
 $font2 = '../addons/wxz_easy_pay/font/msyh.ttf';
 $pid = $pids[0];
+
 $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "/app" . $this->createMobileUrl('productdetail') . "&pid=" . $pid;
 $url2 = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "/app" . $this->createMobileUrl('ordershow') . "&orderid=" . $pid;
 $url3 = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
@@ -224,7 +227,8 @@ $df = file_put_contents($path, $img);
 if ($df) {
     $file_url = $uploadUrl . $fileNmae;
     //更新支付图片
-    $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `goodsCode`='" . $file_url . "'  WHERE id = '" . $pid . "' limit 1");
+    //更新批次号
+    $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `goodsCode`='" . $file_url . "', `batch_id`='" . $pid . "'  WHERE id in (" . implode(',', $pids) . ")");
     include $this->template('upimg');
 }
 

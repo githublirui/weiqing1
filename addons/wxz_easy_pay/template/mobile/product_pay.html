@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
         <title>微信支付</title>
-        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui_new.min" />
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/share.css">
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/vux.css">
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/styleb.css">
@@ -231,21 +230,9 @@
                     </div>
                     <p v-show="items.length==1"><span class="page_desc">{$product['goodsName']}</span></p>
                     <h1 class="money" v-on:click="click_num++"><span style="font-size:64px;font-weight: 300;line-height:1.2" id="totalmoney">
-                            {if $product['goodsPostNum']==1}
-                            {$product['goodsPrice']}
-                            {else}
-                            {php echo $product['goodsPrice'] + $product['postage'];}
-                            {/if}
+                      0
                         </span>元</h1>
                     <div style="margin:0 0 5px 0 ">
-                        </span>
-                        {if $product['postage']}
-                        <span class="tag" v-show="shipping_cost_total>0">
-                            邮费{$product['postage']}元{if $product['goodsPostNum']}满{$product['goodsPostNum']}件包邮{/if}
-                        </span>
-                        {else}
-                        <span class="tag" v-show="shipping_cost_total==0 && item.type==1 && pick_up==0">包邮
-                            {/if}
                             <!--
                                                <span class="tag" v-show="coupons.length>0">优惠券已减1元</span>
                                                <span class="tag" v-show="discount_money>0">店家优惠1元</span>
@@ -260,38 +247,40 @@
 
 
                 <form id="orderform" class="" action="{php echo $this->createMobileUrl('dopay')}" method="POST">
-                    <!--默认值-->
-                    <input type="hidden" value="{$product['goodsPrice']}" class="defaultGoodsPrice" />
-                    <input type="hidden" value="{$product['postage']}" class="defaultPostage" />
-                    <input type="hidden" value="{$product['goodsPostNum']}" class="defaultGoodsPostNum" />
-                    <input type="hidden" value="{$product['goodsStock']}" class="defaultGoodsStock" />
-                    <!--/默认值-->
-
                     <div class="weui_cells">
                         <input type="hidden" name="pid" value="{$pid}">
-                        <box class="weui_cell" style="justify-content:flex-end;align-items:center;padding:10px 15px" v-for="gitem in items" v-show="(gitem.type!=2 && gitem.type!=12 && gitem.type!=101) || items.length>1" v-if="item.type!=3">
+                        {php foreach($products as $product) {}
+                        <box class="weui_cell product_list" style="justify-content:flex-end;align-items:center;padding:10px 15px" v-for="gitem in items" v-show="(gitem.type!=2 && gitem.type!=12 && gitem.type!=101) || items.length>1" v-if="item.type!=3">
                             <box style="flex:1;padding-right:10px;flex-direction: column">
                                 <box style="align-items: center">
-                                    <span v-show="items.length==1">购买数量 </span>
+                                    <span v-show="items.length==1">{$product['goodsName']} </span>
+                                    <span style="color:red;">{$product['goodsNameExt']} </span>
+                                    <span style="color:#D1B755;"><span class="postText">满{$product['goodsPostNum']}件包邮</span>{if $product['promotion']}限购一件{/if}</span>
                                 </box>
                             </box>
                             <box>
-                                <a class="sm-btn"  onclick="remove_item()">-</a>
-                                <input class="weui_input" style="width:44px;text-align:center" id="goodsNum" name="goodsNum" value="1" />
-                                <a class="sm-btn" onclick="add_item()">+</a>
+                                <a class="sm-btn lessGoodsNum" >-</a>
+                                <input class="weui_input goodsNum" style="width:44px;text-align:center" name="goodsNum" value="0" />
+                                <a class="sm-btn addGoodsNum">+</a>
                             </box>
+                            <!--默认值-->
+                            <input type="hidden" value="{$product['goodsPrice']}" class="defaultGoodsPrice" />
+                            <input type="hidden" value="{$product['goodsStock']}" class="defaultGoodsStock" />
+                            <input type="hidden" value="{$product['promotion']}" class="defaultPromotion" />
+                            <!--/默认值-->
+                            <input type="hidden" value="0" class="goodPrice" />
                         </box>
-                        <div class="weui_cell">
+                        {php } }
+                            <input type="hidden" value="{$products[0]['postage']}" class="defaultPostage" />
+                            <input type="hidden" value="{$products[0]['goodsPostNum']}" class="defaultGoodsPostNum" />
+                            <input type="hidden" value="0" class="defaultGoodsPostPrice" />
+<!--                        <div class="weui_cell">
                             <div class="weui_cell_hd"><label class="weui_label weui_label_wide">付款金额</label></div>
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <input name="goodsPriceTotal" id="goodsPriceTotal" value="{if $product['goodsPostNum']==1}{$product['goodsPrice']}{else}{php echo $product['goodsPrice'] + $product['postage'];}{/if}" class="weui_input" type="type" placeholder="和卖家商议后的付款金额" v-model="item.num">
-                            </div>
-                        </div>
-                        <div class="weui_cell">
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <textarea name="postscript" id="postscript" class="weui_textarea" placeholder="买家购买什么商品的留言(选填)" rows="2"></textarea>
-                            </div>
-                        </div>
+                            <div class="weui_cell_bd weui_cell_primary">-->
+                                <input type='hidden' name="goodsPriceTotal" id="goodsPriceTotal" value="0" class="weui_input" type="type" placeholder="和卖家商议后的付款金额" v-model="item.num">
+                                <input type='hidden' name="goodsTotal" id="goodsTotal" value="0" class="weui_input" type="type" v-model="item.num">
+<!--                            </div>
+                        </div>-->
                     </div>
 
                     <div class="weui_cells_title" style="text-align:center">
@@ -329,7 +318,11 @@
                                 <textarea v-show="pick_up==0" id="address" name="address" class="weui_textarea" placeholder="收货地址(如需快递请填写）" v-model="address" rows="2">{$order_address}</textarea>
                             </div>
                         </div>
-
+                        <div class="weui_cell">
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <textarea name="postscript" id="postscript" class="weui_textarea" placeholder="买家购买什么商品的留言(选填)" rows="2"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </form>
                 <div class="weui_cells_title" style="color:#ff6600;text-align:center;font-size:12px;">
@@ -396,77 +389,177 @@
 
                 }
 
-                //删除购买数量
-                function remove_item() {
-                    var goodsNum = parseInt($("#goodsNum").val());
+                //添加商品购买数量
+                $(".addGoodsNum").click( function() {
+                    var parent = $(this).parent().parent();
+                    
+                    var goodsNum = parseInt(parent.find(".goodsNum").val());
+                    var goodPrice = parent.find(".goodPrice").val();
+                    
+                    //邮费
                     var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
                     var defaultPostage = $(".defaultPostage").val();
-                    var defaultGoodsPrice = $(".defaultGoodsPrice").val();
-                    var goodsStock = parseInt($(".defaultGoodsStock").val());
-                    goodsNum = goodsNum - 1;
-                    if (goodsNum > 0) {
-                        $("#goodsNum").attr("value", goodsNum);
-                        var total_money = getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum);
-                        $("#totalmoney").text(total_money);
-                        $("#goodsPriceTotal").val(total_money);
-                    }
-                }
-
-                //添加购买数量
-                function add_item() {
-                    var goodsNum = parseInt($("#goodsNum").val());
-                    var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
-                    var defaultPostage = $(".defaultPostage").val();
-                    var defaultGoodsPrice = $(".defaultGoodsPrice").val();
-                    var goodsStock = parseInt($(".defaultGoodsStock").val());
+                    
+                    //价格库存
+                    var defaultGoodsPrice = parent.find(".defaultGoodsPrice").val();
+                    var goodsStock = parseInt(parent.find(".defaultGoodsStock").val());
+                    
+                    //限购
+                    var defaultPromotion = parent.find(".defaultPromotion").val();
+                  
                     goodsNum = goodsNum + 1;
+                    
+                    var total_money = $("#goodsPriceTotal").val();
+                    var goodsTotal = $("#goodsTotal").val() * 1 + 1;//商品总数
+               
+                    if(goodsNum > 1 && defaultPromotion==1) {
+                        alert("促销只能购买一件");
+                        return;
+                    }
                     if (goodsStock < goodsNum) {
                         alert("商品库存不够");
                         return false;
                     }
-                    if (goodsNum > 0) {
-                        $("#goodsNum").attr("value", goodsNum);
-                        var total_money = getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum);
-                        $("#totalmoney").text(total_money);
-                        $("#goodsPriceTotal").val(total_money);
+                    
+                    parseInt(parent.find(".goodsNum").val(goodsNum));
+                    var goodPriceNew = getGoodPrice(defaultGoodsPrice,goodsNum,defaultPostage,defaultGoodsPostNum,goodsTotal);
+                 
+                    var goodRet = goodPriceNew * 100 - goodPrice * 100;//价格差
+                    
+                    parent.find(".goodPrice").val(goodPriceNew);//设置新价格
+                    var total_money_ret = (total_money * 100 + goodRet);//新总价
+                    
+                    //邮费计算
+                    var defaultGoodsPostPrice = $(".defaultGoodsPostPrice").val() * 1;
+                    if (goodsTotal < defaultGoodsPostNum && defaultGoodsPostPrice == 0) {
+                         total_money_ret += defaultPostage * 100;
+                         $(".defaultGoodsPostPrice").val(defaultPostage);
+                    } else {
+                         $(".defaultGoodsPostPrice").val(0);
                     }
+                    
+                    total_money_ret = total_money_ret / 100;
+                    
+                    $("#totalmoney").text(total_money_ret);
+                    $("#goodsPriceTotal").val(total_money_ret);
+                    $("#goodsTotal").val(goodsTotal);
+                });
+                
+                //减少商品购买数量
+                 $(".lessGoodsNum").click( function() {
+                    var parent = $(this).parent().parent();
+                    
+                    var goodsNum = parseInt(parent.find(".goodsNum").val());
+                    var goodPrice = parent.find(".goodPrice").val();
+
+                    //邮费
+                    var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
+                    var defaultPostage = $(".defaultPostage").val();
+                    
+                    //价格库存
+                    var defaultGoodsPrice = parent.find(".defaultGoodsPrice").val();
+                    var goodsStock = parseInt(parent.find(".defaultGoodsStock").val());
+                    
+                    goodsNum = goodsNum - 1;
+                    goodsNum= goodsNum <= 0 ? 0 : goodsNum;
+                   
+                    var total_money = $("#goodsPriceTotal").val();
+                    var goodsTotal = $("#goodsTotal").val() * 1 - 1;//商品总数
+                    goodsTotal = goodsTotal <= 0 ? 0 : goodsTotal;
+                    
+                    parseInt(parent.find(".goodsNum").val(goodsNum));
+                    
+                    var goodPriceNew = getGoodPrice(defaultGoodsPrice,goodsNum,defaultPostage,defaultGoodsPostNum,goodsTotal);
+                    
+                    var goodRet = goodPrice * 100 - goodPriceNew * 100;//价格差
+                    parent.find(".goodPrice").val(goodPriceNew);//设置新价格
+                    var total_money_ret = (total_money * 100 - goodRet);//新总价
+                    
+                    //邮费计算
+                    if(goodsNum > 0) {
+                        
+                    }
+                    var defaultGoodsPostPrice = $(".defaultGoodsPostPrice").val() * 1;
+                    if (goodsTotal < defaultGoodsPostNum && defaultGoodsPostPrice == 0) {
+                         total_money_ret += defaultPostage * 100;
+                         $(".defaultGoodsPostPrice").val(defaultPostage);
+                    } else {
+                         $(".defaultGoodsPostPrice").val(0);
+                    }
+                    
+                    total_money_ret = total_money_ret / 100;
+                    
+                    $("#totalmoney").text(total_money_ret);
+                    $("#goodsPriceTotal").val(total_money_ret);
+                    $("#goodsTotal").val(goodsTotal);
+                });
+                
+                //重新设置价格
+                function setGoodPrice() {
+                    var total_money = 0;
+                    
+                    $(".product_list").each( function() {
+                        parent = $(this);
+                        var goodsNum = parseInt(parent.find(".goodsNum").val());
+                        var goodPrice = parent.find(".goodPrice").val();
+
+                        //邮费
+                        var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
+                        var defaultPostage = $(".defaultPostage").val();
+
+                        //价格库存
+                        var defaultGoodsPrice = parent.find(".defaultGoodsPrice").val();
+
+                        var goodsTotal = $("#goodsTotal").val() * 1;//商品总数
+                        goodsTotal = goodsTotal <= 0 ? 0 : goodsTotal;
+
+                        var goodPriceNew = getGoodPrice(defaultGoodsPrice,goodsNum,defaultPostage,defaultGoodsPostNum,goodsTotal);
+                       
+                        parent.find(".goodPrice").val(goodPriceNew);//设置新价格
+                        total_money += goodPriceNew * 100;//新总价
+                    });
+                    
+                    if (goodsTotal < defaultGoodsPostNum) {
+                        total_money = defaultPostage * 100;
+                    }
+                    $(".defaultGoodsPostPrice").val(0);
+                    total_money = total_money / 100;
+                    $("#totalmoney").text(total_money);
+                    $("#goodsPriceTotal").val(total_money);
+                    return total_money;
                 }
 
                 //计算价格
-                function getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum) {
+                function getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum,goodsTotal) {
                     var result = 0;
                     if (goodsNum <= 0) {
                         return 0;
                     }
-
-                    if (goodsNum >= defaultGoodsPostNum) {
+                    
+                    if (goodsTotal >= defaultGoodsPostNum) {
                         //包邮
-                        result = defaultGoodsPrice * goodsNum;
+                        result = defaultGoodsPrice * goodsNum * 100;
+                        $(".postText").html('包邮');
                     } else {
-                        result = defaultGoodsPrice * goodsNum * 100 + defaultPostage * 100;
-                        result = result / 100;
+                        result = defaultGoodsPrice * goodsNum * 100;
+                        $(".postText").html('满'+defaultGoodsPostNum+'件包邮');
                     }
+                    
+                    result = result / 100;
                     return result;
                 }
 
                 $(".city").cityPicker({
                     title: "请选择省市",
                     onChange: function (data, e, b) {
-                        var pid = {$product['id']};
+                        var pid = {php echo $products[0]['id'];};
                         $.ajax({
                             url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=getCityPost&pid=" + pid + "&city="+b[0],
                             type: "post",
                             dataType: "json",
                             success: function (dat) {
                                 $(".defaultPostage").val(dat.postage);
-                                var goodsNum = parseInt($("#goodsNum").val());
-                                var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
-                                var defaultPostage = $(".defaultPostage").val();
-                                var defaultGoodsPrice = $(".defaultGoodsPrice").val();
-                                var goodsStock = parseInt($(".defaultGoodsStock").val());
-                                 var total_money = getGoodPrice(defaultGoodsPrice, goodsNum, defaultPostage, defaultGoodsPostNum);
-                                $("#totalmoney").text(total_money);
-                                $("#goodsPriceTotal").val(total_money);
+                                setGoodPrice();
                             }
                         });
                     },

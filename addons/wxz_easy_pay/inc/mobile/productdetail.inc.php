@@ -13,9 +13,13 @@ if (!empty($fan) && !empty($fan['openid'])) {
 $pid = (int) $_GPC['pid'];
 $uniacid = $_W['uniacid'];
 $setting_font = pdo_get('hangyi_add_font', array('uniacid' => $uniacid));
-$product = pdo_get('hangyi_product', array('id' => $pid));
+
+$products = pdo_getall('hangyi_product', array('batch_id' => $pid));
+
 $sell_info = pdo_get('hangyi_user', array('uid' => $product['uid']));
 $buy_info = pdo_get('hangyi_user', array('uid' => $userinfo['uid']));
+
+
 if ($_GPC['ajax']) {
     if (empty($product)) {
         exit();
@@ -76,7 +80,7 @@ if ($_GPC['ajax']) {
     exit();
 }
 
-if ($product) {
+if ($products) {
     $realname = $buy_info['realname'];
     $tel = $buy_info['tel'];
     $order_address = $buy_info['order_address'];
