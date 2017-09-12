@@ -34,10 +34,16 @@ foreach ($_GPC['moreDesc'] as $k => $row) {
     if (!$_GPC['moreDesc'][$k] || !$_GPC['morePrice'][$k] || !$_GPC['moreStock'][$k]) {
         unset($_GPC['moreDesc'][$k], $_GPC['morePrice'][$k], $_GPC['moreStock'][$k]);
     }
+    if (!is_numeric($_GPC['morePrice'][$k])) {
+        message('商品价格必须是数字');
+    }
 }
 foreach ($_GPC['morePostPrice'] as $k => $row) {
     if (!$_GPC['morePostPrice'][$k] || !$_GPC['moreCity'][$k]) {
         unset($_GPC['morePostPrice'][$k], $_GPC['moreCity'][$k]);
+    }
+    if (!is_numeric($_GPC['morePostPrice'][$k])) {
+        message('邮费价格必须是数字');
     }
 }
 
@@ -59,7 +65,7 @@ if (count($_GPC['morePostPrice']) > 0) {
             'uniacid' => $_W['uniacid'],
             'uid' => $userinfo['uid'],
             'flag' => $flag,
-            'postage' => $_GPC['more_post_price'],
+            'postage' => floatval($_GPC['more_post_price']),
             'goodsPostNum' => (int) $_GPC['post_num'],
             'desc' => $desc,
             'create_at' => time(),
@@ -79,7 +85,7 @@ $commData = array(
     'goodsAtr' => $_GPC['goodsAtr'],
     'remark' => $_GPC['remark'],
     'promotion' => $_GPC['promotion'] == 'on' ? 1 : 0,
-    'postage' => $_GPC['post_price'],
+    'postage' => floatval($_GPC['post_price']),
     'goodsPostNum' => (int) $_GPC['post_num'],
     'goodsImg' => $p_img_url,
     'goodsSince' => $_GPC['goodsSince'] == 'on' ? 2 : 1,
@@ -107,6 +113,9 @@ if (count($_GPC['moreDesc']) > 0) {
         }
     }
 } else {
+    if (!is_numeric($_GPC['goodsPrice'])) {
+        message('商品价格必须是数字');
+    }
     //将商品信息存入数据库
     $insertData = $commData;
     $insertData['goodsPrice'] = $_GPC['goodsPrice'];
