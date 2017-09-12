@@ -225,9 +225,9 @@
         <div>
             <div v-show="item && item.status==1 && seller.verified!=3">
                 <div class="hd" style="">
-                    <div style="margin:0 0 5px 0 " v-show="openid==seller.openid" >
+<!--                    <div style="margin:0 0 5px 0 " v-show="openid==seller.openid" >
                         <a class="tag" href="{php echo $this->createMobileUrl('orders')}">管理我的商品</a> 
-                    </div>
+                    </div>-->
                     <p v-show="items.length==1"><span class="page_desc">{$product['goodsName']}</span></p>
                     <h1 class="money" v-on:click="click_num++"><span style="font-size:64px;font-weight: 300;line-height:1.2" id="totalmoney">
                       0
