@@ -18,7 +18,7 @@ if ($_GPC['openid']) {
     $_SESSION['__:proxy:WXZ_PANORAMA_OPENID'] = $quanjing_openid;
 }
 //判断是否中奖，分享
-$sql = "select * from " . tablename('wxz_panorama_win') . " where fans_id =" . $user["uid"]." order by id desc";
+$sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"]." order by id desc";
 $wins = pdo_fetchall($sql, $pars);
 
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
