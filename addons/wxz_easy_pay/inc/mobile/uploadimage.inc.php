@@ -33,6 +33,7 @@ $p_img_url = uploadFile();
 foreach ($_GPC['moreDesc'] as $k => $row) {
     if (!$_GPC['moreDesc'][$k] || !$_GPC['morePrice'][$k] || !$_GPC['moreStock'][$k]) {
         unset($_GPC['moreDesc'][$k], $_GPC['morePrice'][$k], $_GPC['moreStock'][$k]);
+        continue;
     }
     if (!is_numeric($_GPC['morePrice'][$k])) {
         message('商品价格必须是数字');
@@ -41,6 +42,7 @@ foreach ($_GPC['moreDesc'] as $k => $row) {
 foreach ($_GPC['morePostPrice'] as $k => $row) {
     if (!$_GPC['morePostPrice'][$k] || !$_GPC['moreCity'][$k]) {
         unset($_GPC['morePostPrice'][$k], $_GPC['moreCity'][$k]);
+        continue;
     }
     if (!is_numeric($_GPC['morePostPrice'][$k])) {
         message('邮费价格必须是数字');

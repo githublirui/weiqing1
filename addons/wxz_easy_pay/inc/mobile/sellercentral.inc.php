@@ -33,16 +33,18 @@ $dat['set'] = array(
     'headimgurl' => $userinfo['headimgurl'],
     'uid' => $userinfo['uid']
 );
-$userinfo = pdo_get('hangyi_user', array('openid' => $openid));
 
-if (!$userinfo['tel'] || !$userinfo['weixin']) {
+$tableUserInfo = pdo_get('hangyi_user', array('openid' => $openid));
+if (!$tableUserInfo) {
+    $result = pdo_insert('hangyi_user', $dat['set']);
+}
+
+if (!$tableUserInfo['tel'] || !$tableUserInfo['weixin']) {
     message('请先完善信息', $this->createMobileUrl('savesell'));
 }
 
 $setting = pdo_get('hangyi_peizhi', array('uniacid' => $uniacid));
-if (!$userinfo) {
-    $result = pdo_insert('hangyi_user', $dat['set']);
-}
+
 
 //获取历史邮费
 $condition = "uid={$userinfo['uid']}";
