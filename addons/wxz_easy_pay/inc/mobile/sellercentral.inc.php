@@ -38,7 +38,6 @@ $tableUserInfo = pdo_get('hangyi_user', array('openid' => $openid));
 if (!$tableUserInfo) {
     $result = pdo_insert('hangyi_user', $dat['set']);
 }
-
 if (!$tableUserInfo['tel'] || !$tableUserInfo['weixin']) {
     message('请先完善信息', $this->createMobileUrl('savesell'));
 }

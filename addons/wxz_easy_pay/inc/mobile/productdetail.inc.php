@@ -35,17 +35,17 @@ if ($_GPC['ajax']) {
     $goodsNum = (int) $_GPC['goodsNum'];
     $sell_openid = $product['openid'];
     $sell_id = $product['uid'];
-
+    
     //多价格
     $buyPids = array();
     $buyGoodsNums = array();
-    foreach ($goodsNums as $k => $goodsNum) {
-        if ($goodsNum > 0) {
+    foreach($goodsNums as $k=>$goodsNum) {
+        if($goodsNum > 0) {
             $buyPids[] = $pids[$k];
             $buyGoodsNums[] = $goodsNums[$k];
         }
     }
-
+    
     if ($goodsNum < 1) {
         $goodsNum = 1;
     }

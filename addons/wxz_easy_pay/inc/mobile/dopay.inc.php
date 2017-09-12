@@ -15,10 +15,8 @@ if (!empty($fan) && !empty($fan['openid'])) {
     $userinfo = mc_oauth_userinfo();
 }
 
-
 $i = $_GPC['i'];
 $gzhinfo = $_W['cache']['uniaccount:' . $i];
-
 
 $orderid = (INT) $_GPC['orderid'];
 if ($orderid) {
@@ -30,26 +28,26 @@ if (!$orderinfo) {
 if ($orderinfo['sell_id'] && $orderinfo['sell_openid']) {
     $sell_info = pdo_get('hangyi_user', array('uid' => $orderinfo['sell_id']));
 }
-if ($sell_info['nickname'] && $sell_info['openid'] == $orderinfo['sell_openid']) {
-    
-} else {
-    exit();
-}
 
 $peizhi = pdo_get('hangyi_peizhi', array('uniacid' => $uniacid));
 
-$pids = $orderinfo['pids'];
-$pids = explode(',', $pids);
-$productinfos = array();
-foreach($pids as $pid) {
-   $productinfos[$pid] = pdo_get('hangyi_product', array('id' => $pid));
-   if ($productinfo['goodsStock'] <= 0) {
-        message('该商品已经售完');
-        exit();
-   }
+if ($orderinfo['pids']) {
+    $pids = $orderinfo['pids'];
+    $pids = explode(',', $pids);
+} else {
+    $pids = [$orderinfo['pid']];
 }
 
-//$goodsPriceTotal = $productinfo['goodsPrice']*$orderinfo['goodsNum'];
+$productinfos = array();
+foreach ($pids as $pid) {
+    $productinfos[$pid] = pdo_get('hangyi_product', array('id' => $pid));
+    if ($productinfos[$pid]['goodsStock'] <= 0) {
+        message('该商品已经售完');
+        exit();
+    }
+}
+
+$productinfo = reset($productinfos);
 $goodsPriceTotal = $orderinfo['goodsPriceTotalReal'];
 
 
@@ -59,8 +57,6 @@ if (!$orderinfo['out_trade_no']) {
 } else {
     $trade_no = $orderinfo['out_trade_no'];
 }
-
-
 
 $pay_log = pdo_get('core_paylog', array('tid' => $orderinfo['id'], 'type' => 'wechat', 'module' => $_GPC['m']));
 
@@ -80,6 +76,7 @@ $params = array(
     'user' => $_W['member']['uid'], //付款用户, 付款的用户名(选填项)
     'encrypt_code' => time(), //付款用户, 付款的用户名(选填项)
 );
+
 //调用pay方法
 $this->pay($params);
 
