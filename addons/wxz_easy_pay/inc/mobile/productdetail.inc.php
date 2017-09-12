@@ -16,6 +16,10 @@ $setting_font = pdo_get('hangyi_add_font', array('uniacid' => $uniacid));
 
 $products = pdo_getall('hangyi_product', array('batch_id' => $pid));
 
+if (!$products) {
+    $products = pdo_getall('hangyi_product', array('id' => $pid));
+}
+
 $sell_info = pdo_get('hangyi_user', array('uid' => $products[0]['uid']));
 $buy_info = pdo_get('hangyi_user', array('uid' => $userinfo['uid']));
 
@@ -31,17 +35,17 @@ if ($_GPC['ajax']) {
     $goodsNum = (int) $_GPC['goodsNum'];
     $sell_openid = $product['openid'];
     $sell_id = $product['uid'];
-    
+
     //多价格
     $buyPids = array();
     $buyGoodsNums = array();
-    foreach($goodsNums as $k=>$goodsNum) {
-        if($goodsNum > 0) {
+    foreach ($goodsNums as $k => $goodsNum) {
+        if ($goodsNum > 0) {
             $buyPids[] = $pids[$k];
             $buyGoodsNums[] = $goodsNums[$k];
         }
     }
-    
+
     if ($goodsNum < 1) {
         $goodsNum = 1;
     }
