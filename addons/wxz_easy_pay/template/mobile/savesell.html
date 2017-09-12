@@ -89,7 +89,12 @@ function submit(){
 var phone = $("#phone").val();
 var weixin = $("#weixin").val();
 var weui_textarea = $("#weui_textarea").val();
-
+if(!phone) {
+    alert("请填写手机号");
+}
+if(!weixin) {
+    alert("请填写微信");
+}
 $.ajax({
 						url:"{php echo $this->createMobileUrl('savesell')}",
 						type:"post",
@@ -115,13 +120,13 @@ $.ajax({
             <div class="weui_cell">
                 <div class="weui_cell_hd"><label class="weui_label weui_label_wide">联系电话</label></div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input id="phone" class="weui_input" type="tel" placeholder="填写手机号码" value="{$sellinfo['tel']}">
+                    <input id="phone" class="weui_input" type="tel" placeholder="填写手机号码(必填)" value="{$sellinfo['tel']}">
                 </div>
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd"><label class="weui_label weui_label_wide">微信号</label></div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input id="weixin" class="weui_input" placeholder="方便他人联系你(可选)" value="{$sellinfo['weixin']}">
+                    <input id="weixin" class="weui_input" placeholder="方便他人联系你(必填)" value="{$sellinfo['weixin']}">
                 </div>
              <!--   <a class="weui_btn weui_btn_mini weui_btn_primary"><span>上传微信二维码</span></a>
                 <img src="user_data.weixin_qrcode_url+'@!square-small'" style="height:40px"  />-->
