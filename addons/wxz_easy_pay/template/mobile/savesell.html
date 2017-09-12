@@ -107,12 +107,12 @@ $.ajax({
 						type:"post",
 						data:{"phone":phone,"ac":"ajaxsend","weixin":weixin,'weui_textarea':weui_textarea},
 						success: function(re){
-							if(re){
+//							if(re){
 								alert("修改成功");
-								window.location.reload();
-							}else{
-								alert("修改失败");
-							}
+							location.href="{php echo $this->createMobileUrl('sellercentral')}";
+//							}else{
+//								alert("修改失败");
+//							}
 						},
 						async:false
 					});
