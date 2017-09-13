@@ -38,7 +38,7 @@ if ($is_win && $is_fans['share_num'] > '0' && $is_fans['cellphone']) {
 }
 
 if (!$is_win) {
-    $show_msg = "<p>【 亲，你还没有中奖哦，快去全景里找宝箱吧。（<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}'>进入全景寻宝</a>）】</p>";
+    $show_msg = "<p>【 亲，你还没有中奖哦，快去全景里找宝箱吧。（<a href='{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=quanjing&m={$_GPC['m']}&aid={$aid}'>进入全景寻宝</a>）】</p>";
 }
 $redirect = "";
 include $this->template(get_real_tpl('myaward'));

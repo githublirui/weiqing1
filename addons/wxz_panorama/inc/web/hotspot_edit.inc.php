@@ -54,7 +54,8 @@ if (checksubmit()) {
             $hotspotText['httplink'] = (string) $_GPC['httplink'];
             break;
     }
-
+    
+    $hotspotText['textinfo'] = str_replace(' ', '', $hotspotText['textinfo']);
     $hotspotText['openinfo'] = (int) $_GPC['openinfo']; //热点文字
     $hotspotText['infowidth'] = (string) $_GPC['infowidth'];
     $hotspotText['textinfo'] = (string) $_GPC['textinfo'];

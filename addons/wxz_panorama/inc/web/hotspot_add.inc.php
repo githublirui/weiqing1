@@ -54,7 +54,7 @@ if (checksubmit()) {
             $hotspotText['httplink'] = (string) $_GPC['httplink'];
             break;
     }
-
+    $hotspotText['textinfo'] = str_replace(' ', '', $hotspotText['textinfo']);
     $hotspotText['openinfo'] = (int) $hotspotText['openinfo'];
     $hotspotText['infowidth'] = (int) $hotspotText['infowidth'];
     $hotspotText['textinfo'] = (string) $hotspotText['textinfo'];
