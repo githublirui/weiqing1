@@ -57,6 +57,16 @@ class Page {
             'name' => '底部左侧关于文案链接',
             'type' => 'link',
         ),
+        12 => array(
+            'name' => '发布商品生成背景图',
+            'type' => 'img',
+            'help' => "<a href='/addons/wxz_easy_pay/images/buy.png' target='_blank'>模版样例</a>,注:请上传PNG图片(尺寸600x1118)"
+        ),
+        13 => array(
+            'name' => '发布商品扫描二维码文字图片',
+            'type' => 'img',
+            'help' => "<a href='/addons/wxz_easy_pay/images/pay.png' target='_blank'>模版样例</a>,注:请上传PNG图片(尺寸217x65)"
+        ),
     );
 
     /**

@@ -23,10 +23,6 @@ if (empty($_GPC['goodsName'])) {
     message('产品名称不能为空');
 }
 
-//debug
-//$_W['fans']['headimgurl'] = 'http://www.easyicon.net/api/resizeApi.php?id=1192335&size=128';
-//$userinfo['uid'] = 0;
-
 $p_img_url = uploadFile();
 
 //删除多个的空数据
@@ -136,8 +132,25 @@ if (!$pids) {
     message('商品信息添加失败');
 }
 
+//获取图片域名
+setting_load('remote');
+if ($_W['setting']['remote']['type']) {
+    $attach_url = $_W['attachurl_remote'];
+} else {
+    $attach_url = $_W['siteroot'] . $_W['config']['upload']['attachdir'];
+}
+
 $main_url = "../addons/wxz_easy_pay/images/buy.png";
 $pay_path = "../addons/wxz_easy_pay/images/pay.png";
+require_once WXZ_EASY_PAY . '/source/Page.class.php';
+
+$pageInfo = Page::getPage(array(12, 13));
+if ($pageInfo[12]['img']) {
+    $main_url = $attach_url . '/' . $pageInfo[12]['img'];
+}
+if ($pageInfo[13]['img']) {
+    $pay_path = $attach_url . '/' . $pageInfo[13]['img'];
+}
 
 list($main_width, $main_height) = getimagesize($main_url);
 
@@ -145,13 +158,12 @@ $chanping = $p_img_url;
 list($chanping_width, $chanping_height) = getimagesize($chanping);
 
 //把产品放大或缩小和main一样的宽度
-//echo imagecreatefromstring(file_get_contents($chanping));
 
 $newwidth = $main_width;
 $newheight = ($main_width / $chanping_width) * $chanping_height;
 
-
 $main_source = imagecreatefrompng($main_url);
+
 if ($newheight > 800) {
     $newheight = 800;
 } else if ($newheight < 800) {
@@ -212,7 +224,6 @@ $formatPrice = number_format($pInfos[$pid]['goodsPrice'], 2);
 
 $text2 = $formatPrice . " 元";
 $text3 = $pInfos[$pid]['goodsName'];
-
 
 $white = imagecolorallocate($main_source, 255, 255, 255);
 $grey = imagecolorallocate($main_source, 0, 0, 0);
