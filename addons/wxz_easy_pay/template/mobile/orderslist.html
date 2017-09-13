@@ -232,7 +232,13 @@
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">买家:{$item['nickname']}，收货人:{$item['buy_nick']}</a>
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">电话:{$item['cell']}</a>
                         <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">{$item['address']}</a>
-                        <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">{php echo date('Y-m-d H:i', $item['pay_time'])}</a>
+                        <a  href="{php echo $this->createMobileUrl('ordersdetail')}&oid={$item['id']}" class="weui_media_desc">
+                            {if !$item['pay_status']}
+                                {php echo date('Y-m-d H:i', $item['add_time'])}
+                            {else}
+                                 {php echo date('Y-m-d H:i', $item['pay_time'])}
+                            {/if}
+                        </a>
                         <p class="weui_media_desc">
                             {if $item['order_status'] ==1} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhle('{$item['id']}');"><span>扫码发货</span></a>  {/if} 
                             {if $item['order_status'] ==1} <a style="margin:5px 5px 0 0" class="weui_btn weui_btn_mini weui_btn_primary" onclick="fhles('{$item['id']}');"><span>发货</span></a>  {/if} 
