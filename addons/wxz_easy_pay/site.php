@@ -44,7 +44,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
         if ($params['result'] == 'success' && $params['from'] == 'notify') {
             $oid = $params['tid'];
             $account = $_W['account'];
-            $orders = pdo_get('hangyi_order', array('id' => $oid));
+            $orderinfo = pdo_get('hangyi_order', array('id' => $oid));
             $orders_pay_log = pdo_get('core_paylog', array('tid' => $oid, 'uniacid' => $uniacid));
             if ($orders_pay_log['status'] == 1) {
                 $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `pay_time`='" . time() . "',`pay_status`=2  WHERE id = '" . $oid . "' limit 1");
@@ -52,8 +52,16 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                 exit();
             }
             
-            $pids = $orders['pids'];
-            $goodsNums = $orders['goodsNums'];
+            $pids = $orderinfo['pids'];
+             $goodsNums = $orderinfo['goodsNums'];
+             $pids = explode(',', $pids);
+             $goodsNums = explode(',', $goodsNums);
+             
+            if(!$pids) {
+                $pids = array($orderinfo['pid']);
+                $goodsNums = array($orderinfo['goodsNum']);
+            }
+          
             foreach ($pids as $k => $pid) {
                 $sellNum = $goodsNums[$k];
                 $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `sell_num`=`sell_num`+{$sellNum},`goodsStock`=`goodsStock`-{$sellNum}  WHERE id = '" . $pid . "' limit 1");
@@ -66,15 +74,15 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             if ($setting_fh['status']) {
                 $data = array(
                     'first' => array(
-                        'value' => "单号" . $oid . "，买家" . $orders['buy_nickname'] . "支付成功",
+                        'value' => "单号" . $oid . "，买家" . $orderinfo['buy_nickname'] . "支付成功",
                         'color' => $setting_fh['title_color']
                     ),
                     'orderMoneySum' => array(
-                        'value' => $orders['goodsPriceTotalReal'] . "元",
+                        'value' => $orderinfo['goodsPriceTotalReal'] . "元",
                         'color' => $setting_fh['tpl_word_1_color']
                     ),
                     'orderProductName' => array(
-                        'value' => $orders['goodsName'],
+                        'value' => $orderinfo['goodsName'],
                         'color' => $setting_fh['tpl_word_2_color']
                     ),
                     'Remark' => array(
@@ -82,19 +90,19 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                         'color' => $setting_fh['tpl_word_4_color']
                     ),
                 );
-                $acc->sendTplNotice($orders['sell_openid'], $setting_fh['template_id'], $data, '', $topcolor = '#FF683F');
+                $acc->sendTplNotice($orderinfo['sell_openid'], $setting_fh['template_id'], $data, '', $topcolor = '#FF683F');
             } else {
                 $data = array(
                     'first' => array(
-                        'value' => "单号" . $oid . "，买家" . $orders['buy_nickname'] . "支付成功",
+                        'value' => "单号" . $oid . "，买家" . $orderinfo['buy_nickname'] . "支付成功",
                         'color' => '#ff510'
                     ),
                     'orderMoneySum' => array(
-                        'value' => $orders['goodsPriceTotalReal'] . "元",
+                        'value' => $orderinfo['goodsPriceTotalReal'] . "元",
                         'color' => '#ff510'
                     ),
                     'orderProductName' => array(
-                        'value' => $orders['goodsName'],
+                        'value' => $orderinfo['goodsName'],
                         'color' => '#ff510'
                     ),
                     'Remark' => array(
@@ -114,10 +122,9 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             if ($setting['paysell_isauto'] != 1) {
                 exit();
             }
-            $orders = pdo_get('hangyi_order', array('id' => $oid));
+            
             $uniacid = $_W['uniacid'];
             //file_put_contents(IA_ROOT."/1.txt","uniacid=>".$uniacid);
-            $orderinfo = $orders;
             $orderinfo_pay = pdo_get('core_paylog', array('tid' => $oid, "status" => 1, "uniacid" => $uniacid, "module" => "wxz_easy_pay"));
             //file_put_contents(IA_ROOT."/2.txt","orderinfo_pay=>".json_encode($orderinfo_pay));die;
             $my_rate = pdo_get('hangyi_my_rate', array('id' => 1));
@@ -136,16 +143,15 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                 exit();
             }
 
-            $peizhi = pdo_get('hangyi_peizhi', array('id' => 1));
-            $gzhinfo = pdo_get('account_wechats', array('uniacid' => $uniacid));
-            //$i = $uniacid;
-            //$gzhinfo = $_W['cache']['uniaccount:'.$i];
+            $peizhi = pdo_get('hangyi_peizhi', array('uniacid' =>$uniacid));
+            $gzhinfo = $_W['cache']['uniaccount:'.$uniacid];
 
-            define("ZAPPID", $gzhinfo['key']);
-            define("MCHID_D", $peizhi['mchid']);
-            define("MC_KEY_D", $peizhi['mc_key']);
-            define("MSECRET", $gzhinfo['secret']);
-//file_put_contents(IA_ROOT."/2.txt","ddd=>".IA_ROOT."/addons/wxz_easy_pay/pay/lib/WxPay.Api.php");die;
+            define("ZAPPID",$gzhinfo['key']);
+            define("MCHID_D",$peizhi['mchid']);
+            define("MC_KEY_D",$peizhi['mc_key']);
+            define("MSECRET",$gzhinfo['secret']);
+            define("CURUNIACID",$_W['uniacid']);
+
             $productinfo = pdo_get('hangyi_product', array('id' => $orderinfo['pid']));
 
             require_once IA_ROOT . "/addons/wxz_easy_pay/pay/lib/WxPay.Api.php";
@@ -235,6 +241,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                 //	echo "ok";
             } else {
                 //	echo ($responseObj->err_code_des);
+//                file_put_contents(dirname(__FILE__).'/log.txt', $responseObj->err_code_des,FILE_APPEND);
             }
 
 
