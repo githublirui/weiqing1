@@ -35,7 +35,7 @@ if ($orderinfo['pids']) {
     $pids = $orderinfo['pids'];
     $pids = explode(',', $pids);
 } else {
-    $pids = [$orderinfo['pid']];
+    $pids = array($orderinfo['pid']);
 }
 
 $productinfos = array();

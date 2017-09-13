@@ -18,11 +18,6 @@ if(!$orderinfo){
 if($orderinfo['sell_id'] && $orderinfo['sell_openid']){
 	$sell_info = pdo_get('hangyi_user', array('uid' => $orderinfo['sell_id']));
 }
-if($sell_info['nickname'] && $sell_info['openid']==$orderinfo['sell_openid']){
-	
-}else{
-	exit();
-}
 
 $productinfo = pdo_get('hangyi_product', array('id' =>$orderinfo['pid']));
 //error_reporting(E_ERROR);

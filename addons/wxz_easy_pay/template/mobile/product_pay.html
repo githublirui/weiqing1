@@ -272,7 +272,7 @@
                             <input type="hidden" value="0" class="goodPrice" />
                         </box>
                         {php } }
-                            <input type="hidden" value="{$products[0]['postage']}" class="defaultPostage" />
+                            <input type="hidden" value="{$defaultPostage}" class="defaultPostage" />
                             <input type="hidden" value="{$products[0]['goodsPostNum']}" class="defaultGoodsPostNum" />
                             <input type="hidden" value="0" class="defaultGoodsPostPrice" />
 <!--                        <div class="weui_cell">
@@ -393,7 +393,6 @@
                         success: function (res) {
                             if (res) {
                                 window.location.href = "{php echo $this->createMobileUrl('dopay')}&orderid=" + res;
-                                //$("#orderform").submit();
                             } else {
                                 alert("订单生成失败");
                             }
@@ -451,7 +450,6 @@
                          $(".defaultGoodsPostPrice").val(0);
                          total_money_ret -= defaultPostage * 100; 
                     }
-                    
                     total_money_ret = total_money_ret / 100;
                     
                     $("#totalmoney").text(total_money_ret);
@@ -520,13 +518,12 @@
                     
                     if (goodsTotal >= defaultGoodsPostNum) {
                         //包邮
-                        result = defaultGoodsPrice * goodsNum * 100;
+                        result = defaultGoodsPrice * (goodsNum * 100);
                         $(".postText").html('包邮');
                     } else {
-                        result = defaultGoodsPrice * goodsNum * 100;
+                        result = defaultGoodsPrice * (goodsNum * 100);
                         $(".postText").html('满'+defaultGoodsPostNum+'件包邮');
                     }
-                    
                     result = result / 100;
                     return result;
                 }
@@ -534,7 +531,7 @@
                 $(".city").cityPicker({
                     title: "请选择省市",
                     onClose: function (data) {
-                        var pid = {php echo $products[0]['id'];};
+                        var pid = {php echo $product['id'];};
                         $.ajax({
                             url: "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=ajax&m={$_GPC['m']}&sdo=getCityPost&pid=" + pid + "&city="+data.displayValue[0],
                             type: "post",

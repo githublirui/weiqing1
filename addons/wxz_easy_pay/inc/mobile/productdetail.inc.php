@@ -25,6 +25,17 @@ $sell_info = pdo_get('hangyi_user', array('uid' => $product['uid']));
 $buy_info = pdo_get('hangyi_user', array('uid' => $userinfo['uid']));
 
 
+//获取默认邮费
+$defaultPostage = $product['postage'];
+if ($product['tpl_id']) {
+    $citys = explode(' ', $buy_info['city']);
+    $info = pdo_get('wxz_easy_pay_post_tpl', "id='{$product['tpl_id']}'");
+    $info['desc'] = json_decode($info['desc'], true);
+    if (isset($info['desc'][$citys[0]])) {
+        $defaultPostage = $info['desc'][$citys[0]];
+    }
+}
+
 if ($_GPC['ajax']) {
     $buyer_name = $_GPC['buyer_name'];
     $cell = $_GPC['cell'];
