@@ -75,19 +75,19 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                 $data = array(
                     'first' => array(
                         'value' => "单号" . $oid . "，买家" . $orderinfo['buy_nickname'] . "支付成功",
-                        'color' => $setting_fh['title_color']
+                        'color' => $setting_fh['title_color'] ? $setting_fh['title_color'] : '#000000',
                     ),
                     'orderMoneySum' => array(
                         'value' => $orderinfo['goodsPriceTotalReal'] . "元",
-                        'color' => $setting_fh['tpl_word_1_color']
+                        'color' => $setting_fh['tpl_word_1_color']  ? $setting_fh['tpl_word_1_color'] : '#000000',
                     ),
                     'orderProductName' => array(
                         'value' => $orderinfo['goodsName'],
-                        'color' => $setting_fh['tpl_word_2_color']
+                        'color' => $setting_fh['tpl_word_2_color'] ? $setting_fh['tpl_word_2_color'] : '#000000',
                     ),
                     'Remark' => array(
                         'value' => "您此比订单款需要48小时内到账",
-                        'color' => $setting_fh['tpl_word_4_color']
+                        'color' => $setting_fh['tpl_word_4_color'] ? $setting_fh['tpl_word_4_color'] : '#000000',
                     ),
                 );
                 $acc->sendTplNotice($orderinfo['sell_openid'], $setting_fh['template_id'], $data, '', $topcolor = '#FF683F');
