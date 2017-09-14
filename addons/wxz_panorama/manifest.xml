@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[3.2.1]]></version>
+        <version><![CDATA[3.2.2]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -34,7 +34,6 @@
             <entry title="活动列表" do="activity_list" state="" direct="false" />
             <entry title="中奖列表" do="win_list" state="" direct="false" />
             <entry title="项目列表" do="project_list" state="" direct="false" />
-            <entry title="奖品设置" do="award_list" state="" direct="false" />
             <entry title="微信配置" do="wx_pay_setting" state="" direct="false"/>
         </menu>
     </bindings>
