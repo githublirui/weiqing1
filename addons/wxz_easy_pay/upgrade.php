@@ -3,6 +3,9 @@
 if (!pdo_fieldexists('hangyi_peizhi', 'uniacid')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_peizhi') . " ADD `uniacid` int(10) DEFAULT 0;");
 }
+if (!pdo_fieldexists('hangyi_peizhi', 'paysell_isauto')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_peizhi') . " ADD `paysell_isauto` tinyint(1) DEFAULT 0;");
+}
 if (!pdo_fieldexists('hangyi_add_font', 'uniacid')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_add_font') . " ADD `uniacid` int(10) DEFAULT 0;");
 }
