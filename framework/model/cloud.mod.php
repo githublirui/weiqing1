@@ -26,8 +26,10 @@ function _cloud_build_params() {
 	$pars['family'] = IMS_FAMILY;
 	$pars['version'] = IMS_VERSION;
 	$pars['release'] = IMS_RELEASE_DATE;
-	$pars['key'] = $_W['setting']['site']['key'];
-	$pars['password'] = md5($_W['setting']['site']['key'] . $_W['setting']['site']['token']);
+	if (!empty($_W['setting']['site'])) {
+		$pars['key'] = $_W['setting']['site']['key'];
+		$pars['password'] = md5($_W['setting']['site']['key'] . $_W['setting']['site']['token']);
+	}
 	$clients = cloud_client_define();
 	$string = '';
 	foreach($clients as $cli) {
@@ -59,6 +61,16 @@ function _cloud_shipping_parse($dat, $file) {
 		return error(-1, '抱歉，您的站点已被列入云服务黑名单，云服务一切业务已被禁止，请联系微擎客服！');
 	}
 	if (strlen($dat['content']) != 32) {
+		$dat['content'] = unserialize($dat['content']);
+		if (is_array($dat['content']) && isset($dat['content']['files'])) {
+			if (!empty($dat['content']['manifest'])) {
+				$dat['content']['manifest'] = base64_decode($dat['content']['manifest']);
+			}
+			if (!empty($dat['content']['scripts'])) {
+				$dat['content']['scripts'] = base64_decode($dat['content']['scripts']);
+			}
+			return $dat['content'];
+		}
 		return error(-1, '云服务平台向您的服务器传输数据过程中出现错误, 这个错误可能是由于您的通信密钥和云服务不一致, 请尝试诊断云服务参数(重置站点ID和通信密钥). 传输原始数据:' . $dat['meta']);
 	}
 	$data = @file_get_contents($file);
@@ -113,7 +125,6 @@ function cloud_prepare() {
 function cloud_build() {
 	$pars = _cloud_build_params();
 	$pars['method'] = 'application.build2';
-	$pars['extra'] = cloud_extra_account();
 	$dat = cloud_request('http://v2.addons.we7.cc/gateway.php', $pars);
 	$file = IA_ROOT . '/data/application.build';
 	$ret = _cloud_shipping_parse($dat, $file);
@@ -157,10 +168,10 @@ function cloud_build() {
 			$ret['schemas'] = $schemas;
 		}
 
-		if($ret['family'] == 'x' && IMS_FAMILY == 'v') {
+		if (IMS_FAMILY != $ret['family']) {
 			load()->model('setting');
-			setting_upgrade_version('x', IMS_VERSION, IMS_RELEASE_DATE);
-			itoast('您已经购买了商业授权版本, 系统将转换为商业版, 并重新运行自动更新程序.', 'refresh');
+			setting_upgrade_version($ret['family'], IMS_VERSION, IMS_RELEASE_DATE);
+			itoast('更新系统正在为您自动切换版本', 'refresh');
 		}
 		$ret['upgrade'] = false;
 		if(!empty($ret['files']) || !empty($ret['schemas']) || !empty($ret['scripts'])) {
@@ -212,6 +223,7 @@ function cloud_download($path, $type = '') {
 	$pars['path'] = $path;
 	$pars['type'] = $type;
 	$pars['gz'] = function_exists('gzcompress') && function_exists('gzuncompress') ? 'true' : 'false';
+	$pars['download'] = 'true';
 	$headers = array('content-type' => 'application/x-www-form-urlencoded');
 	$dat = cloud_request('http://v2.addons.we7.cc/gateway.php', $pars, $headers, 300);
 	if(is_error($dat)) {
@@ -224,6 +236,44 @@ function cloud_download($path, $type = '') {
 	if(is_error($ret)) {
 		return $ret;
 	} else {
+		$post = $dat['content'];
+		$data = base64_decode($post);
+		if (base64_encode($data) !== $post) {
+			$data = $post;
+		}
+		$ret = iunserializer($data);
+		$gz = function_exists('gzcompress') && function_exists('gzuncompress');
+		$file = base64_decode($ret['file']);
+		if($gz) {
+			$file = gzuncompress($file);
+		}
+		$_W['setting']['site']['token'] = authcode(cache_load('cloud:transtoken'), 'DECODE');
+		$string = (md5($file) . $ret['path'] . $_W['setting']['site']['token']);
+		if(!empty($_W['setting']['site']['token']) && md5($string) === $ret['sign']) {
+			$path = IA_ROOT . $ret['path'];
+			load()->func('file');
+			@mkdirs(dirname($path));
+			if (file_put_contents($path, $file)) {
+				if (!empty($ret['extend'])) {
+					foreach ($ret['extend'] as $file) {
+						$path = base64_decode($file['path']);
+						$file = base64_decode($file['file']);
+						if (empty($path) || empty($file)) {
+							continue;
+						}
+						if($gz) {
+							$file = gzuncompress($file);
+						}
+						$path = IA_ROOT . $path;
+						@mkdirs(dirname($path));
+						file_put_contents($path, $file);
+					}
+				}
+				return true;
+			} else {
+				return error(-1, '写入失败');
+			}
+		}
 		return error(-1, '写入失败');
 	}
 }
@@ -250,6 +300,7 @@ function cloud_m_build($modulename, $type = '') {
 	$pars['method'] = 'module.build';
 	$pars['module'] = $modulename;
 	$pars['type'] = $type;
+	$pars['token'] = cloud_build_transtoken();
 	if (!empty($module)) {
 		$pars['module_version'] = $module['version'];
 	}
@@ -300,10 +351,17 @@ function cloud_m_build($modulename, $type = '') {
 }
 
 
-function cloud_m_query() {
+function cloud_m_query($module = array()) {
 	$pars = _cloud_build_params();
 	$pars['method'] = 'module.query';
-	$pars['module'] = cloud_extra_module();
+	if (empty($module)) {
+		$pars['module'] = cloud_extra_module();
+	} else {
+		if (!is_array($module)) {
+			$module = array($module);
+		}
+		$pars['module'] = base64_encode(iserializer($module));
+	}
 	$dat = cloud_request('http://v2.addons.we7.cc/gateway.php', $pars);
 	$file = IA_ROOT . '/data/module.query';
 	$ret = _cloud_shipping_parse($dat, $file);
@@ -331,6 +389,23 @@ function cloud_m_upgradeinfo($name) {
 	$dat = cloud_request('http://v2.addons.we7.cc/gateway.php', $pars);
 	$file = IA_ROOT . '/data/module.info';
 	$ret = _cloud_shipping_parse($dat, $file);
+	if (!empty($ret) && !is_error($ret)) {
+		$ret['site_branch'] = $ret['branches'][$ret['version']['branch_id']];
+		$ret['from'] = 'cloud';
+		foreach ($ret['branches'] as &$branch) {
+			if ($branch['displayorder'] < $ret['site_branch']['displayorder'] || ($ret['site_branch']['displayorder'] == $ret['site_branch']['displayorder'] && $ret['site_branch']['id'] > intval($branch['id']))) {
+				unset($module['branches'][$branch['id']]);
+				continue;
+			}
+			$branch['id'] = intval($branch['id']);
+			$branch['version']['description'] = preg_replace('/\n/', '<br/>', $branch['version']['description']);
+			$branch['displayorder'] = intval($branch['displayorder']);
+			$branch['day'] = intval(date('d', $branch['version']['createtime']));
+			$branch['month'] = date('Y.m', $branch['version']['createtime']);
+			$branch['hour'] = date('H:i', $branch['version']['createtime']);
+		}
+		unset($branch);
+	}
 	return $ret;
 }
 
@@ -688,6 +763,7 @@ function cloud_auth_url($forward, $data = array()){
 	$auth['referrer'] = intval($_W['config']['setting']['referrer']);
 	$auth['version'] = IMS_VERSION;
 	$auth['forward'] = $forward;
+	$auth['family'] = IMS_FAMILY;
 
 	if(!empty($_W['setting']['site']['key']) && !empty($_W['setting']['site']['token'])) {
 		$auth['key'] = $_W['setting']['site']['key'];
@@ -1017,5 +1093,53 @@ function cloud_flow_site_stat_day($condition) {
 	$ret = @json_decode($dat['content'], true);
 	cache_write($cachekey, array('expire' => TIMESTAMP + 300, 'info' => $ret));
 	return $ret;
-	
+}
+
+function cloud_build_transtoken() {
+	$pars = _cloud_build_params();
+	$pars['method'] = 'application.token';
+	$dat = cloud_request(CLOUD_GATEWAY_URL_NORMAL, $pars);
+	$file = IA_ROOT . '/data/application.build';
+	$ret = _cloud_shipping_parse($dat, $file);
+	cache_write('cloud:transtoken', authcode($ret['token'], 'ENCODE'));
+	return $ret['token'];
+}
+
+function cloud_build_schemas($schems) {
+	$database = array();
+	if (empty($schems)) {
+		return $database;
+	}
+	foreach ($schemas as $remote) {
+		$row = array();
+		$row['tablename'] = $remote['tablename'];
+		$name = substr($remote['tablename'], 4);
+		$local = db_table_schema(pdo(), $name);
+		unset($remote['increment']);
+		unset($local['increment']);
+		if (empty($local)) {
+			$row['new'] = true;
+		} else {
+			$row['new'] = false;
+			$row['fields'] = array();
+			$row['indexes'] = array();
+			$diffs = db_schema_compare($local, $remote);
+			if (!empty($diffs['fields']['less'])) {
+				$row['fields'] = array_merge($row['fields'], $diffs['fields']['less']);
+			}
+			if (!empty($diffs['fields']['diff'])) {
+				$row['fields'] = array_merge($row['fields'], $diffs['fields']['diff']);
+			}
+			if (!empty($diffs['indexes']['less'])) {
+				$row['indexes'] = array_merge($row['indexes'], $diffs['indexes']['less']);
+			}
+			if (!empty($diffs['indexes']['diff'])) {
+				$row['indexes'] = array_merge($row['indexes'], $diffs['indexes']['diff']);
+			}
+			$row['fields'] = implode($row['fields'], ' ');
+			$row['indexes'] = implode($row['indexes'], ' ');
+		}
+		$database[] = $row;
+	}
+	return $database;
 }

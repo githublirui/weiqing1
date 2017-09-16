@@ -5,32 +5,6 @@
  */
 
 
-function mc_check($data) {
-	global $_W;
-	if (!empty($data['email'])) {
-		$email = trim($data['email']);
-		if (!preg_match(REGULAR_EMAIL, $email)) {
-			return error(-1, '邮箱格式不正确');
-		}
-		$isexist = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename('mc_members') . ' WHERE uniacid = :uniacid AND email = :email AND uid != :uid', array(':uniacid' => $_W['uniacid'], ':email' => $email, ':uid' => $_W['member']['uid']));
-		if ($isexist >= 1) {
-			return error(-1, '邮箱已被注册');
-		}
-	}
-	if (!empty($data['mobile'])) {
-		$mobile = trim($data['mobile']);
-		if (!preg_match(REGULAR_MOBILE, $mobile)) {
-			return error(-1, '手机号格式不正确');
-		}
-		$isexist = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename('mc_members') . ' WHERE uniacid = :uniacid AND mobile = :mobile AND uid != :uid', array(':uniacid' => $_W['uniacid'], ':mobile' => $mobile, ':uid' => $_W['member']['uid']));
-		if ($isexist >= 1) {
-			return error(-1, '手机号已被注册');
-		}
-	}
-	return true;
-}
-
-
 function mc_update($uid, $fields) {
 	global $_W;
 	if (empty($fields)) {
@@ -51,7 +25,7 @@ function mc_update($uid, $fields) {
 	$struct[] = 'residecity';
 	$struct[] = 'residedist';
 	$struct[] = 'groupid';
-	
+
 	if (isset($fields['birth']) && !is_array($fields['birth'])) {
 		$birth = explode('-', $fields['birth']);
 		$fields['birth'] = array(
@@ -81,19 +55,19 @@ function mc_update($uid, $fields) {
 			$fields['avatar'] = str_replace($_W['attachurl'], '', $fields['avatar']);
 		}
 	}
-	$isexists = pdo_fetchcolumn("SELECT uid FROM " . tablename('mc_members') . " WHERE uid = :uid", array(':uid' => $uid));
+	$isexists = pdo_getcolumn('mc_members', array('uid' => $uid), 'uid');
 	$condition = '';
 	if (!empty($isexists)) {
 		$condition = ' AND uid != ' . $uid;
 	}
 		if (!empty($fields['email'])) {
-		$emailexists = pdo_fetchcolumn("SELECT email FROM " . tablename('mc_members') . " WHERE uniacid = :uniacid AND email = :email " . $condition, array(':uniacid' => $_W['uniacid'], ':email' => trim($fields['email'])));
+		$emailexists = pdo_fetchcolumn("SELECT email FROM " . tablename('mc_members') . " WHERE uniacid = :uniacid AND email = :email " . $condition, array(':uniacid' => mc_current_real_uniacid(), ':email' => trim($fields['email'])));
 		if ($emailexists) {
 			unset($fields['email']);
 		}
 	}
 	if (!empty($fields['mobile'])) {
-		$mobilexists = pdo_fetchcolumn("SELECT mobile FROM " . tablename('mc_members') . " WHERE uniacid = :uniacid AND mobile = :mobile " . $condition, array(':uniacid' => $_W['uniacid'], ':mobile' => trim($fields['mobile'])));
+		$mobilexists = pdo_fetchcolumn("SELECT mobile FROM " . tablename('mc_members') . " WHERE uniacid = :uniacid AND mobile = :mobile " . $condition, array(':uniacid' => mc_current_real_uniacid(), ':mobile' => trim($fields['mobile'])));
 		if ($mobilexists) {
 			unset($fields['mobile']);
 		}
@@ -102,13 +76,12 @@ function mc_update($uid, $fields) {
 		if(empty($fields['mobile']) && empty($fields['email'])) {
 			return false;
 		}
-		$fields['uniacid'] = $_W['uniacid'];
+		$fields['uniacid'] = mc_current_real_uniacid();
 		$fields['createtime'] = TIMESTAMP;
 		pdo_insert('mc_members', $fields);
 		$insert_id = pdo_insertid();
 		if (!empty($openid)) {
-			pdo_update('mc_mapping_fans', array('uid' => $insert_id), array('uniacid' => $_W['uniacid'], 'openid' => $openid));
-			cache_build_fansinfo($openid);
+			pdo_update('mc_mapping_fans', array('uid' => $insert_id), array('uniacid' => mc_current_real_uniacid(), 'openid' => $openid));
 		}
 		return $insert_id;
 	} else {
@@ -124,26 +97,16 @@ function mc_update($uid, $fields) {
 
 
 function mc_fetch($uid, $fields = array()) {
-	global $_W;
-	$uid = mc_openid2uid($uid);
 	if (empty($uid)) {
 		return array();
 	}
-	$cachekey = cache_system_key("memberinfo:{$uid}");
-	$cache = cache_load($cachekey);
-	if (!empty($cache)) {
-		return $cache;
-	}
 	$struct = mc_fields();
 	$struct = array_keys($struct);
-	if (empty($fields)) {
-		$select = '*';
-	} else {
+	if (!empty($fields)) {
 		foreach ($fields as $key => $field) {
 			if (!in_array($field, $struct)) {
 				unset($fields[$key]);
 			}
-
 			if ($field == 'birth') {
 				$fields[] = 'birthyear';
 				$fields[] = 'birthmonth';
@@ -156,67 +119,60 @@ function mc_fetch($uid, $fields = array()) {
 			}
 		}
 		unset($fields['birth'], $fields['reside']);
-		if (!empty($fields)) {
-			$select = '`uid`, `' . implode('`,`', $fields) . '`';
-		} else {
-			$select = '*';
-		}
 	}
+	$result = array();
 	if (is_array($uid)) {
-		$result = pdo_fetchall("SELECT $select FROM " . tablename('mc_members') . " WHERE uid IN ('" . implode("','", is_array($uid) ? $uid : array($uid)) . "')", array(), 'uid');
-		foreach ($result as &$row) {
-			if (isset($row['credit1'])) {
-				$row['credit1'] = floatval($row['credit1']);
-			}
-			if (isset($row['credit2'])) {
-				$row['credit2'] = floatval($row['credit2']);
-			}
-			if (isset($row['credit3'])) {
-				$row['credit3'] = floatval($row['credit3']);
-			}
-			if (isset($row['credit4'])) {
-				$row['credit4'] = floatval($row['credit4']);
-			}
-			if (isset($row['credit5'])) {
-				$row['credit5'] = floatval($row['credit5']);
-			}
-			if (isset($row['credit6'])) {
-				$row['credit6'] = floatval($row['credit6']);
-			}
-			if (isset($row['avatar']) && !empty($row['avatar'])) {
-				$row['avatar'] = tomedia($row['avatar']);
+		foreach ($uid as $id) {
+			$user_info = mc_fetch_one($id);
+			if (!empty($user_info) && !empty($fields)) {
+				foreach ($fields as $field) {
+					$result[$id][$field] = $user_info[$field];
+				}
+				$result[$id]['uid'] = $id;
+			} else {
+				$result[$id] = $user_info;
 			}
 		}
 	} else {
-		$result = pdo_fetch("SELECT $select FROM " . tablename('mc_members') . " WHERE `uid` = :uid", array(':uid' => $uid));
-		if (isset($result['avatar']) && !empty($result['avatar'])) {
-			$result['avatar'] = tomedia($result['avatar']);
-		}
-		if (isset($result['credit1'])) {
-			$result['credit1'] = floatval($result['credit1']);
-		}
-		if (isset($result['credit2'])) {
-			$result['credit2'] = floatval($result['credit2']);
-		}
-		if (isset($result['credit3'])) {
-			$result['credit3'] = floatval($result['credit3']);
-		}
-		if (isset($result['credit4'])) {
-			$result['credit4'] = floatval($result['credit4']);
-		}
-		if (isset($result['credit5'])) {
-			$result['credit5'] = floatval($result['credit5']);
-		}
-		if (isset($result['credit6'])) {
-			$result['credit6'] = floatval($result['credit6']);
+		$user_info = mc_fetch_one($uid);
+		if (!empty($user_info) && !empty($fields)) {
+			foreach ($fields as $field) {
+				$result[$field] = $user_info[$field];
+			}
+			$result['uid'] = $uid;
+		} else {
+			$result = $user_info;
 		}
 	}
-	cache_write($cachekey, $result);
 	return $result;
 }
 
 
-
+function mc_fetch_one($uid) {
+	$uid = mc_openid2uid($uid);
+	if (empty($uid)) {
+		return array();
+	}
+	$cachekey = cache_system_key(CACHE_KEY_MEMBER_INFO, $uid);
+	$cache = cache_load($cachekey);
+	if (!empty($cache)) {
+		return $cache;
+	}
+	$result = pdo_get('mc_members', array('uid' => $uid));
+	if (!empty($result)) {
+		$result['avatar'] = tomedia($result['avatar']);
+		$result['credit1'] = floatval($result['credit1']);
+		$result['credit2'] = floatval($result['credit2']);
+		$result['credit3'] = floatval($result['credit3']);
+		$result['credit4'] = floatval($result['credit4']);
+		$result['credit5'] = floatval($result['credit5']);
+		$result['credit6'] = floatval($result['credit6']);
+	} else {
+		$result = array();
+	}
+	cache_write($cachekey, $result);
+	return $result;
+}
 
 function mc_fansinfo($openidOruid, $acid = 0, $uniacid = 0){
 	global $_W;
@@ -231,12 +187,8 @@ function mc_fansinfo($openidOruid, $acid = 0, $uniacid = 0){
 	} else {
 		$openid = $openidOruid;
 	}
-
-	$cachekey = cache_system_key("fansinfo:{$openid}");
-	$cache = cache_load($cachekey);
-	if (!empty($cache)) {
-		return $cache;
-	}
+	
+	
 	$params = array();
 	$condition = '`openid` = :openid';
 	$params[':openid'] = $openid;
@@ -262,7 +214,9 @@ function mc_fansinfo($openidOruid, $acid = 0, $uniacid = 0){
 			if (is_array($fan['tag']) && !empty($fan['tag']['headimgurl'])) {
 				$fan['tag']['avatar'] = tomedia($fan['tag']['headimgurl']);
 				unset($fan['tag']['headimgurl']);
-				$fan['nickname'] = $fan['tag']['nickname'];
+				if (empty($fan['nickname']) && !empty($fan['tag']['nickname'])) {
+					$fan['nickname'] = strip_emoji($fan['tag']['nickname']);
+				}
 				$fan['gender'] = $fan['sex'] = $fan['tag']['sex'];
 				$fan['avatar'] = $fan['headimgurl'] = $fan['tag']['avatar'];
 			}
@@ -275,7 +229,9 @@ function mc_fansinfo($openidOruid, $acid = 0, $uniacid = 0){
 		$fan['uid'] = 0;
 		$fan['openid'] = $fan['tag']['openid'];
 		$fan['follow'] = 0;
-		$fan['nickname'] = $fan['tag']['nickname'];
+		if (empty($fan['nickname']) && !empty($fan['tag']['nickname'])) {
+			$fan['nickname'] = strip_emoji($fan['tag']['nickname']);
+		}
 		$fan['gender'] = $fan['sex'] = $fan['tag']['sex'];
 		$fan['avatar'] = $fan['headimgurl'] = $fan['tag']['headimgurl'];
 		$mc_oauth_fan = mc_oauth_fans($fan['openid']);
@@ -283,7 +239,6 @@ function mc_fansinfo($openidOruid, $acid = 0, $uniacid = 0){
 			$fan['uid'] = $mc_oauth_fan['uid'];
 		}
 	}
-	cache_write($cachekey, $fan);
 	return $fan;
 }
 
@@ -331,7 +286,6 @@ function mc_oauth_userinfo($acid = 0) {
 					'tag' => base64_encode(iserializer($userinfo))
 				);
 				pdo_update('mc_mapping_fans', $record, array('openid' => $_SESSION['openid'], 'acid' => $_W['acid'], 'uniacid' => $_W['uniacid']));
-				cache_build_fansinfo($_SESSION['openid']);
 			} else {
 				$record = array();
 				$record['updatetime'] = TIMESTAMP;
@@ -340,6 +294,7 @@ function mc_oauth_userinfo($acid = 0) {
 				$record['openid'] = $_SESSION['openid'];
 				$record['acid'] = $_W['acid'];
 				$record['uniacid'] = $_W['uniacid'];
+				$record['unionid'] = $userinfo['unionid'];
 				pdo_insert('mc_mapping_fans', $record);
 			}
 			
@@ -512,7 +467,6 @@ function mc_require($uid, $fields, $pre = '') {
 			if (empty($uid)) {
 				pdo_update('mc_oauth_fans', array('uid' => $insertuid), array('oauth_openid' => $_W['openid']));
 				pdo_update('mc_mapping_fans', array('uid' => $insertuid), array('openid' => $_W['openid']));
-				cache_build_fansinfo($_W['openid']);
 			}
 			itoast('资料完善成功.', 'refresh', 'success');
 		}
@@ -715,10 +669,8 @@ function mc_fans_groups($force_update = false) {
 
 function _mc_login($member) {
 	global $_W;
-
-	if (!empty($member) && !empty($member['uid'])) {
-		$sql = 'SELECT `uid`,`realname`,`mobile`,`email`,`groupid`,`credit1`,`credit2`,`credit6` FROM ' . tablename('mc_members') . ' WHERE `uid`=:uid AND `uniacid`=:uniacid';
-		$member = pdo_fetch($sql, array(':uid' => $member['uid'], ':uniacid' => $_W['uniacid']));
+	if (!empty($member) && !empty($member['uid'])) {	
+		$member = pdo_get('mc_members', array('uid' => $member['uid'], 'uniacid' => $_W['uniacid']), array('uid', 'realname', 'mobile', 'email', 'groupid', 'credit1', 'credit2', 'credit6'));
 		if (!empty($member) && (!empty($member['mobile']) || !empty($member['email']))) {
 			$_W['member'] = $member;
 			$_W['member']['groupname'] = $_W['uniaccount']['groups'][$member['groupid']]['title'];
@@ -864,15 +816,8 @@ function mc_openid2uid($openid) {
 	if (is_numeric($openid)) {
 		return $openid;
 	}
-	$cachekey = cache_system_key("uid:{$openid}");
-	$cache = cache_load($cachekey);
-	if (!empty($cache)) {
-		return $cache;
-	}
-
 	if (is_string($openid)) {
-		$fans_info = pdo_get('mc_mapping_fans', array('uniacid' => $_W['uniacid'], 'openid' => $openid), array('uid'));
-		cache_write($cachekey, $fans_info['uid']);
+		$fans_info = pdo_get('mc_mapping_fans', array('uniacid' => mc_current_real_uniacid(), 'openid' => $openid), array('uid'));
 		return !empty($fans_info) ? $fans_info['uid'] : false;
 	}
 	if (is_array($openid)) {
@@ -886,7 +831,7 @@ function mc_openid2uid($openid) {
 		}
 		if (!empty($fans)) {
 			$sql = 'SELECT uid, openid FROM ' . tablename('mc_mapping_fans') . " WHERE `uniacid`=:uniacid AND `openid` IN ('" . implode("','", $fans) . "')";
-			$pars = array(':uniacid' => $_W['uniacid']);
+			$pars = array(':uniacid' => mc_current_real_uniacid());
 			$fans = pdo_fetchall($sql, $pars, 'uid');
 			$fans = array_keys($fans);
 			$uids = array_merge((array)$uids, $fans);
@@ -899,13 +844,10 @@ function mc_openid2uid($openid) {
 
 function mc_uid2openid($uid) {
 	global $_W;
-
-	$cachekey = cache_system_key("openid:{$uid}");
-	$cache = cache_load($cachekey);
-	if (!empty($cache)) {
-		return $cache;
+	if (is_numeric($uid)) {
+		$fans_info = pdo_get('mc_mapping_fans', array('uniacid' => mc_current_real_uniacid(), 'uid' => $uid), 'openid');
+		return !empty($fans_info['openid']) ? $fans_info['openid'] : false;
 	}
-
 	if (is_string($uid)) {
 		$openid = trim($uid);
 		$openid_exist = pdo_get('mc_mapping_fans', array('openid' => $openid));
@@ -914,11 +856,6 @@ function mc_uid2openid($uid) {
 		} else {
 			return false;
 		}
-	}
-	if (is_numeric($uid)) {
-		$fans_info = pdo_get('mc_mapping_fans', array('uniacid' => $_W['uniacid'], 'uid' => $uid), 'openid');
-		cache_write($cachekey, $fans_info['openid']);
-		return !empty($fans_info['openid']) ? $fans_info['openid'] : false;
 	}
 	if (is_array($uid)) {
 		$openids = array();
@@ -931,7 +868,7 @@ function mc_uid2openid($uid) {
 		}
 		if (!empty($uids)) {
 			$sql = 'SELECT openid FROM ' . tablename('mc_mapping_fans') . " WHERE `uniacid`=:uniacid AND `uid` IN (" . implode(",", $uids) . ")";
-			$pars = array(':uniacid' => $_W['uniacid']);
+			$pars = array(':uniacid' => mc_current_real_uniacid());
 			$fans_info = pdo_fetchall($sql, $pars, 'openid');
 			$fans_info = array_keys($fans_info);
 			$openids = array_merge($openids, $fans_info);
@@ -960,7 +897,7 @@ function mc_group_update($uid = 0) {
 	}
 	$groupid = $user['groupid'];
 	$credit = $user['credit1'] + $user['credit6'];
-	$groups = $_W['uniaccount']['groups'];
+	$groups = mc_groups();
 	if(empty($groups)) {
 		return false;
 	}
@@ -1002,29 +939,26 @@ function mc_notice_init() {
 		$_W['account'] = uni_fetch($_W['uniacid']);
 	}
 	if(empty($_W['account'])) {
-		return error(-1, '创建公众号操作类失败');
+		return error(1, '创建公众号操作类失败');
 	}
 	if($_W['account']['level'] < 3) {
-		return error(-1, '公众号没有经过认证，不能使用模板消息和客服消息');
+		return error(1, '公众号没有经过认证，不能使用模板消息和客服消息');
 	}
-	$acc = WeAccount::create();
-	if(is_null($acc)) {
-		return error(-1, '创建公众号操作对象失败');
+	$account = WeAccount::create();
+	if(is_null($account)) {
+		return error(1, '创建公众号操作对象失败');
 	}
 	$setting = uni_setting();
 	$noticetpl = $setting['tplnotice'];
-	$acc->noticetpl = $noticetpl;
-	if(!is_array($acc->noticetpl)) {
-		return error(-1, '微信通知参数错误');
-	}
-	return $acc;
+	$account->noticetpl = $noticetpl;
+	return $account;
 }
 
 
 function mc_notice_public($openid, $title, $sender, $content, $url = '', $remark = '') {
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$data = array(
 		'first' => array(
@@ -1044,7 +978,7 @@ function mc_notice_public($openid, $title, $sender, $content, $url = '', $remark
 			'color' => '#ff510'
 		),
 	);
-	$status = $acc->sendTplNotice($openid, $acc->noticetpl['public'], $data, $url);
+	$status = $account->sendTplNotice($openid, $account->noticetpl['public'], $data, $url);
 	return $status;
 }
 
@@ -1057,19 +991,16 @@ function mc_notice_recharge($openid, $uid = 0, $num = 0, $url = '', $remark = ''
 	if(!$uid || !$num || empty($openid)) {
 		return error(-1, '参数错误');
 	}
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['recharge']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$credit = mc_credit_fetch($uid);
 	$time = date('Y-m-d H:i');
 	if(empty($url)) {
 		$url = murl('mc/bond/credits', array('credittype' => 'credit2', 'type' => 'record', 'period' => '1'), true, true);
 	}
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['recharge']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您在{$time}进行会员余额充值，充值金额{$num}元，充值后余额为{$credit['credit2']}元",
@@ -1096,9 +1027,9 @@ function mc_notice_recharge($openid, $uid = 0, $num = 0, $url = '', $remark = ''
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['recharge']['tpl'], $data, $url);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['recharge']['tpl'], $data, $url);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['recharge']['tpl'])) {
 		$info = "【{$_W['account']['name']}】充值通知\n";
 		$info .= "您在{$time}进行会员余额充值，充值金额【{$num}】元，充值后余额【{$credit['credit2']}】元。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1107,7 +1038,7 @@ function mc_notice_recharge($openid, $uid = 0, $num = 0, $url = '', $remark = ''
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1121,19 +1052,16 @@ function mc_notice_credit2($openid, $uid, $credit2_num, $credit1_num = 0, $store
 	if(!$uid || !$credit2_num || empty($openid)) {
 		return error(-1, '参数错误');
 	}
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['credit2']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$credit = mc_credit_fetch($uid);
 	$time = date('Y-m-d H:i');
 	if(empty($url)) {
 		$url = murl('mc/bond/credits', array('credittype' => 'credit2', 'type' => 'record', 'period' => '1'), true, true);
 	}
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['credit2']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您在{$time}有余额消费",
@@ -1164,9 +1092,9 @@ function mc_notice_credit2($openid, $uid, $credit2_num, $credit1_num = 0, $store
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['credit2']['tpl'], $data, $url);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['credit2']['tpl'], $data, $url);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['credit2']['tpl'])) {
 		$info = "【{$_W['account']['name']}】消费通知\n";
 		$info .= "您在{$time}进行会员余额消费，消费金额【{$credit2_num}】元，获得积分【{$credit1_num}】,消费后余额【{$credit['credit2']}】元，消费后积分【{$credit['credit1']}】。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1175,7 +1103,7 @@ function mc_notice_credit2($openid, $uid, $credit2_num, $credit1_num = 0, $store
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1189,12 +1117,9 @@ function mc_notice_credit1($openid, $uid, $credit1_num, $tip, $url = '', $remark
 	if(!$uid || !$credit1_num || empty($tip)) {
 		return error(-1, '参数错误');
 	}
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['credit1']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$credit = mc_credit_fetch($uid);
 	$time = date('Y-m-d H:i');
@@ -1213,7 +1138,7 @@ function mc_notice_credit1($openid, $uid, $credit1_num, $tip, $url = '', $remark
 	if(empty($username)) {
 		$username = $uid;
 	}
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['credit1']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您在{$time}有积分变更",
@@ -1252,9 +1177,9 @@ function mc_notice_credit1($openid, $uid, $credit1_num, $tip, $url = '', $remark
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['credit1']['tpl'], $data, $url);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['credit1']['tpl'], $data, $url);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || empty($account->noticetpl['credit1']['tpl']) || is_error($status)) {
 		$info = "【{$_W['account']['name']}】积分变更通知\n";
 		$info .= "您在{$time}有积分{$type}，{$type}积分【{$credit1_num}】，变更原因：【{$tip}】,消费后账户积分余额【{$credit['credit1']}】。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1263,25 +1188,22 @@ function mc_notice_credit1($openid, $uid, $credit1_num, $tip, $url = '', $remark
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
 
 function mc_notice_group($openid, $old_group, $now_group, $url = '', $remark = '点击查看详情') {
 	global $_W;
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['group']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$time = date('Y-m-d H:i');
 	if(empty($url)) {
 		$url = murl('mc/home', array(), true, true);
 	}
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['group']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您的会员组变更为{$now_group}",
@@ -1304,9 +1226,9 @@ function mc_notice_group($openid, $old_group, $now_group, $url = '', $remark = '
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['group']['tpl'], $data, $url);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['group']['tpl'], $data, $url);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['group']['tpl'])) {
 		$info = "【{$_W['account']['name']}】会员组变更通知\n";
 		$info .= "您的会员等级在{$time}由{$old_group}变更为{$now_group}。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1315,7 +1237,7 @@ function mc_notice_group($openid, $old_group, $now_group, $url = '', $remark = '
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1326,15 +1248,12 @@ function mc_notice_nums_plus($openid, $type, $num, $total_num, $remark = '感谢
 	if(empty($num) || empty($total_num) || empty($type)) {
 		return error(-1, '参数错误');
 	}
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['nums_plus']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$time = date('Y-m-d H:i');
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['nums_plus']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您的{$type}已充次成功",
@@ -1361,9 +1280,9 @@ function mc_notice_nums_plus($openid, $type, $num, $total_num, $remark = '感谢
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['nums_plus']['tpl'], $data);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['nums_plus']['tpl'], $data);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['nums_plus']['tpl'])) {
 		$info = "【{$_W['account']['name']}】-【{$type}】充值通知\n";
 		$info .= "您的{$type}已充值成功，本次充次【{$num}】次，总剩余【{$total_num}】次。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1372,7 +1291,7 @@ function mc_notice_nums_plus($openid, $type, $num, $total_num, $remark = '感谢
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1383,15 +1302,12 @@ function mc_notice_nums_times($openid, $card_id, $type, $num, $remark = '感谢�
 	if(empty($num) || empty($type) || empty($card_id)) {
 		return error(-1, '参数错误');
 	}
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['nums_times']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$time = date('Y-m-d H:i');
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['nums_times']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您的{$type}已成功使用了【1】次。",
@@ -1418,9 +1334,9 @@ function mc_notice_nums_times($openid, $card_id, $type, $num, $remark = '感谢�
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['nums_times']['tpl'], $data);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['nums_times']['tpl'], $data);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['nums_times']['tpl'])) {
 		$info = "【{$_W['account']['name']}】-【{$type}】消费通知\n";
 		$info .= "您的{$type}已成功使用了一次，总剩余【{$num}】次，消费时间【{$time}】。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1429,7 +1345,7 @@ function mc_notice_nums_times($openid, $card_id, $type, $num, $remark = '感谢�
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1437,14 +1353,11 @@ function mc_notice_nums_times($openid, $card_id, $type, $num, $remark = '感谢�
 
 function mc_notice_times_plus($openid, $card_id, $type, $fee, $days, $endtime = '', $remark = '感谢您对本店的支持，欢迎下次再来！') {
 	global $_W;
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
-	if(empty($acc->noticetpl['times_plus']['tpl'])) {
-		return error(-1, '未开启通知');
-	}
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && empty($account->noticetpl['times_plus']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => "您好，您的{$type}已续费成功。",
@@ -1475,9 +1388,9 @@ function mc_notice_times_plus($openid, $card_id, $type, $fee, $days, $endtime = 
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['times_plus']['tpl'], $data);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['times_plus']['tpl'], $data);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['times_plus']['tpl'])) {
 		$info = "【{$_W['account']['name']}】-【{$type}】续费通知\n";
 		$info .= "您的{$type}已成功续费，续费时长【{$days}】天，续费金额【{$fee}】元，有效期至【{$endtime}】。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1486,7 +1399,7 @@ function mc_notice_times_plus($openid, $card_id, $type, $fee, $days, $endtime = 
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1494,15 +1407,12 @@ function mc_notice_times_plus($openid, $card_id, $type, $fee, $days, $endtime = 
 
 function mc_notice_times_times($openid, $title, $type, $endtime = '', $remark = '请注意时间，防止服务失效！') {
 	global $_W;
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
-	}
-	if(empty($acc->noticetpl['times_times']['tpl'])) {
-		return error(-1, '未开启通知');
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 
-	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SERVICE_VERIFY && !empty($account->noticetpl['times_times']['tpl'])) {
 		$data = array(
 			'first' => array(
 				'value' => $title,
@@ -1521,9 +1431,9 @@ function mc_notice_times_times($openid, $title, $type, $endtime = '', $remark = 
 				'color' => '#ff510'
 			),
 		);
-		$status = $acc->sendTplNotice($openid, $acc->noticetpl['times_times']['tpl'], $data);
+		$status = $account->sendTplNotice($openid, $account->noticetpl['times_times']['tpl'], $data);
 	}
-	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY) {
+	if($_W['account']['level'] == ACCOUNT_SUBSCRIPTION_VERIFY || is_error($status) || empty($account->noticetpl['times_times']['tpl'])) {
 		$info = "【{$_W['account']['name']}】-【{$type}】服务到期通知\n";
 		$info .= "您的{$type}即将到期，有效期至【{$endtime}】。\n";
 		$info .= !empty($remark) ? "备注：{$remark}\n\n" : '';
@@ -1532,7 +1442,7 @@ function mc_notice_times_times($openid, $title, $type, $endtime = '', $remark = 
 			'text' => array('content' => urlencode($info)),
 			'touser' => $openid,
 		);
-		$status = $acc->sendCustomNotice($custom);
+		$status = $account->sendCustomNotice($custom);
 	}
 	return $status;
 }
@@ -1540,9 +1450,9 @@ function mc_notice_times_times($openid, $title, $type, $endtime = '', $remark = 
 
 function mc_notice_consume($openid, $title, $content, $url = '') {
 	global $_W;
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	if($_W['account']['level'] == 4) {
 		mc_notice_credit2($openid, $content['uid'], $content['credit2_num'], $content['credit1_num'], $content['store'], '', $content['remark']);
@@ -1555,16 +1465,16 @@ function mc_notice_consume($openid, $title, $content, $url = '') {
 
 function mc_notice_custom_text($openid, $title, $info) {
 	global $_W;
-	$acc = mc_notice_init();
-	if(is_error($acc)) {
-		return error(-1, $acc['message']);
+	$account = mc_notice_init();
+	if(is_error($account)) {
+		return error(-1, $account['message']);
 	}
 	$custom = array(
 		'msgtype' => 'text',
 		'text' => array('content' => urlencode($title . '\n' . $info)),
 		'touser' => $openid,
 	);
-	$status = $acc->sendCustomNotice($custom);
+	$status = $account->sendCustomNotice($custom);
 	return $status;
 }
 
@@ -1602,8 +1512,7 @@ function mc_init_fans_info($openid, $force_init_member = false){
 		return true;
 	}
 		if (empty($fans['subscribe'])) {
-		pdo_update('mc_mapping_fans', array('follow' => 0, 'unfollowtime' => TIMESTAMP), array('fanid' => $openid));
-		cache_build_fansinfo($openid);
+		pdo_update('mc_mapping_fans', array('follow' => 0, 'unfollowtime' => TIMESTAMP), array('openid' => $openid));
 		return true;
 	}
 	$fans_mapping = mc_fansinfo($openid);
@@ -1614,7 +1523,7 @@ function mc_init_fans_info($openid, $force_init_member = false){
 		'updatetime' => TIMESTAMP,
 		'followtime' => $fans['subscribe_time'],
 		'follow' => $fans['subscribe'],
-		'nickname' => stripcslashes($fans['nickname']),
+		'nickname' => strip_emoji(stripcslashes($fans['nickname'])),
 		'tag' => base64_encode(iserializer($fans)),
 		'unionid' => $fans['unionid'],
 		'groupid' => !empty($fans['tagid_list']) ? (','.join(',', $fans['tagid_list']).',') : '',
@@ -1655,7 +1564,6 @@ function mc_init_fans_info($openid, $force_init_member = false){
 
 	if (!empty($fans_mapping)) {
 		pdo_update('mc_mapping_fans', $fans_update_info, array('fanid' => $fans_mapping['fanid']));
-		cache_build_fansinfo($openid);
 	} else {
 		$fans_update_info['salt'] = random(8);
 		$fans_update_info['unfollowtime'] = 0;
@@ -1739,15 +1647,15 @@ function mc_card_settings_hide($item = '') {
 			return true;
 		}
 	} elseif (empty($item)) {
-		if (empty($mcFields['idcard']) && empty($mcFields['height']) && empty($mcFields['weight']) 
-		&& empty($mcFields['bloodtype']) && empty($mcFields['zodiac']) && empty($mcFields['constellation']) 
-		&& empty($mcFields['site']) && empty($mcFields['affectivestatus']) && empty($mcFields['lookingfor']) 
-		&& empty($mcFields['bio']) && empty($mcFields['interest']) && empty($mcFields['telephone']) 
-		&& empty($mcFields['qq']) && empty($mcFields['msn']) && empty($mcFields['taobao']) 
-		&& empty($mcFields['alipay']) && empty($mcFields['education']) && empty($mcFields['graduateschool']) 
-		&& empty($mcFields['studentid']) && empty($mcFields['company']) && empty($mcFields['occupation']) 
-		&& empty($mcFields['position']) && empty($mcFields['revenue']) && empty($mcFields['avatar']) 
-		&& empty($mcFields['nickname']) && empty($mcFields['realname']) && empty($mcFields['gender']) 
+		if (empty($mcFields['idcard']) && empty($mcFields['height']) && empty($mcFields['weight'])
+		&& empty($mcFields['bloodtype']) && empty($mcFields['zodiac']) && empty($mcFields['constellation'])
+		&& empty($mcFields['site']) && empty($mcFields['affectivestatus']) && empty($mcFields['lookingfor'])
+		&& empty($mcFields['bio']) && empty($mcFields['interest']) && empty($mcFields['telephone'])
+		&& empty($mcFields['qq']) && empty($mcFields['msn']) && empty($mcFields['taobao'])
+		&& empty($mcFields['alipay']) && empty($mcFields['education']) && empty($mcFields['graduateschool'])
+		&& empty($mcFields['studentid']) && empty($mcFields['company']) && empty($mcFields['occupation'])
+		&& empty($mcFields['position']) && empty($mcFields['revenue']) && empty($mcFields['avatar'])
+		&& empty($mcFields['nickname']) && empty($mcFields['realname']) && empty($mcFields['gender'])
 		&& empty($mcFields['birthyear']) && empty($mcFields['resideprovince'])) {
 			return true;
 		}
@@ -1782,4 +1690,116 @@ function mc_card_grant_credit($openid, $card_fee, $storeid = 0, $modulename) {
 	} else {
 		return error(-1, '');
 	}
+}
+
+
+function mc_current_real_uniacid() {
+	global $_W;
+	if (!empty($_W['account']['link_uniacid']) || (!empty($_W['account']) && $_W['uniacid'] != $_W['account']['uniacid'])) {
+		return $_W['account']['uniacid'];
+	} else {
+		return $_W['uniacid'];
+	}
+}
+
+function mc_parse_profile($profile) {
+	global $_W;
+	if (empty($profile)) {
+		return array();
+	}
+	if (!empty($profile['avatar'])) {
+		$profile['avatar'] = tomedia($profile['avatar']);
+	} else {
+		$profile['avatar'] = './resource/images/nopic.jpg';
+	}
+	$profile['avatarUrl'] = $profile['avatar'];
+	$profile['birth'] = array(
+		'year' => $profile['birthyear'],
+		'month' => $profile['birthmonth'],
+		'day' => $profile['birthday'],
+	);
+	$profile['reside'] = array(
+		'province' => $profile['resideprovince'],
+		'city' => $profile['city'],
+		'district' => $profile['dist']
+	);
+		if(empty($profile['email']) || (!empty($profile['email']) && substr($profile['email'], -6) == 'we7.cc' && strlen($profile['email']) == 39)) {
+		$profile['email'] = '';
+	}
+	return $profile;
+};
+
+function mc_member_export_parse($members){
+	if (empty($members)) {
+		return false;
+	}
+	$groups = mc_groups();
+	$header = array(
+		'uid' => 'UID', 'nickname' => '昵称', 'realname' => '姓名', 'groupid' => '会员组',
+		'mobile' => '手机', 'email' => '邮箱', 'credit1' => '积分', 'credit2' => '余额', 'createtime' => '注册时间',
+	);
+	$keys = array_keys($header);
+	$html = "\xEF\xBB\xBF";
+	foreach ($header as $li) {
+		$html .= $li . "\t ,";
+	}
+	$html .= "\n";
+	$count = count($members);
+	$pagesize = ceil($count/5000);
+	for ($j = 1; $j <= $pagesize; $j++) {
+		$list = array_slice($members, ($j-1) * 5000, 5000);
+		if (!empty($list)) {
+			$size = ceil(count($list) / 500);
+			for ($i = 0; $i < $size; $i++) {
+				$buffer = array_slice($list, $i * 500, 500);
+				$user = array();
+				foreach ($buffer as $row) {
+					if (strexists($row['email'], 'we7.cc')) {
+						$row['email'] = '';
+					}
+					$row['createtime'] = date('Y-m-d H:i:s', $row['createtime']);
+					$row['groupid'] = $groups[$row['groupid']]['title'];
+					foreach ($keys as $key) {
+						$data[] = $row[$key];
+					}
+					$user[] = implode("\t ,", $data) . "\t ,";
+					unset($data);
+				}
+				$html .= implode("\n", $user) . "\n";
+			}
+		}
+	}
+	return $html;
+}
+
+
+function mc_fans_has_member_info($tag) {
+	if (is_base64($tag)) {
+		$tag = base64_decode($tag);
+	}
+	if (is_serialized($tag)) {
+		$tag = iunserializer($tag);
+	}
+	$profile = array();
+	if (!empty($tag)) {
+		if(!empty($tag['nickname'])) {
+			$profile['nickname'] = $tag['nickname'];
+		}
+		if(!empty($tag['sex'])) {
+			$profile['gender'] =$tag['sex'];
+		}
+		if(!empty($tag['province'])) {
+			$profile['resideprovince'] = $tag['province'];
+		}
+		if(!empty($tag['city'])) {
+			$profile['residecity'] = $tag['city'];
+		}
+		if(!empty($tag['country'])) {
+			$profile['nationality'] = $tag['country'];
+		}
+		if(!empty($tag['headimgurl'])) {
+			$profile['avatar'] = rtrim($tag['headimgurl']);
+		}
+	}
+	return $profile;
 }

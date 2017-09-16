@@ -87,3 +87,21 @@ if (!function_exists('hex2bin')) {
 		return $sbin;
 	}
 }
+
+if (!function_exists('mb_strlen')) {
+	function mb_strlen($string, $charset = '') {
+		return istrlen($string, $charset);
+	}
+}
+
+
+if (!interface_exists('SessionHandlerInterface')) {
+	interface SessionHandlerInterface  {}
+}
+
+
+if (!function_exists("fastcgi_finish_request")) {
+	function fastcgi_finish_request() {
+		return error(-1, 'Not npm or fast cgi');
+	}
+}

@@ -27,7 +27,9 @@ function cache_memcache() {
 }
 
 
-function cache_read($key, $forcecache = false) {
+function cache_read($key, $forcecache = true) {
+	$key = cache_namespace($key);
+	
 	$memcache = cache_memcache();
 	if (is_error($memcache)) {
 		return $memcache;
@@ -50,7 +52,9 @@ function cache_search($key) {
 }
 
 
-function cache_write($key, $value, $ttl = 0, $forcecache = false) {
+function cache_write($key, $value, $ttl = 0, $forcecache = true) {
+	$key = cache_namespace($key);
+	
 	$memcache = cache_memcache();
 	if (is_error($memcache)) {
 		return $memcache;
@@ -69,16 +73,24 @@ function cache_write($key, $value, $ttl = 0, $forcecache = false) {
 }
 
 
-function cache_delete($key) {
+function cache_delete($key, $forcecache = true) {
+	$origins_cache_key = $key;
+	$key = cache_namespace($key);
+	
 	$memcache = cache_memcache();
 	if (is_error($memcache)) {
 		return $memcache;
 	}
-	if ($memcache->delete(cache_prefix($key))) {
+	
+	if (empty($forcecache)) {
 		pdo_delete('core_cache', array('key' => $key));
+	}
+	
+	if ($memcache->delete(cache_prefix($key))) {
+		unset($GLOBALS['_W']['cache'][$origins_cache_key]);
 		return true;
 	} else {
-		pdo_delete('core_cache', array('key' => $key));
+		unset($GLOBALS['_W']['cache'][$origins_cache_key]);
 		return false;
 	}
 }
@@ -86,17 +98,52 @@ function cache_delete($key) {
 
 
 function cache_clean($prefix = '') {
+	if (!empty($prefix)) {
+		$cache_namespace = cache_namespace($prefix, true);
+		unset($GLOBALS['_W']['cache']);
+		pdo_delete('core_cache', array('key LIKE' => $cache_namespace . '%'));
+		return true;
+	}
 	$memcache = cache_memcache();
 	if (is_error($memcache)) {
 		return $memcache;
 	}
 	if ($memcache->flush()) {
-		unset($_W['cache']);
+		unset($GLOBALS['_W']['cache']);
 		pdo_delete('core_cache');
 		return true;
 	} else {
 		return false;
 	}
+}
+
+
+function cache_namespace($key, $forcenew = false) {
+	if (!strexists($key, ':')) {
+		$namespace_cache_key = $key;
+	} else {
+		list($key1, $key2) = explode(':', $key);
+		if ($key1 == 'we7') {
+			$namespace_cache_key = $key2;
+		} else {
+			$namespace_cache_key = $key1;
+		}
+	}
+	if (!in_array($namespace_cache_key, array('unimodules', 'user_modules'))) {
+		return $key;
+	}
+	
+		$namespace_cache_key = 'cachensl:' . $namespace_cache_key;
+	$memcache = cache_memcache();
+	if (is_error($memcache)) {
+		return $memcache;
+	}
+	$namespace = $memcache->get(cache_prefix($namespace_cache_key));
+	if (empty($namespace) || $forcenew) {
+		$namespace = random(5);
+		$memcache->set(cache_prefix($namespace_cache_key), $namespace, MEMCACHE_COMPRESSED, 0);
+	}
+	return $namespace . ':' . $key;
 }
 
 function cache_prefix($key) {

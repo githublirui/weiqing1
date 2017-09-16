@@ -116,7 +116,6 @@
 			return self::IOS6_NOT;
 		}
 	}
-	
 		public static function isMicroMessage($agent = '')
 	{
 		$agent = self::getAgent($agent);
@@ -142,8 +141,8 @@
 				if (isset($_SERVER['HTTP_X_WAP_PROFILE'])) {
 			return true;
 		}
-				if (isset($_SERVER['HTTP_VIA'])) {
-						return stristr($_SERVER['HTTP_VIA'], "wap") ? true : false;
+				if (isset($_SERVER['HTTP_VIA']) && stristr($_SERVER['HTTP_VIA'], "wap")) {
+				return true;
 		}
 				if (isset ($_SERVER['HTTP_USER_AGENT'])) {
 			$clientkeywords = array('nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc', 'sgh', 'lg', 'sharp',

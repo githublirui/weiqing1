@@ -110,20 +110,21 @@ function file_upload($file, $type = 'image', $name = '') {
 	global $_W;
 	$ext = pathinfo($file['name'], PATHINFO_EXTENSION);
 	$ext = strtolower($ext);
+	$setting = setting_load('upload');
 	switch ($type) {
 		case 'image' :
 		case 'thumb' :
 			$allowExt = array('gif', 'jpg', 'jpeg', 'bmp', 'png', 'ico');
-			$limit = 4 * 1024;
+			$limit = $setting['upload']['image']['limit'];
 			break;
 		case 'voice' :
 		case 'audio' :
 			$allowExt = array('mp3', 'wma', 'wav', 'amr');
-			$limit = 6 * 1024;
+			$limit = $setting['upload']['audio']['limit'];
 			break;
 		case 'video' :
 			$allowExt = array('rm', 'rmvb', 'wmv', 'avi', 'mpg', 'mpeg', 'mp4');
-			$limit = 20 * 1024;
+			$limit = $setting['upload']['audio']['limit'];
 			break;
 	}
 	$setting = $_W['setting']['upload'][$type];
@@ -203,7 +204,7 @@ function file_remote_upload($filename, $auto_delete_local = true) {
 		return false;
 	}
 	if ($_W['setting']['remote']['type'] == '1') {
-		require_once (IA_ROOT . '/framework/library/ftp/ftp.php');
+		load()->library('ftp');
 		$ftp_config = array(
 			'hostname' => $_W['setting']['remote']['ftp']['host'],
 			'username' => $_W['setting']['remote']['ftp']['username'],
@@ -320,7 +321,7 @@ function file_remote_delete($file) {
 		return true;
 	}
 	if ($_W['setting']['remote']['type'] == '1') {
-		require_once (IA_ROOT . '/framework/library/ftp/ftp.php');
+		load()->library('ftp');
 		$ftp_config = array(
 			'hostname' => $_W['setting']['remote']['ftp']['host'],
 			'username' => $_W['setting']['remote']['ftp']['username'],
@@ -608,7 +609,7 @@ function file_lists($filepath, $subdir = 1, $ex = '', $isdir = 0, $md5 = 0, $enf
 }
 
 
-function file_fetch($url, $limit = 0, $path = '') {
+function file_remote_attach_fetch($url, $limit = 0, $path = '') {
 	global $_W;
 	$url = trim($url);
 	if (empty($url)) {
@@ -616,6 +617,7 @@ function file_fetch($url, $limit = 0, $path = '') {
 	}
 	load()->func('communication');
 	$resp = ihttp_get($url);
+
 	if (is_error($resp)) {
 		return error(-1, '提取文件失败, 错误信息: '.$resp['message']);
 	}
@@ -625,6 +627,7 @@ function file_fetch($url, $limit = 0, $path = '') {
 	$ext = $type = '';
 	switch ($resp['headers']['Content-Type']) {
 		case 'application/x-jpg' :
+		case 'image/jpg' :
 		case 'image/jpeg' :
 			$ext = 'jpg';
 			$type = 'images';
@@ -670,7 +673,7 @@ function file_fetch($url, $limit = 0, $path = '') {
 	if (! $path){
 		return error(- 1, '提取文件失败: 上传路径配置有误.');
 	}
-	if (! file_exists(ATTACHMENT_ROOT . $path) && mkdir(ATTACHMENT_ROOT . $path, 0700, true)) {
+	if (!file_exists(ATTACHMENT_ROOT . $path) && mkdirs(ATTACHMENT_ROOT . $path, 0700, true)) {
 		return error(- 1, '提取文件失败: 权限不足.');
 	}
 	
@@ -695,7 +698,13 @@ function file_fetch($url, $limit = 0, $path = '') {
 	return $pathname;
 }
 function file_is_image($url) {
+	if (!parse_path($url)) {
+		return false;
+	}
 	$pathinfo = pathinfo($url);
 	$extension = strtolower($pathinfo['extension']);
 	return !empty($extension) && in_array($extension, array('jpg', 'jpeg', 'gif', 'png'));
 }
+
+
+

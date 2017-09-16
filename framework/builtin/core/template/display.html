@@ -19,17 +19,16 @@
 	<input type="hidden" name="reply[reply_module]" value="">
 		<ul class="keywords-list">
 		</ul>
-		<div class="we7-select-msg we7-padding-vertical-max">
+		<div class="we7-select-msg">
 			<ul class="tab-navs">
-				<li>添加：</li>
 				<li class="tab-nav tab-appmsg active {if $options['news']}hidden{/if}">
-					<a href="javascript:void(0);" onclick="select_mediaid('news');">&nbsp;<i class="wi wi-appmsg"></i><span class="msg-tab-title">图文</span></a>
+					<a href="javascript:void(0);"{if $_GPC['a'] == 'mass'} onclick="select_mediaid('news', 'wx')"{else} onclick="select_mediaid('news')"{/if}>&nbsp;<i class="wi wi-appmsg"></i><span class="msg-tab-title">图文</span></a>
 				</li>
 				<li class="tab-nav tab-text {if $options['basic']}hidden{/if}">
 					<a href="javascript:void(0);" onclick="select_mediaid('basic');">&nbsp;<i class="wi wi-text"></i><span class="msg-tab-title">文字</span></a>
 				</li>
 				<li class="tab-nav tab-img {if $options['image']}hidden{/if}">
-					<a href="javascript:void(0);" onclick="select_mediaid('image');">&nbsp;<i class="wi wi-img"></i><span class="msg-tab-title">图片</span></a>
+					<a href="javascript:void(0);" onclick="select_mediaid('image');">&nbsp;<i class="wi wi-img"></i><span class="msg-tab-title">微信图片</span></a>
 				</li>
 				<li class="tab-nav tab-audio {if $options['music']}hidden{/if}">
 					<a href="javascript:void(0);" onclick="select_mediaid('music');">&nbsp;<i class="wi wi-notice"></i><span class="msg-tab-title">音乐</span></a>
@@ -67,7 +66,7 @@
 				var middleVal = oldVal.split(',');
 				newVal = angular.copy(middleVal);
 				angular.forEach(middleVal, function(val, key) {
-					middleVal[key] = htmlEncode(val);
+					middleVal[key] = htmlEncode(angular.toJson(val));
 				});
 				var index = _.indexOf(middleVal, htmlEncode(angular.toJson(media)));
 				newVal = _.without(newVal, newVal[index]);
@@ -166,20 +165,22 @@
 		$(ele).parent().parent('.del-'+type+'-media').parent('li').remove();
 	};
 
-	window.select_mediaid = function(type, val){
+	window.select_mediaid = function(type, otherVal){
 		var option = {
 			type: type,
-			typeVal: angular.isDefined(val) ? val : null,
-			ignore: {
-				basic: type === 'basic' ? false : true,
-				wxcard: type === 'wxcard' ? false : true,
-				image: type === 'image' ? false : true,
-				music: type === 'music' ? false : true,
-				news: type === 'news' ? false : true,
-				video: type === 'video' ? false : true,
-				voice: type === 'voice' ? false : true,
-				keyword: type === 'keyword' ? false : true,
-				module: type === 'module' ? false : true
+			isWechat : true, // 默认显示微信
+			needType : 3, //  除了图文 其他只能微信
+			otherVal : otherVal,//
+			others: {
+				image: {
+					needType : 1
+				},
+				video : {
+					needType : 1
+				},
+				voice : {
+					needType : 1
+				}
 			}
 		};
 		if (type == 'module') {
@@ -189,23 +190,21 @@
 			var replyVal = [];
 			$(':hidden[name="reply[reply_'+type+']"]').val() == '' ? '' : replyVal.push($(':hidden[name="reply[reply_'+type+']"]').val());
 			if (type == 'basic') {
-				if (angular.isDefined(val)) {
+				if (angular.isDefined(otherVal)) {
 					var editmedia = $(".del-basic-media");
 					for (var i = 0; i < editmedia.length; i++) {
-						if ($(editmedia.get(i)).find('.edit-gray').data('media') == val) {
+						if (htmlEncode($(editmedia.get(i)).find('.edit-gray').data('media')) == htmlEncode(angular.toJson(otherVal))) {
 							var inputVal = $(':hidden[name="reply[reply_'+type+']"]').val();
 							var inputValArr = inputVal.split(',');
+							var middleVal = angular.copy(inputValArr);
 							angular.forEach(inputValArr, function(val, key) {
 								inputValArr[key] = htmlEncode(val);
 							});
-							var index = _.indexOf(inputValArr, htmlEncode(angular.toJson(val)));
-							inputValArr[index] = angular.toJson(material.content);
-							angular.forEach(inputValArr, function(val, key) {
-								inputValArr[key] = htmlDecode(val);
-							});
-							replyVal = inputValArr.join(',');
+							var index = _.indexOf(inputValArr, htmlEncode(angular.toJson(otherVal)));
+							material.content = material.content.replace(/,/g, '，');
+							middleVal[index] = angular.toJson(material.content);
+							replyVal = middleVal.join(',');
 							$(':hidden[name="reply[reply_'+type+']"]').val(replyVal);
-							$(editmedia.get(i)).find('.edit-gray').data('media', htmlEncode(material.content));
 							$(editmedia.get(i)).html(
 								'	<div class="desc">'+
 								'		<div class="media-content">'+
@@ -214,8 +213,8 @@
 								'		</div>'+
 								'	</div>'+
 								'	<div class="opr">'+
-								'		<a href="javascript:;" data-media="'+htmlEncode(material.content)+'" class="edit-gray" onclick="select_mediaid(\'basic\', \''+htmlEncode(material.content)+'\')">编辑</a>'+
-								'		<a href="javascript:;" data-media="'+htmlEncode(material.content)+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
+								'		<a href="javascript:;" data-media="'+htmlEncode(angular.toJson(material.content))+'" class="edit-gray" onclick="select_mediaid(\'basic\', '+htmlEncode(angular.toJson(material.content))+')">编辑</a>'+
+								'		<a href="javascript:;" data-media="'+htmlEncode(angular.toJson(material.content))+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
 								'	</div>'
 							);
 							break;
@@ -225,6 +224,7 @@
 					if($.trim(material.content).length == 0) {
 						return false;
 					}
+					material.content = material.content.replace(/,/g, '，');
 					replyVal.push(angular.toJson(material.content));
 					$(':hidden[name="reply[reply_'+type+']"]').val(replyVal);
 					$('.keywords-list').append(
@@ -236,8 +236,8 @@
 						'		</div>'+
 						'	</div>'+
 						'	<div class="opr">'+
-						'		<a href="javascript:;" data-media="'+htmlEncode(material.content)+'" class="edit-gray" onclick="select_mediaid(\'basic\', \''+htmlEncode(material.content)+'\')">编辑</a>'+
-						'		<a href="javascript:;" data-media="'+htmlEncode(material.content)+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
+						'		<a href="javascript:;" data-media="'+htmlEncode(angular.toJson(material.content))+'" class="edit-gray" onclick="select_mediaid(\'basic\', '+htmlEncode(angular.toJson(material.content))+')">编辑</a>'+
+						'		<a href="javascript:;" data-media="'+htmlEncode(angular.toJson(material.content))+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
 						'	</div>'+
 						'</div>'+
 						'</li>'
@@ -250,8 +250,8 @@
 				replyVal.push(angular.toJson(material.id));
 				$(':hidden[name="reply[reply_'+type+']"]').val(replyVal);
 				var keywords = [];
-				for(var i = 0; i < material.child_items.length; i++) {
-					keywords += '&nbsp;&nbsp;' + material.child_items[i].content;
+				for(var i = 0; i < material.length; i++) {
+					keywords += '&nbsp;&nbsp;' + material.content;
 				}
 				$('.keywords-list').append(
 					'<li>'+
@@ -259,13 +259,14 @@
 					'	<div class="desc">'+
 					'		<div class="media-content">'+
 					'				<a class="title-wrp" href="javascript:;">'+
-					'					<span class="title">[关键字]'+material.name+'</span>'+
+					'					<span class="title">[关键字]'+material.content+'</span>'+
 					'				</a>'+
 					'				<p class="desc"><a href="javascript:;" class="appmsg-desc">'+keywords+'</a></p>'+
 					'		</div>'+
 					'	</div>'+
 					'	<div class="opr">'+
-					'		<a href="javascript:;" data-media="'+material.name+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
+					'<a href="./index.php?c=platform&a=reply&do=post&m=keyword&rid=' + material.rid + '" target="_blank" class="del-gray">编辑</a> '  +
+					'		<a href="javascript:;" data-media="'+material.content+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
 					'	</div>'+
 					'</div>'+
 					'</li>'
@@ -311,7 +312,7 @@
 							'		<div class="media-content">'+
 							'			<div class="appmsgSendedItem">'+
 							'				<a class="title-wrp" href="javascript:;">'+
-							'					 <span class="icon cover" style="background-image:'+material.url+';"></span>'+
+							'					 <span class="icon cover" style="background-image:url('+material.url+');"></span>'+
 							'					<span class="title">[图片]</span>'+
 							'				</a>'+
 							'			</div>'+
@@ -331,7 +332,6 @@
 								author: newsV.author,
 								description: newsV.digest,
 								thumb: newsV.thumb_url,
-								content: newsV.content,
 								url: newsV.content_source_url,
 								createtime: material.createtime,
 								displayorder: newsV.displayorder ? newsV.displayorder : 0,
@@ -504,8 +504,8 @@
 							'		</div>'+
 							'	</div>'+
 							'	<div class="opr">'+
-							'		<a href="javascript:;" data-media="'+htmlEncode(basicVal.content)+'" class="edit-gray" onclick="select_mediaid(\'basic\', \''+htmlEncode(basicVal.content)+'\')">编辑</a>'+
-							'		<a href="javascript:;" data-media="'+htmlEncode(basicVal.content)+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
+							'		<a href="javascript:;" data-media="'+htmlEncode(angular.toJson(basicVal.content))+'" class="edit-gray" onclick="select_mediaid(\'basic\', '+htmlEncode(angular.toJson(basicVal.content))+')">编辑</a>'+
+							'		<a href="javascript:;" data-media="'+htmlEncode(angular.toJson(basicVal.content))+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
 							'	</div>'+
 							'</div>'+
 							'</li>'
@@ -521,7 +521,6 @@
 							author: newsVal.author,
 							description: newsVal.description ? newsVal.description : newsVal.digest,
 							thumb: newsVal.thumb ? newsVal.thumb : newsVal.thumb_url,
-							content: newsVal.content,
 							url: newsVal.url,
 							createtime: newsVal.createtime,
 							displayorder: newsVal.displayorder ? newsVal.displayorder : 0,
@@ -540,7 +539,7 @@
 								'			<div class="appmsgSendedItem">'+
 								'				<a class="title-wrp" href="javascript:;">'+
 								'					<span class="icon cover" style="background-image:url('+(newsVal.thumb ? newsVal.thumb : newsVal.thumb_url)+');"></span>'+
-								'					<span class="title">[图文消息]'+newsVal.title+(newsVal.isdeleted ? '<span class="color-red">（素材不存在或已被删除）</span>' : '')+
+								'					<span class="title">[图文消息]'+newsVal.title+(!newsVal.attach_id ? '<span class="color-red">（素材不存在或已被删除）</span>' : '')+
 								'					</span>'+
 								'				</a>'+
 								'				<p class="desc"><a href="javascript:;" class="appmsg-desc">'+(newsVal.description ? newsVal.description : '')+'</a></p>'+
@@ -548,7 +547,7 @@
 								'		</div>'+
 								'	</div>'+
 								'	<div class="opr">'+
-								'		<a href="./index.php?c=platform&a=material-post&type=reply&newsid='+(newsVal.attach_id ? newsVal.attach_id : '')+'&reply_news_id='+newsVal.id+'" target="_blank" class="del-gray">编辑</a>'+
+										'<a href="./index.php?c=platform&a=material-post&type=reply&newsid='+(newsVal.attach_id ? newsVal.attach_id : '')+'&reply_news_id='+newsVal.id+'" target="_blank" class="del-gray">编辑</a>'  +
 								'		<a href="javascript:;" data-media="'+newsVal.media_id+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
 								'	</div>'+
 								'</div>'+
@@ -677,10 +676,9 @@
 					break;
 				case 'keyword':
 					angular.forEach(val, function(keywordVal, keywordKey) {
-						replyVal.push(angular.toJson(keywordVal.rid));
+						replyVal.push(angular.toJson(keywordVal.id));
 						var keywords = '&nbsp;&nbsp;' + keywordVal.content;
 						$('.keywords-list').append(
-
 								'<li>'+
 								'<div class="del-'+type+'-media">'+
 								'	<div class="desc">'+
@@ -692,7 +690,8 @@
 								'		</div>'+
 								'	</div>'+
 								'	<div class="opr">'+
-								'		<a href="javascript:;" data-media="'+keywordVal.name+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
+								'<a href="./index.php?c=platform&a=reply&do=post&m=keyword&rid=' + keywordVal.rid + '" target="_blank" class="del-gray">编辑</a> '  +
+								'<a href="javascript:;" data-media="'+keywordVal.name+'" class="del-gray" onclick="delmedia(\''+type+'\', this)">删除</a>'+
 								'	</div>'+
 								'</div>'+
 								'</li>'
@@ -786,7 +785,7 @@
 		}
 		return true;
 	};
-	function htmlEncode(str) { 
+	function htmlEncode(str) {
 		var s = "";
 		if(str.length == 0) return "";
 		s = str.replace(/&/g,"&amp;");
@@ -794,6 +793,7 @@
 		s = s.replace(/>/g,"&gt;");
 		s = s.replace(/\'/g,"&#039;");
 		s = s.replace(/\"/g,"&quot;");
+		s = s.replace(/\n/g, "\\n");
 		return s;
 	}
 	function htmlDecode(str) {
@@ -804,6 +804,7 @@
 		s = s.replace(/&gt;/g,">");
 		s = s.replace(/&#039;/g,"'");
 		s = s.replace(/&quot;/g,'"');
+		s = s.replace(/\\n/g,'\n');
 		return s;
 	}
     function cutStr(str, len) {

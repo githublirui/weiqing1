@@ -27,6 +27,11 @@ function pdo() {
 }
 
 
+function pdos($table = '') {
+	return load()->singleton('Query');
+}
+
+
 function pdo_query($sql, $params = array()) {
 	return pdo()->query($sql, $params);
 }
@@ -59,6 +64,16 @@ function pdo_getslice($tablename, $condition = array(), $limit = array(), &$tota
 
 function pdo_getcolumn($tablename, $condition = array(), $field) {
 	return pdo()->getcolumn($tablename, $condition, $field);
+}
+
+
+function pdo_exists($tablename, $condition = array()) {
+	return pdo()->exists($tablename, $condition);
+}
+
+
+function pdo_count($tablename, $condition = array(), $cachetime = 15) {
+	return pdo()->count($tablename, $condition, $cachetime);
 }
 
 

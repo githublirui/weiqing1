@@ -213,7 +213,7 @@ function ijson_encode($value, $options = 0) {
 		$str = json_encode($value);
 		$json_str = preg_replace_callback("#\\\u([0-9a-f]{4})#i", function($matchs){
 			return iconv('UCS-2BE', 'UTF-8', pack('H4', $matchs[1]));
-			}, $str);
+		}, $str);
 	} else {
 		$json_str = json_encode($value, $options);
 	}
@@ -228,7 +228,7 @@ function iserializer($value) {
 
 function iunserializer($value) {
 	if (empty($value)) {
-		return '';
+		return array();
 	}
 	if (!is_serialized($value)) {
 		return $value;
@@ -239,8 +239,9 @@ function iunserializer($value) {
 			return 's:'.strlen($matchs[2]).':"'.$matchs[2].'";';
 		}, $value);
 		return unserialize($temp);
+	} else {
+		return $result;
 	}
-	return $result;
 }
 
 
@@ -323,37 +324,39 @@ function wurl($segment, $params = array()) {
 	return $url;
 }
 
-
-function murl($segment, $params = array(), $noredirect = true, $addhost = false) {
-	global $_W;
-	list($controller, $action, $do) = explode('/', $segment);
-	if (!empty($addhost)) {
-		$url = $_W['siteroot'] . 'app/';
-	} else {
-		$url = './';
-	}
-	$str = '';
-	if(uni_is_multi_acid()) {
-		$str = "&j={$_W['acid']}";
-	}
-	$url .= "index.php?i={$_W['uniacid']}{$str}&";
-	if (!empty($controller)) {
-		$url .= "c={$controller}&";
-	}
-	if (!empty($action)) {
-		$url .= "a={$action}&";
-	}
-	if (!empty($do)) {
-		$url .= "do={$do}&";
-	}
-	if (!empty($params)) {
-		$queryString = http_build_query($params, '', '&');
-		$url .= $queryString;
-		if ($noredirect === false) {
-						$url .= '&wxref=mp.weixin.qq.com#wechat_redirect';
+if (!function_exists('murl')) {
+	
+	function murl($segment, $params = array(), $noredirect = true, $addhost = false) {
+		global $_W;
+		list($controller, $action, $do) = explode('/', $segment);
+		if (!empty($addhost)) {
+			$url = $_W['siteroot'] . 'app/';
+		} else {
+			$url = './';
 		}
+		$str = '';
+		if(uni_is_multi_acid()) {
+			$str = "&j={$_W['acid']}";
+		}
+		$url .= "index.php?i={$_W['uniacid']}{$str}&";
+		if (!empty($controller)) {
+			$url .= "c={$controller}&";
+		}
+		if (!empty($action)) {
+			$url .= "a={$action}&";
+		}
+		if (!empty($do)) {
+			$url .= "do={$do}&";
+		}
+		if (!empty($params)) {
+			$queryString = http_build_query($params, '', '&');
+			$url .= $queryString;
+			if ($noredirect === false) {
+								$url .= '&wxref=mp.weixin.qq.com#wechat_redirect';
+			}
+		}
+		return $url;
 	}
-	return $url;
 }
 
 
@@ -372,11 +375,11 @@ function pagination($total, $pageIndex, $pageSize = 15, $url = '', $context = ar
 	if ($context['ajaxcallback']) {
 		$context['isajax'] = true;
 	}
-	
+
 	if ($context['callbackfuncname']) {
 		$callbackfunc = $context['callbackfuncname'];
 	}
-	
+
 	$pdata['tcount'] = $total;
 	$pdata['tpage'] = (empty($pageSize) || $pageSize < 0) ? 1 : ceil($total / $pageSize);
 	if ($pdata['tpage'] <= 1) {
@@ -860,16 +863,16 @@ function scriptname() {
 function utf8_bytes($cp) {
 	if ($cp > 0x10000){
 				return	chr(0xF0 | (($cp & 0x1C0000) >> 18)).
-		chr(0x80 | (($cp & 0x3F000) >> 12)).
-		chr(0x80 | (($cp & 0xFC0) >> 6)).
-		chr(0x80 | ($cp & 0x3F));
+			chr(0x80 | (($cp & 0x3F000) >> 12)).
+			chr(0x80 | (($cp & 0xFC0) >> 6)).
+			chr(0x80 | ($cp & 0x3F));
 	}else if ($cp > 0x800){
 				return	chr(0xE0 | (($cp & 0xF000) >> 12)).
-		chr(0x80 | (($cp & 0xFC0) >> 6)).
-		chr(0x80 | ($cp & 0x3F));
+			chr(0x80 | (($cp & 0xFC0) >> 6)).
+			chr(0x80 | ($cp & 0x3F));
 	}else if ($cp > 0x80){
 				return	chr(0xC0 | (($cp & 0x7C0) >> 6)).
-		chr(0x80 | ($cp & 0x3F));
+			chr(0x80 | ($cp & 0x3F));
 	}else{
 				return chr($cp);
 	}
@@ -951,6 +954,21 @@ function aes_encode($message, $encodingaeskey = '', $appid = '') {
 }
 
 
+function aes_pkcs7_decode($encrypt_data, $key, $iv = false) {
+	load()->library('pkcs7');
+	$encrypt_data = base64_decode($encrypt_data);
+	if (!empty($iv)) {
+		$iv = base64_decode($iv);
+	}
+	$pc = new Prpcrypt($key);
+	$result = $pc->decrypt($encrypt_data, $iv);
+	if ($result[0] != 0) {
+		return error($result[0], '解密失败');
+	}
+	return $result[1];
+}
+
+
 function isimplexml_load_string($string, $class_name = 'SimpleXMLElement', $options = 0, $ns = '', $is_prefix = false) {
 	libxml_disable_entity_loader(true);
 	if (preg_match('/(\<\!DOCTYPE|\<\!ENTITY)/i', $string)) {
@@ -1003,7 +1021,7 @@ function strip_gpc($values, $type = 'g') {
 
 
 function parse_path($path) {
-	$danger_char = array('../', '{php', '<?php', '<%', '<?');
+	$danger_char = array('../', '{php', '<?php', '<%', '<?', '..\\', '\\\\' ,'\\', '..\\\\', '%00', '\0', '\r');
 	foreach ($danger_char as $char) {
 		if (strexists($path, $char)) {
 			return false;
@@ -1030,3 +1048,100 @@ function dir_size($dir) {
 	}
 	return $size;
 }
+
+
+function get_first_pinyin($str) {
+	static $pinyin;
+	$first_char = '';
+	$str = trim($str);
+	if(empty($str)) {
+		return $first_char;
+	}
+	if (empty($pinyin)) {
+		load()->library('pinyin');
+		$pinyin = new Pinyin_Pinyin();
+	}
+	$first_char = $pinyin->get_first_char($str);
+	return $first_char;
+}
+
+
+function strip_emoji($nickname) {
+	$clean_text = "";
+		$regexEmoticons = '/[\x{1F600}-\x{1F64F}]/u';
+	$clean_text = preg_replace($regexEmoticons, '', $nickname);
+		$regexSymbols = '/[\x{1F300}-\x{1F5FF}]/u';
+	$clean_text = preg_replace($regexSymbols, '', $clean_text);
+		$regexTransport = '/[\x{1F680}-\x{1F6FF}]/u';
+	$clean_text = preg_replace($regexTransport, '', $clean_text);
+		$regexMisc = '/[\x{2600}-\x{26FF}]/u';
+	$clean_text = preg_replace($regexMisc, '', $clean_text);
+		$regexDingbats = '/[\x{2700}-\x{27BF}]/u';
+	$clean_text = preg_replace($regexDingbats, '', $clean_text);
+
+	$clean_text = str_replace("'",'',$clean_text);
+	$clean_text = str_replace('"','',$clean_text);
+	$clean_text = str_replace('“','',$clean_text);
+	$clean_text = str_replace('゛','',$clean_text);
+	$search = array(" ","　","\n","\r","\t");
+	$replace = array("","","","","");
+	return str_replace($search, $replace, $clean_text);
+}
+
+
+function emoji_unicode_decode($string) {
+	preg_match_all('/\[U\+(\\w{4,})\]/i', $string, $match);
+	if(!empty($match[1])) {
+		foreach ($match[1] as $emojiUSB) {
+			$string = str_ireplace("[U+{$emojiUSB}]", utf8_bytes(hexdec($emojiUSB)), $string);
+		}
+	}
+	return $string;
+}
+
+function emoji_unicode_encode($string) {
+	$ranges = array(
+		'\\\\ud83c[\\\\udf00-\\\\udfff]', 		'\\\\ud83d[\\\\udc00-\\\\ude4f]', 		'\\\\ud83d[\\\\ude80-\\\\udeff]'  	);
+	preg_match_all('/' . implode('|', $ranges) . '/i', $string, $match);
+	print_r($match);exit;
+}
+
+
+function getglobal($key) {
+	global $_W;
+	$key = explode('/', $key);
+
+	$v = &$_W;
+	foreach ($key as $k) {
+		if (!isset($v[$k])) {
+			return null;
+		}
+		$v = &$v[$k];
+	}
+	return $v;
+}
+
+
+
+if (!function_exists('starts_with')) {
+	function starts_with($haystack, $needles) {
+		foreach ((array) $needles as $needle) {
+			if ($needle != '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+
+function check_url_not_outside_link($redirect) {
+	global $_W;
+	if(starts_with($redirect, 'http') && !starts_with($redirect, $_W['siteroot'])) {
+		$redirect = $_W['siteroot'];
+	}
+	return $redirect;
+}
+
+
+
