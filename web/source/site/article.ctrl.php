@@ -9,14 +9,13 @@ load()->func('file');
 $dos = array('display', 'post', 'del');
 $do = in_array($do, $dos) ? $do : 'display';
 
-uni_user_permission_check('platform_site');
+permission_check_account_user('platform_site');
 $_W['page']['title'] = '文章管理 - 微官网';
 $category = pdo_fetchall("SELECT id,parentid,name FROM ".tablename('site_category')." WHERE uniacid = '{$_W['uniacid']}' ORDER BY parentid ASC, displayorder ASC, id ASC ", array(), 'id');
 $parent = array();
 $children = array();
 
 if (!empty($category)) {
-	$children = '';
 	foreach ($category as $cid => $cate) {
 		if (!empty($cate['parentid'])) {
 			$children[$cate['parentid']][] = $cate;
@@ -104,18 +103,19 @@ if ($do == 'display') {
 			'click' => intval($_GPC['click'])
 		);
 		if (!empty($_GPC['thumb'])) {
-			$data['thumb'] = $_GPC['thumb'];
+			if (file_is_image($_GPC['thumb'])) {
+				$data['thumb'] = $_GPC['thumb'];
+			}
 		} elseif (!empty($_GPC['autolitpic'])) {
 			$match = array();
-			$file_name = file_random_name(ATTACHMENT_ROOT.'images/'.$_W['uniacid'].'/'.date('Y/m').'/', 'jpg');
-			$path = 'images/'.$_W['uniacid'].'/'.date('Y/m').'/'.$file_name;
-			preg_match('/&lt;img.*?src=&quot;(.*?)&quot;/', $_GPC['content'], $match);
+			preg_match('/&lt;img.*?src=&quot;?(.+\.(jpg|jpeg|gif|bmp|png))&quot;/', $_GPC['content'], $match);
 			if (!empty($match[1])) {
 				$url = $match[1];
-				$file = file_get_contents($url);
-				file_write($path, $file);
-				$data['thumb'] = $path;
-				file_remote_upload($path);
+				$file = file_remote_attach_fetch($url);
+				if (!is_error($file)) {
+					$data['thumb'] = $file;
+					file_remote_upload($file);
+				}
 			}
 		} else {
 			$data['thumb'] = '';
@@ -201,20 +201,18 @@ if ($do == 'display') {
 	if (checksubmit('submit')) {
 		foreach ($_GPC['rid'] as $key => $id) {
 			$id = intval($id);
-			$row = pdo_fetch("SELECT id,rid,kid,thumb FROM ".tablename('site_article')." WHERE id = :id", array(':id' => $id));
+			$row = pdo_get('site_article', array('id' => $id, 'uniacid' => $_W['uniacid']));
 			
 			if (empty($row)) {
 				itoast('抱歉，文章不存在或是已经被删除！', '', '');
 			}
-			if (!empty($row['thumb'])) {
-				file_delete($row['thumb']);
-			}
+
 			if (!empty($row['rid'])) {
 				pdo_delete('rule', array('id' => $row['rid'], 'uniacid' => $_W['uniacid']));
 				pdo_delete('rule_keyword', array('rid' => $row['rid'], 'uniacid' => $_W['uniacid']));
 				pdo_delete('news_reply', array('rid' => $row['rid']));
 			}
-			pdo_delete('site_article', array('id' => $id));
+			pdo_delete('site_article', array('id' => $id, 'uniacid'=>$_W['uniacid']));
 		}
 		itoast('批量删除成功！', referer(), 'success');
 	} else {
@@ -224,18 +222,16 @@ if ($do == 'display') {
 		if (empty($row)) {
 			itoast('抱歉，文章不存在或是已经被删除！', '', '');
 		}
-		if (!empty($row['thumb'])) {
-			file_delete($row['thumb']);
-		}
+
 		if (!empty($row['rid'])) {
 			pdo_delete('rule', array('id' => $row['rid'], 'uniacid' => $_W['uniacid']));
 			pdo_delete('rule_keyword', array('rid' => $row['rid'], 'uniacid' => $_W['uniacid']));
 			pdo_delete('news_reply', array('rid' => $row['rid']));
 		}
-		if (pdo_delete('site_article', array('id' => $id))){
+		if (pdo_delete('site_article', array('id' => $id,'uniacid'=>$_W['uniacid']))){
 			itoast('删除成功！', referer(), 'success');
 		} else {
 			itoast('删除失败！', referer(), 'error');
-		}				
+		}
 	}
 }

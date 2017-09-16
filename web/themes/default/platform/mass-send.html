@@ -7,7 +7,7 @@
 		<a href="{php echo url('platform/mass/')}" >素材定时群发</a>
 	</li>
 	<li {if $_GPC['a'] == 'mass' && $do == 'send'}class="active"{/if}>
-		<a href="{php echo url('platform/mass/send')}">定时群发记录</a>
+		<a href="{php echo url('platform/mass/send')}">群发记录</a>
 	</li>
 </ul>
 <div class="mass-send" id="js-mass-send" ng-controller="MassSend" ng-cloak>
@@ -17,7 +17,6 @@
 			<th>消息类型</th>
 			<th>接收用户组</th>
 			<th>预计发送时间</th>
-			<th>实际发送时间</th>
 			<th>发送人数</th>
 			<th>状态</th>
 			<th>操作</th>
@@ -31,7 +30,6 @@
 			</td>
 			<td>{$list['groupname']}</td>
 			<td>{php echo date('Y-m-d H:i', $list['sendtime']);}</td>
-			<td>{if $list['status'] == 0 || $list['status'] == 2}{php echo date('Y-m-d H:i', $list['finalsendtime']);}{else}---{/if}</td>
 			<td>{if $list['group'] == '-1'}全部粉丝{else}{$list['fansnum']}{/if}</td>
 			<td>
 				{if !$list['status']}
@@ -47,13 +45,14 @@
 					{if !$list['cron_id'] && $list['sendtime'] > TIMESTAMP}
 					<a href="{php echo url('platform/mass/cron', array('id' => $list['id']));}" class="btn btn-danger btn-sm">同步到云服务</a>
 					{/if}
-					<a href="javascript:;" id="{$list['id']}" class="btn btn-default mass-log" ng-mouseover="showLog({$list['id']})" ng-mouseleave="hideLog({$list['id']})">日志</a>
+					<a href="{php echo url('platform/mass/post', array('id' => $list['id']));}" data-toggle="tooltip" data-placement="bottom">编辑</a>
+					<a href="{php echo url('platform/mass/del', array('id' => $list['id']));}" data-toggle="tooltip" data-placement="bottom">删除</a>
 				{/if}
 			</td>
 		</tr>
 		{/loop}
 	</table>
-	<div class="pull-right"> 
+	<div class="text-right">
 		{$pager}
 	</div>
 </div>

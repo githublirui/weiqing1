@@ -109,7 +109,7 @@ function tpl_form_field_link($name, $value = '', $options = array()) {
 			function mapLinkDialog(elm) {
 				var ipt = $(elm).parent().parent().parent().prev();
 				util.map(elm, function(val){
-					var href = \'http://api.map.baidu.com/marker?location=\'+val.lat+\',\'+val.lng+\'&output=html&src=we7\';
+					var href = \'https://api.map.baidu.com/marker?location=\'+val.lat+\',\'+val.lng+\'&output=html&src=we7\';
 					var multiid = "'. $_GPC['multiid'] .'";
 					if (multiid) {
 						href = /(&)?t=/.test(href) ? href : href + "&t=" + multiid;
@@ -122,7 +122,7 @@ function tpl_form_field_link($name, $value = '', $options = array()) {
 	}
 	$s .= '
 	<div class="input-group">
-		<input type="text" value="'.$value.'" name="'.$name.'" class="form-control" autocomplete="off" style="'.($options ? $options : 'width:500px').'">
+		<input type="text" value="'.$value.'" name="'.$name.'" class="form-control" autocomplete="off" style="'.($options ? $options : 'width:525px').'">
 		<span class="input-group-btn">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">选择链接 <span class="caret"></span></button>
 			<ul class="dropdown-menu">

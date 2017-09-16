@@ -19,7 +19,7 @@ if($do == 'profile') {
 
 if($do == 'sms') {
 	define('ACTIVE_FRAME_URL', url('cloud/sms'));
-	uni_user_permission_check('system_cloud_sms');
+	permission_check_account_user('system_cloud_sms');
 	$iframe = cloud_auth_url('sms');
 	$title = '云短信';
 }
@@ -50,7 +50,7 @@ if ($do == 'buybranch') {
 	$response = json_decode($response['content'], true);
 
 	if (is_error($response['message'])) {
-		itoast($response['message']['message'], url('system/module'), 'error');
+		itoast($response['message']['message'], url('module/manage-system'), 'error');
 	}
 
 	$params = array(

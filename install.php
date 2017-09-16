@@ -3,9 +3,9 @@
  * [WeEngine System] Copyright (c) 2014 WE7.CC
  * WeEngine is NOT a free software, it under the license terms, visited http://www.we7.cc/ for more details.
  */
-define('IN_IA', true);
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 @set_time_limit(0);
+
 ob_start();
 define('IA_ROOT', str_replace("\\",'/', dirname(__FILE__)));
 define('APP_URL', 'http://v2.addons.we7.cc/web/');
@@ -24,6 +24,7 @@ if($_GET['res']) {
 		exit();
 	}
 }
+
 $actions = array('license', 'env', 'db', 'finish');
 $action = $_COOKIE['action'];
 $action = in_array($action, $actions) ? $action : 'license';
@@ -73,30 +74,35 @@ if($action == 'env') {
 	if(version_compare(PHP_VERSION, '5.3.0') == -1) {
 		$ret['php']['version']['class'] = 'danger';
 		$ret['php']['version']['failed'] = true;
-		$ret['php']['version']['remark'] = 'PHP版本必须为 5.3.0 以上，强烈建议您使用 7.0 . <a href="http://bbs.we7.cc/forum.php?mod=redirect&goto=findpost&ptid=3564&pid=58062">详情</a>';
+		$ret['php']['version']['remark'] = 'PHP版本必须为 5.3.0 以上. <a href="http://bbs.we7.cc/forum.php?mod=redirect&goto=findpost&ptid=3564&pid=58062">详情</a>';
 	}
 
 	$ret['php']['pdo']['ok'] = extension_loaded('pdo') && extension_loaded('pdo_mysql');
 	if($ret['php']['pdo']['ok']) {
 		$ret['php']['pdo']['value'] = '<span class="glyphicon glyphicon-ok text-success"></span>';
 		$ret['php']['pdo']['class'] = 'success';
-		$ret['php']['pdo']['remark'] = '';
 	} else {
 		$ret['php']['pdo']['failed'] = true;
-		$ret['php']['pdo']['value'] = '<span class="glyphicon glyphicon-remove text-danger"></span>';
-		$ret['php']['pdo']['class'] = 'danger';
-		$ret['php']['pdo']['remark'] = '您的PHP环境不支持PDO, 系统无法正常运行. <a target="_blank" href="http://bbs.we7.cc/forum.php?mod=redirect&goto=findpost&ptid=3564&pid=58074">详情</a>';
+		$ret['php']['pdo']['value'] = '<span class="glyphicon glyphicon-remove text-warning"></span>';
+		$ret['php']['pdo']['class'] = 'warning';
+		$ret['php']['pdo']['remark'] = '您的PHP环境不支持PDO, 请开启此扩展. <a target="_blank" href="http://bbs.we7.cc/forum.php?mod=redirect&goto=findpost&ptid=3564&pid=58074">详情</a>';
+	}
+
+	$ret['php']['fopen']['ok'] = @ini_get('allow_url_fopen') && function_exists('fsockopen');
+	if($ret['php']['fopen']['ok']) {
+		$ret['php']['fopen']['value'] = '<span class="glyphicon glyphicon-ok text-success"></span>';
+	} else {
+		$ret['php']['fopen']['value'] = '<span class="glyphicon glyphicon-remove text-danger"></span>';
 	}
 
 	$ret['php']['curl']['ok'] = extension_loaded('curl') && function_exists('curl_init');
 	if($ret['php']['curl']['ok']) {
 		$ret['php']['curl']['value'] = '<span class="glyphicon glyphicon-ok text-success"></span>';
 		$ret['php']['curl']['class'] = 'success';
-		$ret['php']['curl']['remark'] = '';
 	} else {
 		$ret['php']['curl']['value'] = '<span class="glyphicon glyphicon-remove text-danger"></span>';
 		$ret['php']['curl']['class'] = 'danger';
-		$ret['php']['curl']['remark'] = '您的PHP环境不支持cURL, 系统无法正常运行. <a target="_blank" href="http://bbs.we7.cc/forum.php?mod=redirect&goto=findpost&ptid=3564&pid=58086">详情</a>';
+		$ret['php']['curl']['remark'] = '您的PHP环境不支持cURL, 也不支持 allow_url_fopen, 系统无法正常运行. <a target="_blank" href="http://bbs.we7.cc/forum.php?mod=redirect&goto=findpost&ptid=3564&pid=58086">详情</a>';
 		$ret['php']['curl']['failed'] = true;
 	}
 
@@ -198,50 +204,48 @@ if($action == 'db') {
 		$family = $_POST['family'] == 'x' ? 'x' : 'v';
 		$db = $_POST['db'];
 		$user = $_POST['user'];
-		list($host, $port) = explode(':', $db['server']);
-		if (empty($port)) {
-			$port = '3306';
-		}
 		try {
-			$link = new PDO("mysql:host={$host};port={$port}", $db['username'], $db['password']);
-		} catch (Exception $error) {
-			$error = $error->getMessage();
-			if (strpos($error, 'Access denied for user') !== false) {
-				$error = '您的数据库访问用户名或是密码错误. <br />';
+			$pieces = explode(':', $db['server']);
+			$db['server'] = $pieces[0];
+			$db['port'] = !empty($pieces[1]) ? $pieces[1] : '3306';
+			$link = new PDO("mysql:host={$db['server']};port={$db['port']}", $db['username'], $db['password']); 	// dns可以没有dbname
+			$link->exec("SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
+			$link->exec("SET sql_mode=''");
+			if ($link->errorCode() != '00000') {
+				$errorInfo = $link->errorInfo();
+				$error = $errorInfo[2];
 			} else {
-				$error = iconv('gbk', 'utf-8', $error);
-			}
-		}
-		if(!empty($link)) {
-			$link->query("SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
-			$link->query("SET sql_mode=''");
-
-			if($link->errorCode() != '00000') {
-				$error = $link->errorInfo();
-				$error = $error[2];
-			} else {
-				$db_found = $link->query("SHOW DATABASES LIKE '{$db['name']}';")->fetchColumn();
-				if (empty($db_found)) {
-					if(version_compare($link->query('select version()')->fetchColumn(), '4.1') == '1') {
+				$statement = $link->query("SHOW DATABASES LIKE '{$db['name']}';");
+				$fetch = $statement->fetch();
+				if (empty($fetch)){
+					if (substr($link->getAttribute(PDO::ATTR_SERVER_VERSION), 0, 3) > '4.1') {
 						$link->query("CREATE DATABASE IF NOT EXISTS `{$db['name']}` DEFAULT CHARACTER SET utf8");
 					} else {
 						$link->query("CREATE DATABASE IF NOT EXISTS `{$db['name']}`");
 					}
 				}
-				$db_found = $link->query("SHOW DATABASES LIKE '{$db['name']}';")->fetchColumn();
-				if (empty($db_found)) {
+				$statement = $link->query("SHOW DATABASES LIKE '{$db['name']}';");
+				$fetch = $statement->fetch();
+				if (empty($fetch)) {
 					$error .= "数据库不存在且创建数据库失败. <br />";
 				}
-				if($link->errorCode() != '00000') {
-					$errorinfo = $link->errorInfo();
-					$error .= $errorinfo[2];
+				if ($link->errorCode() != '00000') {
+					$errorInfo = $link->errorInfo();
+					$error .= $errorInfo[2];
 				}
+			}
+		} catch (PDOException $e) {
+			$error = $e->getMessage();
+			if (strpos($error, 'Access denied for user') !== false) {
+				$error = '您的数据库访问用户名或是密码错误. <br />';
+			} else {
+				$error = iconv('gbk', 'utf8', $error);
 			}
 		}
 		if(empty($error)) {
-			$link->query("USE `{$db['name']}`");
-			$table_found = $link->query("SHOW TABLES LIKE '{$db['prefix']}%';")->fetchColumn();
-			if (!empty($table_found)) {
+			$link->exec("USE {$db['name']}");
+			$statement = $link->query("SHOW TABLES LIKE '{$db['prefix']}%';");
+			if ($statement->fetch()) {
 				$error = '您的数据库不为空，请重新建立数据库或是清空该数据库或更改表前缀！';
 			}
 		}
@@ -252,82 +256,40 @@ if($action == 'db') {
 			$config = str_replace(array(
 				'{db-server}', '{db-username}', '{db-password}', '{db-port}', '{db-name}', '{db-tablepre}', '{cookiepre}', '{authkey}', '{attachdir}'
 			), array(
-				$host, $db['username'], $db['password'], $port, $db['name'], $db['prefix'], $cookiepre, $authkey, 'attachment'
+				$db['server'], $db['username'], $db['password'], $db['port'], $db['name'], $db['prefix'], $cookiepre, $authkey, 'attachment'
 			), $config);
 			$verfile = IA_ROOT . '/framework/version.inc.php';
 			$dbfile = IA_ROOT . '/data/db.php';
 
 			if($_POST['type'] == 'remote') {
-				$link = null;
+				$link = NULL;
 				$ins = remote_install();
-				if(empty($ins) || !is_array($ins)) {
+				if(empty($ins)) {
 					die('<script type="text/javascript">alert("连接不到服务器, 请稍后重试！");history.back();</script>');
 				}
-				if($ins['error']) {
-					die('<script type="text/javascript">alert("链接微擎更新服务器失败, 错误为: ' . $ins['error'] . '！");history.back();</script>');
+				if($ins == 'error') {
+					die('<script type="text/javascript">alert("版本错误，请确认是否为微擎最新版安装文件！");history.back();</script>');
 				}
-				$archive = $ins['files'];
-				if(!$archive) {
-					die('<script type="text/javascript">alert("未能下载程序包, 请确认你的安装程序目录有写入权限. 多次安装失败, 请访问论坛获取解决方案！");history.back();</script>');
-				}
-				$link = new PDO("mysql:dbname={$db['name']};host={$host};port={$port}", $db['username'], $db['password']);
-				$link->query("SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
-				$link->query("SET sql_mode=''");
 
-				$version = $ins['version'];
-				$release = $ins['release'];
-				$family = $ins['family'];
-								$tmpfile = IA_ROOT . '/we7source.tmp';
-				file_put_contents($tmpfile, $archive);
-				local_mkdirs(IA_ROOT . '/data');
-				file_put_contents(IA_ROOT . '/data/db.php', base64_decode($ins['schemas']));
+				$link = new PDO("mysql:dbname={$db['name']};host={$db['server']};port={$db['port']}", $db['username'], $db['password']);
+				$link->exec("SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
+				$link->exec("SET sql_mode=''");
 
-				$fp = fopen($tmpfile, 'r');
-				if ($fp) {
-					$buffer = '';
-					while (!feof($fp)) {
-						$buffer .= fgets($fp, 4096);
-						if($buffer[strlen($buffer) - 1] == "\n") {
-							$pieces = explode(':', $buffer);
-							$path = base64_decode($pieces[0]);
-							$dat = base64_decode($pieces[1]);
-							$fname = IA_ROOT . $path;
-							local_mkdirs(dirname($fname));
-							file_put_contents($fname, $dat);
-							$buffer = '';
-						}
-					}
-					fclose($fp);
+				$tmpfile = IA_ROOT . '/we7source.tmp';
+				file_put_contents($tmpfile, $ins);
+
+				$zip = new ZipArchive;
+				$res = $zip->open($tmpfile);
+
+				if ($res === TRUE) {
+					$zip->extractTo(IA_ROOT);
+					$zip->close();
+				} else {
+					die('<script type="text/javascript">alert("安装失败，请确认当前目录是否有写入权限！");history.back();</script>');
 				}
 				unlink($tmpfile);
-			} else {
-				if (file_exists($verfile)) {
-					include $verfile;
-					$version = IMS_VERSION;
-					$release = IMS_RELEASE_DATE;
-				} else {
-					$version = '';
-					$release = date('YmdHis');
-				}
 			}
-$verdat = <<<VER
-<?php
-/**
- * 版本号
- *
- * [WeEngine System] Copyright (c) 2013 WE7.CC
- */
 
-defined('IN_IA') or exit('Access Denied');
-
-define('IMS_FAMILY', '{$family}');
-define('IMS_VERSION', '{$version}');
-define('IMS_RELEASE_DATE', '{$release}');
-VER;
-			$is_ok = file_put_contents($verfile, $verdat);
-			if(!$is_ok) {
-				die('<script type="text/javascript">alert("生成版本文件失败");history.back();</script>');
-			}
 			if(file_exists(IA_ROOT . '/index.php') && is_dir(IA_ROOT . '/web') && file_exists($verfile) && file_exists($dbfile)) {
 				$dat = require $dbfile;
 				if(empty($dat) || !is_array($dat)) {
@@ -346,7 +308,7 @@ VER;
 
 			$salt = local_salt(8);
 			$password = sha1("{$user['password']}-{$salt}-{$authkey}");
-			$link->query("INSERT INTO {$db['prefix']}users (username, password, salt, joindate) VALUES('{$user['username']}', '{$password}', '{$salt}', '" . time() . "')");
+			$link->exec("INSERT INTO {$db['prefix']}users (username, password, salt, joindate, groupid) VALUES('{$user['username']}', '{$password}', '{$salt}', '" . time() . "', 1)");
 			local_mkdirs(IA_ROOT . '/data');
 			file_put_contents(IA_ROOT . '/data/config.php', $config);
 			touch(IA_ROOT . '/data/install.lock');
@@ -361,7 +323,7 @@ VER;
 if($action == 'finish') {
 	setcookie('action', '', -10);
 	$dbfile = IA_ROOT . '/data/db.php';
-	//@unlink($dbfile);
+	@unlink($dbfile);
 	define('IN_SYS', true);
 	require IA_ROOT . '/framework/bootstrap.inc.php';
 	require IA_ROOT . '/web/common/bootstrap.sys.inc.php';
@@ -447,7 +409,6 @@ defined('IN_IA') or exit('Access Denied');
 \$config['setting']['founder'] = '1';
 \$config['setting']['development'] = 0;
 \$config['setting']['referrer'] = 0;
-\$config['setting']['https'] = 0;
 
 // --------------------------  CONFIG UPLOAD  --------------------------- //
 \$config['upload']['image']['extentions'] = array('gif', 'jpg', 'jpeg', 'png');
@@ -499,9 +460,10 @@ function local_run($sql) {
 	foreach($ret as $query) {
 		$query = trim($query);
 		if($query) {
-			if(!$link->query($query)) {
-				$errorinfo = $link->errorInfo();
-				echo $errorinfo[2] . ": " . $link->errorCode() . "<br />";
+			$link->exec($query);
+			if($link->errorCode() != '00000') {
+				$errorInfo = $link->errorInfo();
+				echo $errorInfo[0] . ": " . $errorInfo[2] . "<br />";
 				exit($query);
 			}
 		}
@@ -558,29 +520,14 @@ function local_create_sql($schema) {
 	return $sql;
 }
 
-function __remote_install_headers($ch = '', $header = '') {
-	static $hash;
-	if(!empty($header)) {
-		$pieces = explode(':', $header);
-		if(trim($pieces[0]) == 'hash') {
-			$hash = trim($pieces[1]);
-		}
-	}
-	if($ch == '' && $header == '') {
-		return $hash;
-	}
-	return strlen($header);
-}
-
 function remote_install() {
 	global $family;
 	$token = '';
 	$pars = array();
 	$pars['host'] = $_SERVER['HTTP_HOST'];
 	$pars['version'] = '1.0';
-	$pars['release'] = '';
 	$pars['type'] = 'install';
-	$pars['product'] = '';
+	$pars['method'] = 'application.install';
 	$url = 'http://v2.addons.we7.cc/gateway.php';
 	$urlset = parse_url($url);
 	$cloudip = gethostbyname($urlset['host']);
@@ -588,71 +535,17 @@ function remote_install() {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $urlset['scheme'] . '://' . $cloudip . $urlset['path']);
 	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $pars);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($pars, '', '&'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HEADERFUNCTION, '__remote_install_headers');
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	$content = curl_exec($ch);
 	curl_close($ch);
-	$sign = __remote_install_headers();
-	$ret = array();
-	if(empty($content)) {
+
+	if (empty($content)) {
 		return showerror(-1, '获取安装信息失败，可能是由于网络不稳定，请重试。');
 	}
-	$ret = unserialize($content);
-	if($sign != md5($ret['data'] . $token)) {
-		return showerror(-1, '发生错误: 数据校验失败，可能是传输过程中网络不稳定导致，请重试。');
-	}
-	$ret['data'] = unserialize($ret['data']);
-	return $ret['data'];
-}
 
-function __remote_download_headers($ch = '', $header = '') {
-	static $hash;
-	if(!empty($header)) {
-		$pieces = explode(':', $header);
-		if(trim($pieces[0]) == 'hash') {
-			$hash = trim($pieces[1]);
-		}
-	}
-	if($ch == '' && $header == '') {
-		return $hash;
-	}
-	return strlen($header);
-}
-
-function remote_download($archive) {
-	$pars = array();
-	$pars['host'] = $_SERVER['HTTP_HOST'];
-	$pars['version'] = '';
-	$pars['release'] = '';
-	$pars['archive'] = base64_encode(json_encode($archive));
-	$url = 'http://v2.addons.we7.cc/gateway.php';
-	$urlset = parse_url($url);
-	$cloudip = gethostbyname($urlset['host']);
-	$headers[] = "Host: {$urlset['host']}";
-	$tmpfile = IA_ROOT . '/we7.zip';
-	$fp = fopen($tmpfile, 'w+');
-	if(!$fp) {
-		return false;
-	}
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $urlset['scheme'] . '://' . $cloudip . $urlset['path']);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $pars);
-	curl_setopt($ch, CURLOPT_FILE, $fp);
-	curl_setopt($ch, CURLOPT_HEADERFUNCTION, '__remote_download_headers');
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	if(!curl_exec($ch)) {
-		return false;
-	}
-	curl_close($ch);
-	fclose($fp);
-	$sign = __remote_download_headers();
-	if(md5_file($tmpfile) == $sign) {
-		return $tmpfile;
-	}
-	return false;
+	return $content;
 }
 
 function tpl_frame() {
@@ -730,7 +623,7 @@ function tpl_frame() {
 					<a href="http://www.we7.cc">关于微擎</a> &nbsp; &nbsp; <a href="http://bbs.we7.cc">微擎帮助</a> &nbsp; &nbsp; <a href="http://www.we7.cc">购买授权</a>
 				</div>
 				<div class="text-center">
-					Powered by <a href="http://www.we7.cc"><b>微擎</b></a> v0.7 &copy; 2014 <a href="http://www.we7.cc">www.we7.cc</a>
+					Powered by <a href="http://www.we7.cc"><b>微擎</b></a> v0.8 &copy; 2014 <a href="http://www.we7.cc">www.we7.cc</a>
 				</div>
 			</div>
 		</div>
@@ -860,21 +753,21 @@ function tpl_install_env($ret = array()) {
 				</tr>
 				<tr class="{$ret['php']['version']['class']}">
 					<td>PHP版本</td>
-					<td>5.3或者5.3以上，建议使用php7</td>
+					<td>5.3或者5.3以上</td>
 					<td>{$ret['php']['version']['value']}</td>
 					<td>{$ret['php']['version']['remark']}</td>
-				</tr>
-				<tr class="{$ret['php']['pdo']['class']}">
-					<td>PDO_MYSQL</td>
-					<td>支持</td>
-					<td>{$ret['php']['pdo']['value']}</td>
-					<td>{$ret['php']['pdo']['remark']}</td>
 				</tr>
 				<tr class="{$ret['php']['curl']['class']}">
 					<td>cURL</td>
 					<td>支持</td>
 					<td>{$ret['php']['curl']['value']}</td>
 					<td>{$ret['php']['curl']['remark']}</td>
+				</tr>
+				<tr class="{$ret['php']['pdo']['class']}">
+					<td>PDO</td>
+					<td>支持</td>
+					<td>{$ret['php']['pdo']['value']}</td>
+					<td>{$ret['php']['pdo']['remark']}</td>
 				</tr>
 				<tr class="{$ret['php']['ssl']['class']}">
 					<td>openSSL</td>
@@ -1044,7 +937,7 @@ function tpl_install_db($error = '') {
 		<input type="hidden" name="do" id="do" />
 		<ul class="pager">
 			<li class="previous"><a href="javascript:;" onclick="$('#do').val('back');$('form')[0].submit();"><span class="glyphicon glyphicon-chevron-left"></span> 返回</a></li>
-			<li class="previous"><a href="javascript:;" onclick="if(check(this)){jQuery('#do').val('continue');if($('input[name=type]').val() == 'remote'){alert('在线线安装时，安装程序会下载精简版快速完成安装，完成后请务必注册云服务更新到完整版。')}$('form')[0].submit();}">继续 <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+			<li class="previous"><a href="javascript:;" onclick="if(check(this)){jQuery('#do').val('continue');if($('input[name=type]:checked').val() == 'remote'){alert('在线安装时，安装程序会下载精简版快速完成安装，完成后请务必注册云服务更新到完整版。')}$('form')[0].submit();}">继续 <span class="glyphicon glyphicon-chevron-right"></span></a></li>
 		</ul>
 	</form>
 	<script>

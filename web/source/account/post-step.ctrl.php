@@ -7,18 +7,22 @@ defined('IN_IA') or exit('Access Denied');
 
 load()->func('file');
 load()->model('module');
+load()->model('user');
+load()->model('account');
 load()->classs('weixin.platform');
 
 $_W['page']['title'] = '添加/编辑公众号 - 公众号管理';
 $uniacid = intval($_GPC['uniacid']);
 $step = intval($_GPC['step']) ? intval($_GPC['step']) : 1;
+$account_info = permission_user_account_num();
 
 if($step == 1) {
 		if (!$_W['isfounder']) {
-				$account_info = uni_user_account_permission();
 				$max_tsql = "SELECT COUNT(*) FROM " . tablename('uni_account'). " as a LEFT JOIN". tablename('account'). " as b ON a.default_acid = b.acid LEFT JOIN ". tablename('uni_account_users')." as c ON a.uniacid = c.uniacid WHERE a.default_acid <> 0 AND c.uid = :uid AND b.isdeleted <> 1";
 		$max_pars[':uid'] = $_W['uid'];
 		$max_total = pdo_fetchcolumn($max_tsql, $max_pars);
+
+
 		$maxaccount = pdo_fetchcolumn('SELECT `maxaccount` FROM '. tablename('users_group') .' WHERE id = :groupid', array(':groupid' => $_W['user']['groupid']));
 		if($max_total >= $maxaccount) {
 			$authurl = "javascript:alert('您所在会员组最多只能添加 {$maxaccount} 个公众号);";
@@ -29,23 +33,26 @@ if($step == 1) {
 		$account_platform = new WeiXinPlatform();
 		$authurl = $account_platform->getAuthLoginUrl();
 	}
-}elseif ($step == 2) {
+} elseif ($step == 2) {
 	if (!empty($uniacid)) {
-		$state = uni_permission($uid, $uniacid);
+		$state = permission_account_user_role($uid, $uniacid);
 		if ($state != ACCOUNT_MANAGE_NAME_FOUNDER && $state != ACCOUNT_MANAGE_NAME_OWNER) {
 			itoast('没有该公众号操作权限！', '', '');
 		}
-		if (is_error($permission = uni_create_permission($_W['uid'], 2))) {
+		if (is_error($permission = permission_create_account($_W['uid'], 2))) {
 			itoast($permission['message'], '' , 'error');
 		}
 	} else {
-		if (empty($_W['isfounder']) && is_error($permission = uni_create_permission($_W['uid'], 1))) {
-			if (is_error($permission = uni_create_permission($_W['uid'], 2))) {
+		if (empty($_W['isfounder']) && is_error($permission = permission_create_account($_W['uid'], 1))) {
+			if (is_error($permission = permission_create_account($_W['uid'], 2))) {
 				itoast($permission['message'], '' , 'error');
 			}
 		}
 	}
 		if (checksubmit('submit')) {
+		if ($account_info['uniacid_limit'] <= 0 && !$_W['isfounder']) {
+			itoast('创建公众号已达上限！');
+		}
 		$update = array();
 		$update['name'] = trim($_GPC['cname']);
 
@@ -58,6 +65,7 @@ if($step == 1) {
 			$data = array(
 				'name' => $name,
 				'description' => $description,
+				'title_initial' => get_first_pinyin($name),
 				'groupid' => 0,
 			);
 						$check_uniacname = pdo_get('uni_account', array('name' => $name), 'name');
@@ -68,6 +76,7 @@ if($step == 1) {
 				itoast('添加公众号失败', '', '');
 			}
 			$uniacid = pdo_insertid();
+
 						$template = pdo_fetch('SELECT id,title FROM ' . tablename('site_templates') . " WHERE name = 'default'");
 			$styles['uniacid'] = $uniacid;
 			$styles['templateid'] = $template['id'];
@@ -102,15 +111,17 @@ if($step == 1) {
 				pdo_insert('mc_member_fields', $data);
 			}
 			
-			module_build_privileges();
 		}
 		$update['account'] = trim($_GPC['account']);
 		$update['original'] = trim($_GPC['original']);
 		$update['level'] = intval($_GPC['level']);
 		$update['key'] = trim($_GPC['key']);
 		$update['secret'] = trim($_GPC['secret']);
-		$update['type'] = 1;
+		$update['type'] = ACCOUNT_TYPE_OFFCIAL_NORMAL;
 		$update['encodingaeskey'] = trim($_GPC['encodingaeskey']);
+		if (user_is_vice_founder()) {
+			uni_user_account_role($uniacid, $_W['uid'], ACCOUNT_MANAGE_NAME_VICE_FOUNDER);
+		}
 		if (empty($acid)) {
 			$acid = account_create($uniacid, $update);
 			if(is_error($acid)) {
@@ -118,10 +129,13 @@ if($step == 1) {
 			}
 			pdo_update('uni_account', array('default_acid' => $acid), array('uniacid' => $uniacid));
 			if (empty($_W['isfounder'])) {
-				pdo_insert('uni_account_users', array('uniacid' => $uniacid, 'uid' => $_W['uid'], 'role' => 'owner'));
+				uni_user_account_role($uniacid, $_W['uid'], ACCOUNT_MANAGE_NAME_OWNER);
+			}
+			if (!empty($_W['user']['owner_uid'])) {
+				uni_user_account_role($uniacid, $_W['user']['owner_uid'], ACCOUNT_MANAGE_NAME_VICE_FOUNDER);
 			}
 		} else {
-			pdo_update('account', array('type' => 1, 'hash' => ''), array('acid' => $acid, 'uniacid' => $uniacid));
+			pdo_update('account', array('type' => ACCOUNT_TYPE_OFFCIAL_NORMAL, 'hash' => ''), array('acid' => $acid, 'uniacid' => $uniacid));
 			unset($update['type']);
 			pdo_update('account_wechats', $update, array('acid' => $acid, 'uniacid' => $uniacid));
 		}
@@ -132,7 +146,7 @@ if($step == 1) {
 			copy($_GPC['headimg'], IA_ROOT . '/attachment/headimg_'.$acid.'.jpg');
 		}
 				$oauth = uni_setting($uniacid, array('oauth'));
-		if ($acid && !empty($update['key']) && !empty($update['secret']) && empty($oauth['oauth']['account']) && $update['level'] == 4) {
+		if ($acid && !empty($update['key']) && !empty($update['secret']) && empty($oauth['oauth']['account']) && $update['level'] == ACCOUNT_SERVICE_VERIFY) {
 			pdo_update('uni_settings', array('oauth' => iserializer(array('account' => $acid, 'host' => $oauth['oauth']['host']))), array('uniacid' => $uniacid));
 		}
 		cache_delete("unisetting:{$uniacid}");
@@ -159,7 +173,7 @@ if($step == 1) {
 		}
 		$result['username'] = $user['username'];
 		$result['uid'] = $user['uid'];
-		$result['group'] = pdo_fetch("SELECT id, name, package FROM ".tablename('users_group')." WHERE id = :id", array(':id' => $user['groupid']));
+		$result['group'] = user_group_detail_info($user['groupid']);
 		$result['package'] = iunserializer($result['group']['package']);
 		iajax(0, $result, '');
 		exit;
@@ -168,7 +182,7 @@ if($step == 1) {
 				$uid = intval($_GPC['uid']);
 		$groupid = intval($_GPC['groupid']);
 		if (!empty($uid)) {
-						$account_info = uni_user_account_permission();
+						$account_info = permission_user_account_num($uid);
 			if ($account_info['uniacid_limit'] <= 0) {
 				itoast("您所设置的主管理员所在的用户组可添加的主公号数量已达上限，请选择其他人做主管理员！", referer(), 'error');
 			}
@@ -177,8 +191,11 @@ if($step == 1) {
 			if (!empty($owner)) {
 				pdo_update('uni_account_users', array('uid' => $uid), array('uniacid' => $uniacid, 'role' => 'owner'));
 			} else {
-				$account_users = array('uniacid' => $uniacid, 'uid' => $uid, 'role' => 'owner');
-				pdo_insert('uni_account_users', $account_users);
+				uni_user_account_role($uniacid, $uid, ACCOUNT_MANAGE_NAME_OWNER);
+			}
+			$user_vice_id = pdo_getcolumn('users', array('uid' => $uid), 'owner_uid');
+			if ($_W['user']['founder_groupid'] != ACCOUNT_MANAGE_GROUP_VICE_FOUNDER && !empty($user_vice_id)) {
+				uni_user_account_role($uniacid, $user_vice_id, ACCOUNT_MANAGE_NAME_VICE_FOUNDER);
 			}
 		}
 		if (!empty($_GPC['signature'])) {
@@ -241,7 +258,7 @@ if($step == 1) {
 		cache_delete("accesstoken:{$acid}");
 		cache_delete("jsticket:{$acid}");
 		cache_delete("cardticket:{$acid}");
-		module_build_privileges();
+
 		if (!empty($_GPC['from'])) {
 			itoast('公众号权限修改成功', url('account/post-step/', array('uniacid' => $uniacid, 'step' => 3, 'from' => 'list')), 'success');
 		} else {
@@ -251,6 +268,7 @@ if($step == 1) {
 	}
 
 	$unigroups = uni_groups();
+
 	if(!empty($unigroups['modules'])) {
 		foreach ($unigroups['modules'] as $module_key => $module_val) {
 			if(file_exists(IA_ROOT.'/addons/'.$module_val['name'].'/icon-custom.jpg')) {
@@ -291,9 +309,8 @@ if($step == 1) {
 		$owner['extend']['templates'] = pdo_getall('site_templates', array('id' => $extend['templates']));
 	}
 	$extend['package'] = pdo_getall('uni_account_group', array('uniacid' => $uniacid), array(), 'groupid');
-
-	$groups = pdo_fetchall("SELECT id, name, package FROM ".tablename('users_group')." ORDER BY id ASC", array(), 'id');
-	$modules = pdo_fetchall("SELECT mid, name, title FROM " . tablename('modules') . ' WHERE issystem != 1', array(), 'name');
+	$groups = user_group();
+	$modules = user_uniacid_modules($_W['uid']);
 	$templates  = pdo_fetchall("SELECT * FROM ".tablename('site_templates'));
 } elseif($step == 4) {
 	$uniacid = intval($_GPC['uniacid']);

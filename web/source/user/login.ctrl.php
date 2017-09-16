@@ -16,6 +16,7 @@ function _login($forward = '') {
 	load()->model('user');
 	$member = array();
 	$username = trim($_GPC['username']);
+
 	pdo_query('DELETE FROM'.tablename('users_failed_login'). ' WHERE lastupdate < :timestamp', array(':timestamp' => TIMESTAMP-300));
 	$failed = pdo_get('users_failed_login', array('username' => $username, 'ip' => CLIENT_IP));
 	if ($failed['count'] >= 5) {
@@ -41,11 +42,13 @@ function _login($forward = '') {
 	}
 	$record = user_single($member);
 	if (!empty($record)) {
-		if ($record['status'] == 1) {
+		if ($record['status'] == USER_STATUS_CHECK || $record['status'] == USER_STATUS_BAN) {
 			itoast('您的账号正在审核或是已经被系统禁止，请联系网站管理员解决！', '', '');
 		}
-		$founders = explode(',', $_W['config']['setting']['founder']);
-		$_W['isfounder'] = in_array($record['uid'], $founders);
+		$_W['uid'] = $record['uid'];
+		$_W['isfounder'] = user_is_founder($record['uid']);
+		$_W['user'] = $record;
+
 		if (empty($_W['isfounder'])) {
 			if (!empty($record['endtime']) && $record['endtime'] < TIMESTAMP) {
 				itoast('您的账号有效期限已过，请联系网站管理员解决！', '', '');
@@ -59,32 +62,18 @@ function _login($forward = '') {
 		$cookie['lastvisit'] = $record['lastvisit'];
 		$cookie['lastip'] = $record['lastip'];
 		$cookie['hash'] = md5($record['password'] . $record['salt']);
-		$session = base64_encode(json_encode($cookie));
+		$session = authcode(json_encode($cookie), 'encode');
 		isetcookie('__session', $session, !empty($_GPC['rember']) ? 7 * 86400 : 0, true);
 		$status = array();
 		$status['uid'] = $record['uid'];
 		$status['lastvisit'] = TIMESTAMP;
 		$status['lastip'] = CLIENT_IP;
 		user_update($status);
-		if ($record['type'] == ACCOUNT_OPERATE_CLERK) {
-			$role = uni_permission($record['uid'], $record['uniacid']);
-			isetcookie('__uniacid', $record['uniacid'], 7 * 86400);
-			isetcookie('__uid', $record['uid'], 7 * 86400);
-			
-			if ($_W['role'] == 'clerk' || $role == 'clerk') {
-				itoast('登陆成功', url('activity/desk', array('uniacid' => $record['uniacid'])), 'success');
-			}
-		}
+
 		if (empty($forward)) {
-			$forward = $_GPC['forward'];
+			$forward = user_login_forward($_GPC['forward']);
 		}
-		if (empty($forward)) {
-			if (!empty($_GPC['__uniacid'])) {
-				$forward = './index.php?c=home&a=welcome';
-			} else {
-				$forward = './index.php?c=account&a=display';
-			}
-		}
+
 		if ($record['uid'] != $_GPC['__uid']) {
 			isetcookie('__uniacid', '', -7 * 86400);
 			isetcookie('__uid', '', -7 * 86400);

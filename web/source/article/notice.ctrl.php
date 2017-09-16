@@ -9,7 +9,7 @@ load()->model('article');
 
 $dos = array('category_post', 'category', 'category_del', 'list', 'post', 'batch_post', 'del');
 $do = in_array($do, $dos) ? $do : 'list';
-uni_user_permission_check('system_article_notice');
+permission_check_account_user('system_article_notice');
 
 if ($do == 'category_post') {
 	$_W['page']['title'] = '公告分类-公告管理-文章-系统管理';

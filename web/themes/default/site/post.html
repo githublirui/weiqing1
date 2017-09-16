@@ -1,18 +1,17 @@
 {template 'common/header'}
-<div class="panel-heading">
-	<ol class="breadcrumb we7-breadcrumb">
-		<a href="{php echo url('site/multi')}"><i class="wi wi-back-circle"></i> </a>
-		<li>
-			<a href="{php echo url('site/multi')}">微官网列表</a>
-		</li>
-		<li>
-			编辑
-		</li>
-	</ol>
-</div>
-
 <form action="" method="post" class="panel panel-cut" id="js-wesite-post" ng-controller="WesitePost" ng-cloak>
 	<input type="hidden" name="multiid" value="{$_GPC['multiid']}">
+	<div class="panel-heading">
+		<ol class="breadcrumb we7-breadcrumb">
+			<a href="{php echo url('site/multi')}"><i class="wi wi-back-circle"></i> </a>
+			<li>
+				<a href="{php echo url('site/multi')}">微官网列表</a>
+			</li>
+			<li>
+				编辑
+			</li>
+		</ol>
+	</div>
 	<div class="panel-body">
 		<div class="site-select-tem">
 			<div class="select-tem-heading">选择模板</div>
@@ -260,6 +259,7 @@
 							<label for="" class="control-label col-sm-2">绑定域名</label>
 							<div class="form-controls col-sm-10">
 								<input type="text" name="bindhost" class="form-control" ng-model="multi.bindhost">
+								<span class="help-block">绑定时请先将域名解析指向到本服务器，请只填写host部分，不允许为当前系统域名。例如：www.baidu.com</span>
 							</div>
 						</div>
 						<div class="form-group">
@@ -327,7 +327,7 @@
 					<table class="table we7-table table-hover" ng-show="!addHomemenuStatus">
 						<col width="100px" />
 						<col width="70px" />
-						<col width="90px" />
+						<col width="85px" />
 						<col width="180px" />
 						<tr>
 							<th>标题</th>
@@ -336,7 +336,7 @@
 							<th>操作</th>
 						</tr>
 						<tr ng-repeat="menu in homeMenu">
-							<td class="title" ng-bind="menu.name"></td>
+							<td class="title" title="{{menu.name}}" ng-bind="menu.name"></td>
 							<td class="icon">
 								<img ng-src="{{attachurl + menu.icon}}" width="30px" ng-if="menu.icon">
 								<i class="fa fa-2x {{menu.css.icon.icon}}" ng-if="menu.icon == ''"></i>
@@ -565,7 +565,7 @@
 														</div>
 													</div>
 												</div>
-												<div ng-show="menu.submenus.length < 5" ng-click="menu.submenus.length >= 5 ? '' : addSubMenu(menu);" class="add-shopNav">+ 添加二级导航</div>
+												<div ng-show="!menu.submenus || menu.submenus.length < 5" ng-click="menu.submenus.length >= 5 ? '' : addSubMenu(menu);" class="add-shopNav">+ 添加二级导航</div>
 												<!--最多可添加5个-->
 											</div>
 										</div>
@@ -617,7 +617,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="add-shopNav text-center" ng-show="activeItem.menus.length < 5" ng-click="activeItem.menus.length >= 5 ? '' : addMenu();">+添加导航</div>
+									<div class="add-shopNav text-center" ng-show="!activeItem.menus || activeItem.menus.length < 5" ng-click="activeItem.menus.length >= 5 ? '' : addMenu();">+添加导航</div>
 								</div>
 								<!--end APP导航样式-->
 
@@ -685,13 +685,13 @@
 											</div>
 										</div>
 									</div>
-									<div class="add-shopNav text-center" ng-show="activeItem.menus.length < 4" ng-click="activeItem.menus.length >= 4 ? '' : addMenu();">+添加导航</div>
+									<div class="add-shopNav text-center" ng-show="!activeItem.menus || activeItem.menus.length < 4" ng-click="activeItem.menus.length >= 4 ? '' : addMenu();">+添加导航</div>
 								</div>
 								<!--end 带购物车导航模板-->
 
 								<!--Path展开形式导航模板-->
 								<div class="shopNav-path" ng-show="activeItem.navStyle == 4">
-										<p class="help-block">此导航模板建议您用三个自定义图标效果最佳哦！</p>
+										<p class="help-block">此导航模板建议您用三个自定义图标效果最佳哦1！</p>
 										<div class="card" ng-repeat="menu in activeItem.menus">
 											<div class="btns">
 												<a href="javascript:;" ng-click="removeMenu(menu)"><i class="fa fa-times"></i></a>
@@ -714,7 +714,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="add-shopNav text-center" ng-show="activeItem.menus.length < 4" ng-click="activeItem.menus.length >= 4 ? '' : addMenu();">+添加导航</div>
+										<div class="add-shopNav text-center" ng-show="!activeItem.menus || activeItem.menus.length < 4" ng-click="activeItem.menus.length >= 4 ? '' : addMenu();">+添加导航</div>
 										<!--最多可添加4个-->
 								</div>
 								<!--end Path展开形式导航模板-->
@@ -781,7 +781,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="add-shopNav text-center" ng-show="activeItem.menus.length < 4" ng-click="activeItem.menus.length >= 4 ? '' : addMenu();">+添加导航</div>
+										<div class="add-shopNav text-center" ng-show="!activeItem.menus || activeItem.menus.length < 4" ng-click="activeItem.menus.length >= 4 ? '' : addMenu();">+添加导航</div>
 										<!--最多可添加4个-->
 								</div>
 								<!--end 两侧展开导航模板-->

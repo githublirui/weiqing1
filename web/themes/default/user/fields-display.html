@@ -1,12 +1,5 @@
 {template 'common/header'}
-<div class="we7-page-title">用户管理</div>
-<ul class="we7-page-tab">
-	<li><a href="{url 'user/display'}">用户管理</a></li>
-	<li><a href="{url 'user/display/check_display'}">审核用户</a></li>
-	<li><a href="{url 'user/display/recycle_display'}">用户回收站</a></li>
-	<li class="active"><a href="{url 'user/fields/display'}">用户属性设置</a></li>
-	<li><a href="{url 'user/registerset'}">用户注册设置</a></li>
-</ul>
+{template 'user/user-header'}
 <div class="clearfix we7-margin-bottom">
 	<form action="" method="get">
 		<input type="hidden" name="c" value="user">
@@ -36,7 +29,7 @@
 			<th>是否启用</th>
 			<th>注册页显示</th>
 			<th>是否必填</th>
-			<th class="text-left">操作</th>
+			<th class="text-right">操作</th>
 		</tr>
 		<tr ng-repeat="field in fields">
 			<td><input type="text" class="form-control" name="displayorder[{{field.id}}]" ng-model="field.displayorder"></td>
@@ -60,7 +53,7 @@
 					<label for="require-check-{{field.id}}">&nbsp;</label>
 				</div>
 			</td>
-			<td class="text-left">
+			<td>
 				<div class="link-group">
 					<a ng-href="{{links.fieldPost}}id={{field.id}}">编辑</a>
 				</div>

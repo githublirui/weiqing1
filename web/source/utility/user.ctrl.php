@@ -4,7 +4,7 @@
  * WeEngine is NOT a free software, it under the license terms, visited http://www.we7.cc/ for more details.
  */
 defined('IN_IA') or exit('Access Denied');
-
+load()->model('user');
 $dos = array('browser');
 $do = in_array($do, $dos) ? $do: 'browser';
 
@@ -24,7 +24,7 @@ if ($do == 'browser') {
 		}
 		$uids = implode(',', $uidArr);
 	}
-	$where = " WHERE status = '2' and type != '".ACCOUNT_OPERATE_CLERK."'";
+	$where = " WHERE status = '2' and type != '".ACCOUNT_OPERATE_CLERK."' AND founder_groupid != " . ACCOUNT_MANAGE_GROUP_VICE_FOUNDER;
 	if($mode == 'invisible' && !empty($uids)){
 		$where .= " AND uid not in ( {$uids} )";
 	}
@@ -33,7 +33,10 @@ if ($do == 'browser') {
 		$where .= ' AND `username` LIKE :username';
 		$params[':username'] = "%{$_GPC['keyword']}%";
 	}
-	
+	if (user_is_vice_founder()) {
+		$where .= ' AND `owner_uid` = :owner_uid';
+		$params[':owner_uid'] = $_W['uid'];
+	}
 	$pindex = max(1, intval($_GPC['page']));
 	$psize = 10;
 	$total = 0;
@@ -41,7 +44,7 @@ if ($do == 'browser') {
 	$list = pdo_fetchall("SELECT uid, groupid, username, remark FROM ".tablename('users')." {$where} ORDER BY `uid` LIMIT ".(($pindex - 1) * $psize).",{$psize}", $params);
 	$total = pdo_fetchcolumn("SELECT COUNT(*) FROM ".tablename('users'). $where , $params);
 	$pager = pagination($total, $pindex, $psize, '', array('ajaxcallback'=>'null','mode'=>$mode,'uids'=>$uids));
-	$usergroups = pdo_fetchall('SELECT id, name FROM '.tablename('users_group'), array(), 'id');
+	$usergroups = user_group();
 	template('utility/user-browser');
 	exit;
 }

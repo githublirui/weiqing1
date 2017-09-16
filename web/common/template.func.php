@@ -6,7 +6,6 @@
 defined('IN_IA') or exit('Access Denied');
 
  
-
 function template($filename, $flag = TEMPLATE_DISPLAY) {
 	global $_W;
 	$source = IA_ROOT . "/web/themes/{$_W['template']}/{$filename}.html";
@@ -17,7 +16,8 @@ function template($filename, $flag = TEMPLATE_DISPLAY) {
 	}
 
 	if(!is_file($source)) {
-		exit("Error: template source '{$filename}' is not exist!");
+		echo "template source '{$filename}' is not exist!";
+		return '';
 	}
 	if(DEVELOPMENT || !is_file($compile) || filemtime($source) > filemtime($compile)) {
 		template_compile($source, $compile);
@@ -52,7 +52,7 @@ function template_compile($from, $to, $inmodule = false) {
 		mkdirs($path);
 	}
 	$content = template_parse(file_get_contents($from), $inmodule);
-	if(IMS_FAMILY == 'x' && !preg_match('/(footer|header|account\/welcome|login|register)+/', $from)) {
+	if(IMS_FAMILY == 'x' && !preg_match('/(footer|header|account\/welcome|login|register|home\/welcome)+/', $from)) {
 		$content = str_replace('微擎', '系统', $content);
 	}
 	file_put_contents($to, $content);

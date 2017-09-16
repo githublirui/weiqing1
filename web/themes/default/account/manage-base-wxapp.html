@@ -1,18 +1,12 @@
 {template 'common/header'}
 {template 'account/account-header'}
 <div id="js-account-manage-base" ng-controller="AccountManageBase" ng-cloak>
-	{if $_W['uniaccount']['isconnect'] == 0}
-	<div class="alert alert-info">
-		<p><i class="wi wi-info-sign"></i>接入状态：未接入。</p>
-		<p><i class="wi wi-info-sign"></i>解决方案：进入微信公众平台，依次选择: 开发者中心 -> 修改配置，然后将对应公众号在平台的url和token复制到微信公众平台对应的选项，公众平台会自动进行检测</p>
-	</div>
-	{/if}
 	<table class="table we7-table table-hover table-form">
 		<col width="140px" />
 		<col />
 		<col width="100px" />
 		<tr>
-			<th class="text-left" colspan="3">小程序设置</th>
+			<th class="text-left" colspan="3">小程序应用设置</th>
 		</tr>
 		<tr>
 			<td class="table-label">头像</td>
@@ -45,8 +39,8 @@
 		</tr>
 		<tr>
 			<td class="table-label">到期时间</td>
-			<td ng-bind="account.end"></td>
-			<td><div class="link-group"><a href="javascript:;" data-toggle="modal" data-target="#endtime" ng-click="editInfo('endtype', account.endtype)">修改</a></div></td>
+			<td><span ng-bind="account.end"></span><span class="color-gray">（随该公众号主管理员的到期时间，未设置主管理员时默认为创始人）</span></td>
+			<td><div class="link-group"></div></td>
 		</tr>
 	</table>
 	<div class="modal fade" id="name" tabindex="-1" role="dialog" aria-hidden="true">
@@ -162,7 +156,7 @@
 		<col width="140px " />
 		<col />
 		<col width="100px" />
-		<tr><th class="text-left" colspan="3">自定义菜单通讯设置</th></tr>
+		<tr><th class="text-left" colspan="3">开发者ID</th></tr>
 		<tr>
 			<td class="table-label">AppId</td>
 			<td ng-bind="account.key"></td>
@@ -218,7 +212,7 @@
 		<col width="160px " />
 		<col />
 		<col />
-		<tr><th class="text-left" colspan="3">服务器配置</th></tr>
+		<tr><th class="text-left" colspan="3">服务器配置信息</th></tr>
 		<tr>
 			<td class="table-label">request合法域名</td>
 			<td>
@@ -231,10 +225,10 @@
 		<tr>
 			<td class="table-label">socket合法域名</td>
 			<td>
-				<a href="javascript:;" class="we7-padding-right" ng-bind="other.socket_url"></a>
+				<a href="javascript:;" class="we7-padding-right" ng-bind="other.siteurl"></a>
 			</td>
 			<td>
-				<div class="link-group"><a href="javascript:;" id="copy-1" clipboard supported="supported" text="other.socket_url" on-copied="success('1')">点击复制</a></div>
+				<div class="link-group"><a href="javascript:;" id="copy-1" clipboard supported="supported" text="other.siteurl" on-copied="success('1')">点击复制</a></div>
 			</td>
 		</tr>
 		<tr>
@@ -256,6 +250,87 @@
 			</td>
 		</tr>
 	</table>
+	<table class="table wechat-communication">
+		<col width="160px" />
+		<col />
+		<col width="230px"/>
+		<tr><th class="text-left" colspan="3">消息推送配置</th></tr>
+		<tr>
+			<td class="table-label">URL<p>(服务器地址)</p></td>
+			<td>
+				<a href="javascript:;" class="we7-padding-right" ng-bind="other.serviceUrl"></a>
+			</td>
+			<td>
+				<div class="link-group"><a href="javascript:;" id="copy-4" clipboard supported="supported" text="other.serviceUrl" on-copied="success('4')">点击复制</a></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="table-label">Token<p>(令牌)</p></td>
+			<td>
+				<a href="javascript:;" class="we7-padding-right" ng-bind="account.token"></a>
+			</td>
+			<td>
+				<div class="link-group">
+					<a href="javascript:;" data-toggle="modal" data-target="#token">修改</a>
+					<a href="javascript:;" data-dismiss="modal" ng-click="httpChange('token')">生成新的</a>
+					<a href="javascript:;" id="copy-5" clipboard supported="supported" text="account.token" on-copied="success('5')">点击复制</a>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="table-label">EncodingAESKey<p>(消息加解密密钥)</p> </td>
+			<td>
+				<a href="javascript:;" class="we7-padding-right" ng-bind="account.encodingaeskey"></a>
+			</td>
+			<td>
+				<div class="link-group">
+					<a href="javascript:;" data-toggle="modal" data-target="#encodingaeskey">修改</a>
+					<a href="javascript:;" data-dismiss="modal" ng-click="httpChange('encodingaeskey')">生成新的</a>
+					<a href="javascript:;" id="copy-6" clipboard supported="supported" text="account.encodingaeskey" on-copied="success('6')">点击复制</a>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div class="modal fade" id="token" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="we7-modal-dialog modal-dialog we7-form">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<div class="modal-title">修改token</div>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<input type="text" id="newtoken" class="form-control" placeholder="请填写新的公众号消息校验Token" />
+						<span class="help-block">与公众平台接入设置值一致，必须为英文或者数字，长度为3到32个字符. 请妥善保管, Token 泄露将可能被窃取或篡改平台的操作数据.</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" ng-click="httpChange('token', 'edit')">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="encodingaeskey" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="we7-modal-dialog modal-dialog we7-form">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<div class="modal-title">修改EncodingAESKey</div>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<input type="text" id="newencodingaeskey" class="form-control" placeholder="请填写新的公众号消息加解密Key" />
+						<span class="help-block">与公众平台接入设置值一致，必须为英文或者数字，长度为43个字符. 请妥善保管, EncodingAESKey 泄露将可能被窃取或篡改平台的操作数据.</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" ng-click="httpChange('encodingaeskey', 'edit')">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script>
 	angular.module('accountApp').value('config', {
@@ -266,7 +341,7 @@
 		links: {
 			basePost: "{php echo url('account/post/base', array('acid' => $acid, 'uniacid' => $uniacid, 'account_type' => ACCOUNT_TYPE_APP_NORMAL))}",
 			siteroot: "{php echo $_W['siteroot']}",
-			socket_url: "{php echo $socket_url}"
+			sitednsroot: "{php echo str_replace($_W['sitescheme'], '', $_W['siteroot'])}",
 		},
 	});
 	angular.bootstrap($('#js-account-manage-base'), ['accountApp']);

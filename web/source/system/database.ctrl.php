@@ -9,7 +9,7 @@ set_time_limit(0);
 load()->func('file');
 load()->model('cloud');
 load()->func('db');
-
+load()->model('system');
 $dos = array('backup', 'restore', 'trim', 'optimize', 'run');
 $do = in_array($do, $dos) ? $do : 'backup';
 
@@ -18,33 +18,31 @@ if ($do == 'backup') {
 	if ($_GPC['status']) {
 		if (empty($_W['setting']['copyright']['status'])) {
 			itoast('为了保证备份数据完整请关闭站点后再进行此操作', url('system/site'), 'error');
-		}
-		
-				$sql = "SHOW TABLE STATUS LIKE '{$_W['config']['db']['tablepre']}%'";
+		}	
+		$sql = "SHOW TABLE STATUS LIKE '{$_W['config']['db']['tablepre']}%'";
 		$tables = pdo_fetchall($sql);
 		if (empty($tables)) {
 			itoast('数据已经备份完成', url('system/database/'), 'success');
-		}
-		
-				 $series = max(1, intval($_GPC['series']));
-				if (!empty($_GPC['volume_suffix'])) {
+		}	
+		$series = max(1, intval($_GPC['series']));
+		if (!empty($_GPC['volume_suffix'])) {
 			$volume_suffix =  $_GPC['volume_suffix'];
 		} else {
 			$volume_suffix = random(10);
 		}	
-				if (!empty($_GPC['folder_suffix'])) {
+		if (!empty($_GPC['folder_suffix'])) {
 			$folder_suffix = $_GPC['folder_suffix'];
 		} else {
 			$folder_suffix = TIMESTAMP . '_' . random(8);
 		}
-				$bakdir = IA_ROOT . '/data/backup/' . $folder_suffix;
+		$bakdir = IA_ROOT . '/data/backup/' . $folder_suffix;
 		if (trim($_GPC['start'])) {
 			$result = mkdirs($bakdir);		
 		}
-				$size = 300;
-				$volumn = 1024 * 1024 * 2;
+		$size = 300;
+		$volumn = 1024 * 1024 * 2;
 		$dump = '';
-				if (empty($_GPC['last_table'])) {
+		if (empty($_GPC['last_table'])) {
 			$last_table ='';
 			$catch = true;
 		} else {
@@ -52,21 +50,21 @@ if ($do == 'backup') {
 			$catch = false;
 		}
 		foreach ($tables as $table) {
-						$table = array_shift($table);
-						if (!empty($last_table) && $table == $last_table) {
+			$table = array_shift($table);
+			if (!empty($last_table) && $table == $last_table) {
 				$catch = true;
 			}
-						if (!$catch) { 
+			if (!$catch) { 
 				continue;
 			}
 			if (!empty($dump)) {
 				$dump .= "\n\n";
 			}
-						if ($table != $last_table) {
+			if ($table != $last_table) {
 				$row = db_table_schemas($table);
 				$dump .= $row;
 			}
-						$index = 0;
+			$index = 0;
 			if (!empty($_GPC['index'])) {
 				$index = $_GPC['index'];
 				$_GPC['index'] = 0;
@@ -91,7 +89,7 @@ if ($do == 'backup') {
 							'status'=>1
 						);
 						$current_series = $series-1;
-						itoast('正在导出数据, 请不要关闭浏览器, 当前第 ' . $current_series . ' 卷.', url('system/database/backup/',$current), 'info');
+						message('正在导出数据, 请不要关闭浏览器, 当前第 ' . $current_series . ' 卷.', url('system/database/backup/',$current), 'info');
 					}
 					
 				}
@@ -102,114 +100,48 @@ if ($do == 'backup') {
 				$index++;
 			}
 		}
-	
-				$bakfile = $bakdir . "/volume-{$volume_suffix}-{$series}.sql";
+		$bakfile = $bakdir . "/volume-{$volume_suffix}-{$series}.sql";
 		$dump .= "\n\n----WeEngine MySQL Dump End";
 		file_put_contents($bakfile, $dump);
 		itoast('数据已经备份完成', url('system/database/'), 'success');	
 	}
 }
-
 if($do == 'restore') {
 	$_W['page']['title'] = '还原 - 数据库 - 常用系统工具 - 系统管理';
-	$reduction = array();
-	$path = IA_ROOT . '/data/backup/';
-	if (is_dir($path)) {
-		if ($handle = opendir($path)) {
-			while (false !== ($bakdir = readdir($handle))) {
-				if ($bakdir == '.' || $bakdir == '..') {
-					continue;
-				}
-				if (preg_match('/^(?P<time>\d{10})_[a-z\d]{8}$/i', $bakdir, $match)) {
-					$time = $match['time'];
-										if ($handle1= opendir($path . $bakdir)) {
-						while (false !== ($filename = readdir($handle1))) {
-							if ($filename == '.' || $filename == '..') {
-								continue;
-							}
-							if (preg_match('/^volume-(?P<prefix>[a-z\d]{10})-\d{1,}\.sql$/i', $filename, $match1)) {
-								$volume_prefix = $match1['prefix'];
-								if (!empty($volume_prefix)) {
-									break;
-								}
-							}
-						}
-					}
-					for ($i = 1;;) {
-						$last = $path . $bakdir . "/volume-{$volume_prefix}-{$i}.sql";
-						$i++;
-						$next = $path . $bakdir . "/volume-{$volume_prefix}-{$i}.sql";
-						if (!is_file($next)) {
-							break;
-						}
-					}
-					if (is_file($last)) {
-						$fp = fopen($last, 'r');
-						fseek($fp, -27, SEEK_END);
-						$end = fgets($fp);
-						fclose($fp);
-						if ($end == '----WeEngine MySQL Dump End') {
-							$row = array(
-								'bakdir'=> $bakdir,
-								'time'=> $time,
-								'volume'=> $i - 1
-							);
-							$reduction[$bakdir] = $row;
-							continue;
-						}
-					}
-				}
-				rmdirs($path . $bakdir);
-			}
-		}
-	}
-	if (!empty($_GPC['restore_dirname'])) {
+		$reduction = system_database_backup();
+		if (!empty($_GPC['restore_dirname'])) {
 		$restore_dirname = $_GPC['restore_dirname'];
-		if ($reduction[$restore_dirname]) {
-			$row = $reduction[$restore_dirname];
-			$dir = $path . $row['bakdir'];
-						if ($handle1= opendir($dir)) {
-				while (false !== ($filename = readdir($handle1))) {
-					if ($filename == '.' || $filename == '..') {
-						continue;
-					}
-					if (preg_match('/^volume-(?P<prefix>[a-z\d]{10})-\d{1,}\.sql$/i', $filename, $match1)) {
-						$volume_prefix = $match1['prefix'];
-						break;
-					}
-				}
-			}
-						if (empty($_GPC['restore_volume_prefix'])) {
-				$restore_volume_prefix = $volume_prefix;
-			} else {
-				$restore_volume_prefix = $_GPC['restore_volume_prefix'];
-			}
-						$restore_volume_sizes = max(1, intval($_GPC['restore_volume_sizes']));
-			if ($reduction[$restore_dirname]) {
-				if ($reduction[$restore_dirname]['volume'] < $restore_volume_sizes) {
-					itoast('成功恢复数据备份. 可能还需要你更新缓存.', url('system/database/restore'), 'success');
-				} else {
-					$sql = file_get_contents($path .$restore_dirname . "/volume-{$restore_volume_prefix}-{$restore_volume_sizes}.sql");
-					pdo_run($sql);
-					$volume_sizes = $restore_volume_sizes;
-					$restore_volume_sizes ++;
-					$restore = array (
-						'restore_dirname' => $restore_dirname,
-						'restore_volume_prefix' => $restore_volume_prefix,
-						'restore_volume_sizes' => $restore_volume_sizes,
-					);
-					itoast('正在恢复数据备份, 请不要关闭浏览器, 当前第 ' . $volume_sizes . ' 卷.', url('system/database/restore',$restore), 'success');
-				}
-			} else {
-				itoast('非法访问', '','error');
-			}
+		$restore_dirname_list = array_keys($reduction);
+		if (!in_array($restore_dirname, $restore_dirname_list)) {
+			itoast('非法访问', '','error');
+			exit;
+		} 
+		
+		$volume_list = $reduction[$restore_dirname]['volume_list'];
+		if (empty($_GPC['restore_volume_name'])) {
+			$restore_volume_name = $volume_list[0];
+		} else {
+			$restore_volume_name = $_GPC['restore_volume_name'];
 		}
+		$restore_volume_sizes = max(1, intval($_GPC['restore_volume_sizes']));
+		if ($reduction[$restore_dirname]['volume'] < $restore_volume_sizes) {
+			itoast('成功恢复数据备份. 可能还需要你更新缓存.', url('system/database/restore'), 'success');
+			exit;
+		} 
+		$volume_sizes = $restore_volume_sizes;
+		system_database_volume_restore($restore_volume_name);
+		$next_restore_volume_name = system_database_volume_next($restore_volume_name);
+		$restore_volume_sizes ++;
+		$restore = array (
+				'restore_volume_name' => $next_restore_volume_name,
+				'restore_volume_sizes' => $restore_volume_sizes,
+				'restore_dirname' => $restore_dirname
+		);
+		message('正在恢复数据备份, 请不要关闭浏览器, 当前第 ' . $volume_sizes . ' 卷.', url('system/database/restore',$restore), 'success');
 	}
-
-	if ($_GPC['delete_dirname']) {
+		if ($_GPC['delete_dirname']) {
 		$delete_dirname = $_GPC['delete_dirname'];
-		if ($reduction[$delete_dirname]) {
-			rmdirs($path . $delete_dirname);
+		if(!empty($reduction[$delete_dirname]) && system_database_backup_delete($delete_dirname)) {
 			itoast('删除备份成功.', url('system/database/restore'), 'success');
 		}
 	}
@@ -233,7 +165,11 @@ if ($do == 'trim') {
 		}
 		exit();
 	}
-
+	
+	$r = cloud_prepare();
+	if(is_error($r)) {
+		itoast($r['message'], url('cloud/profile'), 'error');
+	}
 	
 	$upgrade = cloud_schema();
 	$schemas = $upgrade['schemas'];

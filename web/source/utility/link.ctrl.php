@@ -156,16 +156,16 @@ if ($do == 'article') {
 }
 if ($do == 'entry') {
 	$has_permission = array();
-	if(uni_user_permission_exist()) {
+	if(permission_account_user_permission_exist()) {
 		$has_permission = array(
 			'system' => array(),
 			'modules' => array()
 		);
-		$has_permission['system'] = uni_user_permission('system');
-				$temp_module = pdo_fetchall('SELECT * FROM ' . tablename('users_permission') . ' WHERE uniacid = :uniacid AND uid = :uid AND type != :type', array(':uniacid' => $_W['uniacid'], ':uid' => $_W['uid'], ':type' => 'system'), 'type');
-		if(!empty($temp_module)) {
-			$has_permission['modules'] = array_keys($temp_module);
-			foreach($temp_module as $row) {
+		$has_permission['system'] = permission_account_user('system');
+				$module_permission = permission_account_user_menu($_W['uid'], $_W['uniacid'], 'modules');
+		if(!is_error($module_permission) && !empty($module_permission)) {
+			$has_permission['modules'] = array_keys($module_permission);
+			foreach($module_permission as $row) {
 				if($row['permission'] == 'all') {
 					$has_permission[$row['type']] = array('all');
 				} else {
@@ -215,17 +215,6 @@ if ($do == 'entry') {
 		array('title'=>'个人中心','url'=> murl('mc')),
 	);
 
-		if(empty($has_permission) || (!empty($has_permission) && in_array('mc_card', $has_permission['system']))) {
-		$cardmenus = array(
-			array('title'=>'我的会员卡','url'=> murl('entry', array('m' => 'we7_coupon', 'do' => 'card'))),
-			array('title'=>'兑换商城','url'=> murl('entry', array('m' => 'we7_coupon', 'do' => 'activity'))),
-			array('title'=>'我的卡券','url'=> murl('entry', array('m' => 'we7_coupon', 'do' => 'activity', 'op' => 'mine'))),
-			array('title'=>'我的兑换','url'=> murl('entry', array('m' => 'we7_coupon', 'do' => 'activity', 'activity_type' => 'goods', 'op' => 'mine'))),
-			array('title'=>'消息','url'=> murl('entry', array('m' => 'we7_coupon', 'do' => 'card', 'op' => 'notice'))),
-			array('title'=>'签到','url'=> murl('entry', array('m' => 'we7_coupon', 'do' => 'card', 'op' => 'sign_display'))),
-			array('title'=>'完善会员资料','url'=> murl('mc/profile')),
-		);
-	}
 		if(empty($has_permission) || (!empty($has_permission) && in_array('site_multi_display', $has_permission['system']))) {
 		$multi_list = pdo_getall('site_multi', array('uniacid' => $_W['uniacid'], 'status !=' => 0), array('id', 'title'));
 		if(!empty($multi_list)) {

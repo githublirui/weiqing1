@@ -31,13 +31,13 @@ if ($do == 'forward') {
 		echo "此为测试平台接入返回结果：<br/> 公众号名称：{$account_info['authorizer_info']['nick_name']} <br/> 接入状态：成功";
 		exit;
 	}
-	if ($account_info['authorizer_info']['service_type_info'] = '0' || $account_info['authorizer_info']['service_type_info'] == '1') {
+	if ($account_info['authorizer_info']['service_type_info']['id'] == '0' || $account_info['authorizer_info']['service_type_info']['id'] == '1') {
 		if ($account_info['authorizer_info']['verify_type_info']['id'] > '-1') {
 			$level = '3';
 		} else {
 			$level = '1';
 		}
-	} elseif ($account_info['authorizer_info']['service_type_info'] = '2') {
+	} elseif ($account_info['authorizer_info']['service_type_info']['id'] == '2') {
 		if ($account_info['authorizer_info']['verify_type_info']['id'] > '-1') {
 			$level = '4';
 		} else {
@@ -92,9 +92,6 @@ if ($do == 'forward') {
 	pdo_insert('uni_settings', $unisetting_insert);
 	pdo_insert('mc_groups', array('uniacid' => $uniacid, 'title' => '默认会员组', 'isdefault' => 1));
 
-	load()->model('module');
-	module_build_privileges();
-
 	$account_index_insert = array(
 		'uniacid' => $uniacid,
 		'type' => ACCOUNT_OAUTH_LOGIN,
@@ -128,6 +125,8 @@ if ($do == 'forward') {
 	$qrcode = ihttp_request($account_info['authorizer_info']['qrcode_url']);
 	file_put_contents(IA_ROOT . '/attachment/headimg_'.$acid.'.jpg', $headimg['content']);
 	file_put_contents(IA_ROOT . '/attachment/qrcode_'.$acid.'.jpg', $qrcode['content']);
+	
+	cache_build_account($uniacid);
 	itoast('授权登录成功', url('account/manage', array('type' => '3')), 'success');
 } elseif ($do == 'confirm') {
 	$auth_refresh_token = $_GPC['auth_refresh_token'];
@@ -144,33 +143,7 @@ if ($do == 'forward') {
 		'key' => $auth_appid,
 	), array('acid' => $acid));
 	pdo_update('account', array('isconnect' => '1', 'type' => ACCOUNT_OAUTH_LOGIN, 'isdeleted' => 0), array('acid' => $acid));
-		$account_api = WeAccount::create();
-		$default_menu_info = $account_api->menuCurrentQuery();
-		$menu = array();
-		if(!empty($default_menu_info['selfmenu_info']['button'])) {
-			foreach($default_menu_info['selfmenu_info']['button'] as $key => &$button) {
-				$button['name'] = preg_replace_callback('/\:\:([0-9a-zA-Z_-]+)\:\:/', create_function('$matches', 'return utf8_bytes(hexdec($matches[1]));'), $button['name']);
-				$button['name'] = urlencode($button['name']);
-				if (empty($button['sub_button'])) {
-					if($button['type'] == 'view') {
-						$button['url'] = urlencode($button['url']);
-					}
-				} else {
-					$button['sub_button'] = !empty($button['sub_button']['list']) ? $button['sub_button']['list'] : $button['sub_button'];
-					foreach($button['sub_button'] as &$subbutton) {
-						$subbutton['name'] = preg_replace_callback('/\:\:([0-9a-zA-Z_-]+)\:\:/', create_function('$matches', 'return utf8_bytes(hexdec($matches[1]));'), $subbutton['name']);
-						$subbutton['name'] = urlencode($subbutton['name']);
-						if($subbutton['type'] == 'view') {
-							$subbutton['url'] = urlencode($subbutton['url']);
-						}
-					}
-					unset($subbutton);
-				}
-			}
-			unset($button);
-			$menu = $default_menu_info['selfmenu_info'];
-		}
-		$account_api->menuCreate($menu);
+
 	cache_delete("uniaccount:{$uniacid}");
 	cache_delete("unisetting:{$uniacid}");
 	cache_delete("accesstoken:{$acid}");

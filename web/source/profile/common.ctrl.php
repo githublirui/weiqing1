@@ -8,11 +8,11 @@ defined('IN_IA') or exit('Access Denied');
 
 $dos = array('uc_setting', 'upload_file');
 $do = in_array($do, $dos) ? $do : 'uc_setting';
-uni_user_permission_check('profile_setting');
+permission_check_account_user('profile_setting');
 $_W['page']['title'] = '系统 - 参数设置';
 
 if ($do == 'uc_setting') {
-		$_W['page']['title'] = 'uc站点整合';
+	$_W['page']['title'] = 'uc站点整合';
 	$setting = uni_setting_load('uc');
 	$uc = $setting['uc'];
 	if(!is_array($uc)) {
@@ -64,6 +64,9 @@ if ($do == 'upload_file') {
 		if (empty($_FILES['file']['tmp_name'])) {
 			itoast('请选择文件', url('profile/common/upload_file'), 'error');
 		}
+		if ($_FILES['file']['type'] != 'text/plain') {
+			itoast('文件类型错误', url('profile/common/upload_file'), 'error');
+		}
 		$file = file_get_contents($_FILES['file']['tmp_name']);
 		$file_name = 'MP_verify_'. $file. ".txt";
 		if ($file_name != $_FILES['file']['name'] || !preg_match("/^[A-Za-z0-9]+$/", $file)) {
@@ -74,9 +77,4 @@ if ($do == 'upload_file') {
 	}
 }
 
-template('profile/common');
-
-
-
-
-
+template('profile/uc');
