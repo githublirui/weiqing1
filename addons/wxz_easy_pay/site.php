@@ -86,7 +86,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                         'color' => $setting_fh['tpl_word_2_color'] ? $setting_fh['tpl_word_2_color'] : '#000000',
                     ),
                     'Remark' => array(
-                        'value' => "您此比订单款需要48小时内到账",
+                        'value' => $setting_fh['tpl_word_4'] ? $setting_fh['tpl_word_4'] : '您该比订单款需要48小时内到账',
                         'color' => $setting_fh['tpl_word_4_color'] ? $setting_fh['tpl_word_4_color'] : '#000000',
                     ),
                 );

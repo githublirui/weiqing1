@@ -7,64 +7,64 @@
         </div>
         <div class="panel-body">
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">直播通知模板id</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">通知模板id</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_zhifu['template_id']}" class="form-control" name="template_id">
                     <span class="help-block">微信模版ID，模版样例<br/> 支付金额: 1元<br/> 商品信息: 商品名称</span>
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_zhifu['title']}" class="form-control" name="firstvalue">
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题字体颜色</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">支付成功标题字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('firstcolor',$setting_zhifu['title_color']);}
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_zhifu['tpl_word_1']}" class="form-control" name="keyword1value">
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1字体颜色</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">支付成功金额字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('keyword1color',$setting_zhifu['tpl_word_1_color']);}
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_zhifu['tpl_word_2']}" class="form-control" name="keyword2value">
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2字体颜色</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">支付成功商品名称字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('keyword2color',$setting_zhifu['tpl_word_2_color']);}
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_zhifu['tpl_word_3']}" class="form-control" name="keyword3value">
                 </div>
-            </div>
-            <div class="form-group">
+            </div>-->
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('keyword3color',$setting_zhifu['tpl_word_3_color']);}
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">备注</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
-                    <input type="text" value="{$setting_zhifu['tpl_word_4']}" class="form-control" name="remarkvalue">
+                    <input placeholder="您该比订单款需要48小时内到账" type="text" value="{$setting_zhifu['tpl_word_4']}" class="form-control" name="remarkvalue">
                 </div>
             </div>
             <div class="form-group">
@@ -104,68 +104,65 @@
             发货模板消息通知
         </div>
         <div class="panel-body">
-
-
-
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">直播通知模板id</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">通知模板id</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_fh['template_id']}" class="form-control" name="template_id">
 
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_fh['title']}" class="form-control" name="firstvalue">
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题字体颜色</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">发货标题字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('firstcolor',$setting_fh['title_color']);}
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_fh['tpl_word_1']}" class="form-control" name="keyword1value">
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词1字体颜色</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">查看字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('keyword1color',$setting_fh['tpl_word_1_color']);}
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_fh['tpl_word_2']}" class="form-control" name="keyword2value">
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
-                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词2字体颜色</label>
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">发货数量字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('keyword2color',$setting_fh['tpl_word_2_color']);}
                 </div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     <input type="text" value="{$setting_fh['tpl_word_3']}" class="form-control" name="keyword3value">
                 </div>
-            </div>
-            <div class="form-group">
+            </div>-->
+<!--            <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">关键词3字体颜色</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
                     {php echo tpl_form_field_color('keyword3color',$setting_fh['tpl_word_3_color']);}
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                 <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">备注</label>
                 <div class="col-sm-8 col-lg-9 col-xs-12">
-                    <input type="text" value="{$setting_fh['tpl_word_4']}" class="form-control" name="remarkvalue">
+                    <input type="text" placeholder="点击这里查看快递物流跟踪信息>>>" value="{$setting_fh['tpl_word_4']}" class="form-control" name="remarkvalue">
                 </div>
             </div>
             <div class="form-group">

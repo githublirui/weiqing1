@@ -51,7 +51,7 @@ if ($_GPC['ac'] == 'ajaxsend') {
                     'color' => $setting_fh['tpl_word_2_color']
                 ),
                 'remark' => array(
-                    'value' => "点击这里查看快递物流跟踪信息>>>",
+                    'value' => $setting_fh['tpl_word_4'] ? $setting_fh['tpl_word_4'] : '点击这里查看快递物流跟踪信息>>>',
                     'color' => $setting_fh['tpl_word_4_color']
                 ),
             );
