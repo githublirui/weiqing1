@@ -15,7 +15,7 @@ require_once WXZ_PANORAMA . '/source/Activity.class.php';
 $activitys = Activity::getAll('id,name');
 
 $aid = intval($_GPC['aid']);
-$mobile = intval($_GPC['mobile']);
+$mobile = $_GPC['mobile'];
 
 $start = ($pindex - 1) * $psize;
 $condition = '`uniacid`=:uniacid';

@@ -30,14 +30,14 @@ $total = pdo_fetchcolumn($sql, $pars);
 
 $sql = "SELECT * FROM " . tablename('wxz_panorama_win') . " WHERE {$condition} ORDER BY `fans_id` DESC limit $start , $psize";
 $list = pdo_fetchall($sql, $pars);
-foreach ($list as &$row) {
+foreach ($list as $k => $row) {
     $sql = "SELECT * FROM " . tablename('wxz_panorama_fans') . " WHERE uid={$row['fans_id']}";
     $fans = pdo_fetch($sql);
-    $row['openid'] = $fans['openid'];
-    $row['nickname'] = $fans['nickname'];
-    $row['username'] = $fans['username'];
-    $row['cellphone'] = $fans['cellphone'];
-    $row['share_num'] = $fans['share_num'];
+    $list[$k]['openid'] = $fans['openid'];
+    $list[$k]['nickname'] = $fans['nickname'];
+    $list[$k]['username'] = $fans['username'];
+    $list[$k]['cellphone'] = $fans['cellphone'];
+    $list[$k]['share_num'] = $fans['share_num'];
 }
 $pager = pagination($total, $pindex, $psize);
 
