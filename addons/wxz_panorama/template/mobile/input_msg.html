@@ -45,7 +45,7 @@
                 $.post('{php echo $this->createMobileUrl("ajax",array("sdo"=>"regmsg"))}', pars).success(function (dat) {
                     if (dat == 'success') {
                         //location.href = location.href;
-                        location.href = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=win&m={$_GPC['m']}";
+                        location.href = "{$_W['siteroot']}app/index.php?i={$_GPC['i']}&c=entry&do=win&m={$_GPC['m']}&aid={$aid}";
                     } else {
                         alert(dat);
                     }

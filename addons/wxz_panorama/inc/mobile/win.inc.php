@@ -12,11 +12,7 @@ $modulePath = '../addons/' . $_GPC['m'] . '/';
 unset($_SESSION['__:proxy:WXZ_PANORAMA_VIEW_SCENES']); //删除浏览场景记录
 $user = $this->auth();
 //活动开始结束判断
-//写入session判断是否关注
-if ($_GPC['openid']) {
-    $quanjing_openid = $_GPC['openid'];
-    $_SESSION['__:proxy:WXZ_PANORAMA_OPENID'] = $quanjing_openid;
-}
+
 //判断是否中奖，分享
 $sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"]." order by id desc";
 $wins = pdo_fetchall($sql, $pars);

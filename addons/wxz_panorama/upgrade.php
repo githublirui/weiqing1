@@ -118,6 +118,10 @@ if (!pdo_fieldexists('wxz_panorama_project', 'aid')) {
     pdo_query("ALTER TABLE " . tablename('wxz_panorama_project') . " ADD `aid` int(11) COMMENT '活动id';");
 }
 
+if (!pdo_fieldexists('wxz_panorama_fans', 'aid')) {
+    pdo_query("ALTER TABLE " . tablename('wxz_panorama_fans') . " ADD `aid` int(11) COMMENT '活动id';");
+}
+
 if (!pdo_tableexists('wxz_panorama_activity')) {
     pdo_query("CREATE TABLE IF NOT EXISTS " . tablename('wxz_panorama_activity') . " (
   `id` int(11) NOT NULL AUTO_INCREMENT,

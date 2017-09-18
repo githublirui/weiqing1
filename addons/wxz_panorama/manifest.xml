@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-720°全景寻宝抢红包]]></name>
         <identifie><![CDATA[wxz_panorama]]></identifie>
-        <version><![CDATA[3.2.2]]></version>
+        <version><![CDATA[3.3.2]]></version>
         <type><![CDATA[activity]]></type>
         <ability><![CDATA[wxz_panorama]]></ability>
         <description><![CDATA[wxz_panorama]]></description>
@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_win` (
 CREATE TABLE IF NOT EXISTS `ims_wxz_panorama_fans` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) unsigned NOT NULL,
+  `aid` int(11) unsigned NOT NULL,
   `sub_openid` varchar(40) NOT NULL DEFAULT '',
   `openid` varchar(40) NOT NULL DEFAULT '',
   `proxy` varchar(40) NOT NULL DEFAULT '',
