@@ -196,7 +196,6 @@ CREATE TABLE `ims_hangyi_tplset` (
   `tpl_word_3_color` varchar(20) DEFAULT NULL,
   `tpl_word_4` varchar(255) DEFAULT NULL,
   `tpl_word_4_color` varchar(20) DEFAULT NULL,
-  `uniacid` int(10) DEFAULT NULL,
   `tpl_type` int(10) DEFAULT '0' COMMENT '1,订单支付成功通知，2商品发货通知',
   `template_id` varchar(100) DEFAULT NULL,
   `edit_time` int(10) DEFAULT NULL,
@@ -238,7 +237,8 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_page` (
 	DROP TABLE IF EXISTS `ims_hangyi_peizhi`;
 	DROP TABLE IF EXISTS `ims_hangyi_order`;
         DROP TABLE IF EXISTS `ims_hangyi_tplset`;
-        DROP TABLE IF EXISTS `wxz_easy_pay_page`;
+        DROP TABLE IF EXISTS `ims_wxz_easy_pay_page`;
+        DROP TABLE IF EXISTS `ims_wxz_easy_pay_post_tpl`;
 	]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

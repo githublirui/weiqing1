@@ -1,154 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>发布商品</title>
-    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
-          <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-   
-    <style>
-        .more {}
-
-        
-        .text-center {
-            text-align: center;
-        }
-        .weui_label{
-		width: 5em;
-		}
-        .weui_dialog_bd {
-            padding: 0 20px;
-            font-size: 15px;
-            color: #888;
-            word-wrap: break-word;
-            word-break: break-all;
-            max-height: 300px;
-            overflow-y: scroll;
-            text-align: left;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .weui_icon_success:before {
-            font-size: 16px;
-        }
-        
-        .weui_icon_circle:before {
-            font-size: 16px;
-        }
-        
-        .page {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            background-color: #EFEFF3;
-            z-index: 1;
-        }
-        
-        .page_desc {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .money {
-            font-size: 16px;
-        }
-        
-        .money span#price {
-            font-size: 64px;
-            font-weight: 300;
-        }
-        
-        .pointer-events {
-            pointer-events: none;
-        }
-        box{
-            display: flex;
-        }
-        centerbox{
-            display: flex;
-            justify-content: center;
-            align-items:center;
-        }
-        
-        html,
-        body,
-        .container {
-            height: 100%;
-        }
-    </style>
-</head>
-
-<body>
-   
-  
-
-<script type="text/javascript">
-function submit(){
-var phone = $("#phone").val();
-var weixin = $("#weixin").val();
-var weui_textarea = $("#weui_textarea").val();
-if(!phone) {
-    alert("请填写手机号");
-    return;
-}
- var reg = /^1[0-9]{10}$/;
-if (!reg.test(phone)) {
-    alert("手机号码格式不正确");
-    return false;
-}
-if(!weixin) {
-    alert("请填写微信");
-      return;
-}
-$.ajax({
-						url:"{php echo $this->createMobileUrl('savesell')}",
-						type:"post",
-						data:{"phone":phone,"ac":"ajaxsend","weixin":weixin,'weui_textarea':weui_textarea},
-						success: function(re){
-//							if(re){
-								alert("修改成功");
-							location.href="{php echo $this->createMobileUrl('sellercentral')}";
-//							}else{
-//								alert("修改失败");
-//							}
-						},
-						async:false
-					});
-}
-</script>
-   
-       
-        <div class="weui_cells_title">
-            保存卖家的联系方式
-        </div>
-        <div class="weui_cells weui_cells_form">
-            <div class="weui_cell">
-                <div class="weui_cell_hd"><label class="weui_label weui_label_wide">联系电话</label></div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input id="phone" class="weui_input" type="tel" placeholder="填写手机号码(必填)" value="{$sellinfo['tel']}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>保存卖家的联系方式</title>
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui_new.min.css" />
+        <script type="text/javascript" src="../addons/wxz_easy_pay/js/jquery-1.11.1.min.js"></script>
+    </head>
+    <body ontouchstart>
+        <div class="weui-cells__title">保存卖家的联系方式</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" placeholder="请输入手机号" id="phone"/>
                 </div>
             </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd"><label class="weui_label weui_label_wide">微信号</label></div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input id="weixin" class="weui_input" placeholder="方便他人联系你(必填)" value="{$sellinfo['weixin']}">
-                </div>
-             <!--   <a class="weui_btn weui_btn_mini weui_btn_primary"><span>上传微信二维码</span></a>
-                <img src="user_data.weixin_qrcode_url+'@!square-small'" style="height:40px"  />-->
-            </div>
-            <div class="weui_cell more" >
-                <div class="weui_cell_bd weui_cell_primary">
-                    <textarea class="weui_textarea" id="weui_textarea" placeholder="自提店地址（选填）" rows="">{$sellinfo['mysaddress']}</textarea>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">微信号</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" placeholder="请输入微信号" id="weixin"/>
                 </div>
             </div>
-        </div>
-        <div class="weui_btn_area">
-            <a class="weui_btn weui_btn_primary" onclick="submit()">保存卖家信息</a>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea placeholder="自提店地址（选填）" id="weui_textarea" class="weui-textarea" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" onclick="submit()" id="showTooltips">保存卖家信息</a>
+            </div>
         </div>
 
-   
-</body>
 
+        <script type="text/javascript">
+            function submit() {
+                var phone = $("#phone").val();
+                var weixin = $("#weixin").val();
+                var weui_textarea = $("#weui_textarea").val();
+                if (!phone) {
+                    alert("请填写手机号");
+                    return;
+                }
+                var reg = /^1[0-9]{10}$/;
+                if (!reg.test(phone)) {
+                    alert("手机号码格式不正确");
+                    return false;
+                }
+                if (!weixin) {
+                    alert("请填写微信");
+                    return;
+                }
+                $.ajax({
+                    url: "{php echo $this->createMobileUrl('savesell')}",
+                    type: "post",
+                    data: {"phone": phone, "ac": "ajaxsend", "weixin": weixin, 'weui_textarea': weui_textarea},
+                    success: function (re) {
+                        alert("修改成功");
+                        location.href = "{php echo $this->createMobileUrl('sellercentral')}";
+                    },
+                });
+            }
+        </script>
+    </body>
 </html>
