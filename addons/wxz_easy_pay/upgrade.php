@@ -121,3 +121,16 @@ if (!pdo_tableexists('wxz_easy_pay_post_tpl')) {
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;");
 }
+
+
+if (!pdo_tableexists('wxz_easy_pay_log')) {
+    pdo_query("CREATE TABLE " . tablename('wxz_easy_pay_log') . " (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `uid` int(10) DEFAULT '0' COMMENT '用户id',
+  `order_id` int(10) DEFAULT '0' COMMENT '订单id',
+  `desc` VARCHAR(2000) NOT NULL COMMENT '返回详情',
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;");
+}

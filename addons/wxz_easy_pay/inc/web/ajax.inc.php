@@ -10,5 +10,15 @@ if ($do == 'del_page') {
     $ret = pdo_query($update_sql);
     echo "ok";
     die;
+} else if ($do == 'del_table') {
+    $id = (int) $_GPC['id'];
+    $table = $_GPC['table'];
+    if (!$id || !$table) {
+        exit('参数错误');
+    }
+    
+    $ret = pdo_delete($table, array('id' => $id));
+    echo "ok";
+    die;
 }
 ?>

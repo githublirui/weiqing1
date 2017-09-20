@@ -3,7 +3,7 @@
     <application setting="true">
         <name><![CDATA[小智-简单支付交易平台]]></name>
         <identifie><![CDATA[wxz_easy_pay]]></identifie>
-        <version><![CDATA[3.4.1]]></version>
+        <version><![CDATA[3.4.4]]></version>
         <type><![CDATA[business]]></type>
         <ability><![CDATA[小智-简单支付]]></ability>
         <description><![CDATA[小智-简单支付]]></description>
@@ -49,6 +49,7 @@
             <entry title="付款卖家设置" do="paysell" state="" direct="false" />
             <entry title="模板消息设置" do="tplset" state="" direct="false" />
             <entry title="数据配置" do="page_list" state="" direct="false" />	
+            <entry title="打款失败日志" do="pay_log_list" state="" direct="false" />	
         </menu>
 		
     </bindings>
@@ -226,7 +227,18 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_page` (
   `goodsPostNum` int(10) DEFAULT '0',
   `create_at` INT(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;                   
+) ENGINE=INNODB DEFAULT CHARSET=utf8;  
+        
+ CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_log` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` INT(11) NOT NULL,
+  `uid` int(10) DEFAULT '0' COMMENT '用户id',
+  `order_id` int(10) DEFAULT '0' COMMENT '订单id',
+  `desc` VARCHAR(2000) NOT NULL COMMENT '返回详情',
+  `create_at` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;    
+                             
 ]]></install>
     <uninstall><![CDATA[
 	DROP TABLE IF EXISTS `ims_hangyi_user`;
@@ -239,6 +251,7 @@ CREATE TABLE IF NOT EXISTS `ims_wxz_easy_pay_page` (
         DROP TABLE IF EXISTS `ims_hangyi_tplset`;
         DROP TABLE IF EXISTS `ims_wxz_easy_pay_page`;
         DROP TABLE IF EXISTS `ims_wxz_easy_pay_post_tpl`;
+        DROP TABLE IF EXISTS `ims_wxz_easy_pay_log`;
 	]]></uninstall>
     <upgrade><![CDATA[upgrade.php]]></upgrade>
 </manifest>

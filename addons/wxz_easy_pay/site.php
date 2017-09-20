@@ -51,17 +51,17 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             } else {
                 exit();
             }
-            
+
             $pids = $orderinfo['pids'];
-             $goodsNums = $orderinfo['goodsNums'];
-             $pids = explode(',', $pids);
-             $goodsNums = explode(',', $goodsNums);
-             
-            if(!$pids) {
+            $goodsNums = $orderinfo['goodsNums'];
+            $pids = explode(',', $pids);
+            $goodsNums = explode(',', $goodsNums);
+
+            if (!$pids) {
                 $pids = array($orderinfo['pid']);
                 $goodsNums = array($orderinfo['goodsNum']);
             }
-          
+
             foreach ($pids as $k => $pid) {
                 $sellNum = $goodsNums[$k];
                 $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `sell_num`=`sell_num`+{$sellNum},`goodsStock`=`goodsStock`-{$sellNum}  WHERE id = '" . $pid . "' limit 1");
@@ -79,7 +79,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                     ),
                     'orderMoneySum' => array(
                         'value' => $orderinfo['goodsPriceTotalReal'] . "元",
-                        'color' => $setting_fh['tpl_word_1_color']  ? $setting_fh['tpl_word_1_color'] : '#000000',
+                        'color' => $setting_fh['tpl_word_1_color'] ? $setting_fh['tpl_word_1_color'] : '#000000',
                     ),
                     'orderProductName' => array(
                         'value' => $orderinfo['goodsName'],
@@ -122,7 +122,7 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
             if ($setting['paysell_isauto'] != 1) {
                 exit();
             }
-            
+
             $uniacid = $_W['uniacid'];
             //file_put_contents(IA_ROOT."/1.txt","uniacid=>".$uniacid);
             $orderinfo_pay = pdo_get('core_paylog', array('tid' => $oid, "status" => 1, "uniacid" => $uniacid, "module" => "wxz_easy_pay"));
@@ -143,14 +143,14 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                 exit();
             }
 
-            $peizhi = pdo_get('hangyi_peizhi', array('uniacid' =>$uniacid));
-            $gzhinfo = $_W['cache']['uniaccount:'.$uniacid];
+            $peizhi = pdo_get('hangyi_peizhi', array('uniacid' => $uniacid));
+            $gzhinfo = $_W['cache']['uniaccount:' . $uniacid];
 
-            define("ZAPPID",$gzhinfo['key']);
-            define("MCHID_D",$peizhi['mchid']);
-            define("MC_KEY_D",$peizhi['mc_key']);
-            define("MSECRET",$gzhinfo['secret']);
-            define("CURUNIACID",$_W['uniacid']);
+            define("ZAPPID", $gzhinfo['key']);
+            define("MCHID_D", $peizhi['mchid']);
+            define("MC_KEY_D", $peizhi['mc_key']);
+            define("MSECRET", $gzhinfo['secret']);
+            define("CURUNIACID", $_W['uniacid']);
 
             $productinfo = pdo_get('hangyi_product', array('id' => $orderinfo['pid']));
 
@@ -240,6 +240,15 @@ class Wxz_easy_payModuleSite extends WeModuleSite {
                 $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `give_money`='" . ($send_money) . "',`we_pay_sell_status`='2',`qi_pay_time`='" . time() . "'  WHERE id = '" . $oid . "' and `we_pay_sell_status`=1 limit 1");
                 //	echo "ok";
             } else {
+                //支付记录失败日志
+                $data = array(
+                    'uniacid' => $_W['uniacid'],
+                    'uid' => $orderinfo['buy_id'],
+                    'order_id' => $orderinfo['id'],
+                    'desc' => var_export($responseObj, true),
+                    'create_at' => time(),
+                );
+                pdo_insert('wxz_easy_pay_log', $data);
                 //	echo ($responseObj->err_code_des);
 //                file_put_contents(dirname(__FILE__).'/log.txt', $responseObj->err_code_des,FILE_APPEND);
             }
