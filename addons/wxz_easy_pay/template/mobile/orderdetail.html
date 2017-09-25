@@ -33,16 +33,23 @@
             <div class="weui_cell_ft">{$product_info['goodsName']}</div>
         </div>
 
-       
-
-       
-
 
         <div class="weui_cell">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>购买数量</p>
             </div>
-            <div class="weui_cell_ft">{$orderinfo['goodsNum']}</div>
+            <div class="weui_cell_ft">
+                {if count($productIds)>0 }
+                    {php foreach($product_infos as $k=>$product_info) {}
+                        {php echo $product_info['goodsNameExt'].$goodnums[$k]}个
+                        {if count($product_infos)-1!=$k }
+                            ,
+                        {/if}
+                    {php }}
+                {else}
+                   {$orderinfo['goodsNum']}
+                {/if}
+            </div>
         </div>
 
         <div class="weui_cell">
