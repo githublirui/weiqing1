@@ -1,90 +1,224 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-        <title>卖家中心</title>
-        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/style.css" />
-        <script type="text/javascript" src="../addons/wxz_easy_pay/js/jquery.min.js"></script>
-        <script type="text/javascript" src="../addons/wxz_easy_pay/js/common.js"></script>
-        <style>
-            .order_manager_list a{
-                color:#000;
-            }
-            .order_manager_list h4{
-                font-weight: normal;
-            }
-        </style>
-    </head>
-    <body class="order_manager">
-        <p class="order_manager_top">昨日营收<span class="red-Clr">{$yestodayMoney}</span>元 昨日成交<span class="red-Clr">{$alltotal}</span>笔</p>
-        <ul class="order_manager_list">
-            <li>
-                <a href="{php echo $this->createMobileUrl('sellercentral')}" class="weui_grid js_grid">
-                    <span class="manager-ico"><img src="../addons/wxz_easy_pay/images/plus.svg"/></span>
-                    <h4>发布商品</h4>
-                    <p>生成支付码商品图</p>
-                </a>
-            </li>
-            <li>
-                <a href="{php echo $this->createMobileUrl('orders')}" class="weui_grid js_grid">
-                    <span class="manager-ico"><img src="../addons/wxz_easy_pay/images/groceries-bag.svg"/></span>
-                    <h4>商品管理</h4>
-                    <p>管理删除商品</p>
-                </a>
-            </li>
-            <li>
-                <a href="{php echo $this->createMobileUrl('orderslist')}" class="weui_grid js_grid">
-                    <span class="manager-ico"><img src="../addons/wxz_easy_pay/images/invoice.svg"/></span>
-                    <h4>订单管理</h4>
-                    <p>未发货{$weifah}笔</p>
-                </a>
-            </li>
-            <li id="shipall">
-                <a href="javascript:void(0)" class="weui_grid js_grid">
-                    <span class="manager-ico"><img src="../addons/wxz_easy_pay/images/delivery-truck.svg"/></span>
-                    <h4>批量发货</h4>
-                    <p>一键发货准确通知</p>
-                </a>
-            </li>
-        </ul>
-        <!--<a href="#" class="btn" style="">购买简单支付年付会员费</a>-->
-        {template 'footer'}
-    </body>
-
-    <script type="text/javascript">
-                $("#submit").click(function(){
-        var search_input;
-        {if $_GPC['order_status']}
-        search_input = $("#search_input").val();
-                order_status = {$_GPC['order_status']};
-                window.location.href = "{php echo $this->createMobileUrl('orderslist')}&search=" + search_input + "&order_status=" + order_status;
-        { else}
-        search_input = $("#search_input").val();
-                window.location.href = "{php echo $this->createMobileUrl('orderslist')}&search=" + search_input;
-        {/if}
-
-        });
-                $("#shipall").click(function(){
-        if (confirm("确定全部标记为已发货吗？")) {
-
-        $.ajax({
-        url: "{php echo $this->createMobileUrl('my')}&ac=ajaxshipall",
-                type: "post",
-                dataType: "html",
-                success: function (res) {
-
-                if (res == "ok") {
-                alert("操作成功");
-                        window.location.reload(true);
-                } else {
-                alert(res);
-                }
-                }
-        })
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>卖家中心</title>
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/weui.min.css" />
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/weui.min.css" />
+    <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/jquery-weui.min.css" />
+    <style>
+        .more {}
+        
+      
+        
+        .weui_actionsheet_menu a {
+            display: block;
         }
+        
+        .info .weui_grid:before {
+            border: 0;
+        }
+        
+        .weui_grid_desc {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .weui_grid {
+            height: 120px;
+        }
+        .weui_grids{
+            background-color: #fff;
 
-        });
+        }
+        .weui_grid_2 {
+            padding: 10px;
+            width: 50%;
+            height: 130px;
+        }
+        
+        .page {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #EFEFF3;
+            z-index: 1;
+        }
+        
+        .container,
+        .page {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow-x: hidden;
+        }
+        
+        .tag {
+            -webkit-transform: scale(0.8);
+            display: inline-block;
+            background-color: #ff6600;
+            border-radius: 4px;
+            padding: 4px 6px;
+            color: #fff;
+            font-size: 9px;
+            -webkit-transform-origin-x: -1px;
+        }
+        
+        .weui_media_box.weui_media_appmsg {
+            align-items: flex-start;
+        }
+        .weui_navbar {
+            z-index: 10;
+        }
+        .info p {
+            margin: 4px;
+        }
+        .disable{
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        .weui_grid_icon_block{
+            display: block;
+        }
+        .padding_top_0{
+            padding-top: 0 !important;
+        }
+        .weui_grid_desc a {
+            margin: 3px 3px;
+        }
+    </style>
+</head>
+
+<body id="app">
+   
+    
+        <div class="info" style="text-align:center;padding:20px;font-size:14px;">
+            <p>昨日营收<span style="color:#ff3300">{$yestodayMoney}</span>元 昨日成交<span style="color:#ff3300">{$alltotal}</span>笔</p>
+            <!--<p><a class="weui_btn weui_btn_mini weui_btn_primary" id="shipall">全部标记为已发货</a></p>-->
+        </div>
+        <div class="bd">
+            <div class="weui_search_bar" id="search_bar" style="z-index:0">
+                <form class="weui_search_outer">
+                    <div class="weui_search_inner">
+                        <i class="weui_icon_search"></i>
+                        <input  type="search"class="weui_search_input" id="search_input" placeholder="可以输入订单号，买家名称，商品名称，地址，电话" required/>
+                        <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+                    </div>
+                </form>
+                <a  class="weui_search_cancel" style="display:block" id="submit">搜索</a>
+            </div>
+        </div>
+        <div class="bd">
+            <div class="weui_grids">
+                <a href="{php echo $this->createMobileUrl('sellercentral')}" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Interface/svg_64/plus.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        发布商品
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        生成支付码商品图
+                    </p>
+                </a>
+               
+                <a href="{php echo $this->createMobileUrl('orders')}" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/groceries-bag.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        商品管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        管理删除商品
+                    </p>
+                </a>
+
+                <a href="{php echo $this->createMobileUrl('orderslist')}" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/invoice.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        订单管理
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        未发货{$weifah}笔
+                    </p>
+                </a>
+                
+                <a  class="weui_grid js_grid download_order" href="javascript:;">
+                    <div class="weui_grid_icon">
+                        <img src="../addons/wxz_easy_pay/images/cloud-download.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        下载订单
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        查看订单全部信息
+                    </p>
+                </a>
+             <!--   <a onclick="showSearchBar=true" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="../addons/wxz_easy_pay/images/zoom.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        查找订单
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        快速搜索某笔订单
+                    </p>
+                </a>
+                
+                <a href="batchship" class="weui_grid js_grid">
+                    <div class="weui_grid_icon">
+                        <img src="http://banling1.oss-cn-beijing.aliyuncs.com/micro_forum/icon/Financial/svg_64/delivery-truck.svg" alt="">
+                    </div>
+                    <p class="weui_grid_label">
+                        批量发货
+                    </p>
+                    <p class="weui_grid_label weui_grid_desc">
+                        一键发货准确通知
+                    </p>
+                </a>-->
+            </div>
+        </div>
+</body>
+    <script type="text/javascript" src="../addons/wxz_easy_pay/js/new/jquery.min.js"></script>
+    <script type="text/javascript" src="../addons/wxz_easy_pay/js/new/jquery-weui.min.js"></script>
+    <script type="text/javascript">
+        $("#submit").click(function(){ 
+                      var search_input;
+                      {if $_GPC['order_status']}
+                      search_input = $("#search_input").val();
+                      order_status = {$_GPC['order_status']};
+                      window.location.href="{php echo $this->createMobileUrl('orderslist')}&search="+search_input+"&order_status="+order_status;
+                      {else}
+                      search_input = $("#search_input").val();
+                      window.location.href="{php echo $this->createMobileUrl('orderslist')}&search="+search_input;
+                      {/if}
+        }); 
+       
+       $(function(){
+          $(".download_order").click(function(){ 
+               $.actions({
+                    actions: [{
+                      text: "下载全部订单表",
+                      onClick: function() {
+                         location.href="{php echo $this->createMobileUrl('download_order')}";
+                      }
+                    },{
+                      text: "下载未发货订单表",
+                      onClick: function() {
+                         location.href="{php echo $this->createMobileUrl('download_order',array('order_status'=>1))}";
+                      }
+                    }]
+               });
+         }); 
+           
+       });
+ 
     </script>  
 </html>

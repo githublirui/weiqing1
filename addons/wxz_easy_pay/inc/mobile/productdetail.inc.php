@@ -138,7 +138,7 @@ if ($products) {
     $weixin = $buy_info['weixin'];
     $city = $buy_info['city'];
 
-    include $this->template('product_pay');
+    include $this->template('productdetail');
 }
 ?>
 

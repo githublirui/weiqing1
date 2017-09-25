@@ -11,13 +11,16 @@
 
 <body>
     <div class="weui_cells_title">订单编号：<span>{$orderinfo['id']}</span> 
-	
-	{if $orderinfo['order_status'] == '1'}
-	<span class="weui_cell_ft">未发货</span>
-	{else if $orderinfo['order_status'] == '2'}
-	<span class="weui_cell_ft">已发货</span>
-	{else if $orderinfo['order_status'] == '3'}
-	<span class="weui_cell_ft">已退款</span>
+	{if $orderinfo['pay_status'] == '2'}
+            {if $orderinfo['order_status'] == '1'}
+            <span class="weui_cell_ft">未发货</span>
+            {else if $orderinfo['order_status'] == '2'}
+            <span class="weui_cell_ft">已发货</span>
+            {else if $orderinfo['order_status'] == '3'}
+            <span class="weui_cell_ft">已退款</span>
+            {/if}
+	{else}
+            <span class="weui_cell_ft">未付款</span>
 	{/if}
 	
 	

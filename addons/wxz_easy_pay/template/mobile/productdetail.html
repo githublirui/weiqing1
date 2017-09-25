@@ -239,9 +239,9 @@
                                              <span class="tag" v-show="score>0" v-link="{ name: 'scores_log',params:{seller:this.item.openid}}">查看积分抵扣{{score/100}}元</span>-->  
                     </div>
                     <div style="font-size:12px" v-show="item.nickname && !item.company  && reseller==null">
-                        <span style="margin:0 10px">收款人:{$sell_info['nickname']}</span>
-                        <span style="margin:0 10px">电话:{$sell_info['tel']}</span>
-                        <span v-show="item.weixin" style="margin:0 10px">微信:{$sell_info['weixin']}</span>
+                        <span style="margin:0 3px">收款人:{$sell_info['nickname']}</span>
+                        <span style="margin:0 3px">电话:{$sell_info['tel']}</span>
+                        <span v-show="item.weixin" style="margin:0 3px">微信:{$sell_info['weixin']}</span>
                     </div>
                 </div>
 

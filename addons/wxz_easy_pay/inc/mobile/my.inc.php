@@ -10,27 +10,41 @@ if (!empty($fan) && !empty($fan['openid'])) {
 }
 
 $uid = $userinfo['uid'];
-//$uid = 1; //debug
 
 if ($_GPC['ac'] == 'ajaxshipall' && $uid) {
-    $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `order_status`='2'  WHERE `sell_id` = '" . $uid . "'  and `order_status`=1 ");
+    $condition = "sell_id={$uid} AND `order_status`=1 AND order_status!=2";
+    $orderInfos = pdo_getall('hangyi_order', $condition);
+    //发送发货消息
+//    foreach($orderInfos as $orderInfo) {
+//        $result = pdo_query("UPDATE " . tablename('hangyi_order') . " SET `order_status`='2'  WHERE id={$orderInfo['id']}");
+//        //发送通知
+//        if($result) {
+//            
+//        }
+//    }
     echo "ok";
     exit;
 }
 
 $today = date("Y-m-d");
+$todayTime = strtotime(date("Y-m-d"));
+$yestodayTime = strtotime('-1 day');
 $yestoday = date("Y-m-d", strtotime('-1 day'));
-$sql = "SELECT count(*) as totalNum FROM " . tablename('hangyi_order') . " as o left join " . tablename('core_paylog') . "  as p on o.id=p.tid WHERE o.`sell_id`='" . $uid . "' and p.`status`=1 and FROM_UNIXTIME(`pay_time`,'%Y-%m-%d')='" . $yestoday . "' ";
-$re_order_num = pdo_fetch($sql, $params = array());
-$alltotal = (int) $re_order_num['totalNum'];
 
-$sql = "SELECT count(*) as weifah FROM " . tablename('hangyi_order') . " as o left join " . tablename('core_paylog') . "  as p on o.id=p.tid  WHERE o.`sell_id`='" . $uid . "' and p.`status`=1 and o.`order_status`=1 ";
+$sql = "SELECT id,goodsPriceTotalReal FROM " . tablename('hangyi_order') . "  where sell_id={$uid} AND pay_status=2 AND pay_time>='{$yestodayTime}' AND pay_time<'{$todayTime}' AND uniacid={$_W['uniacid']}";
+$yestodayOrders = pdo_fetchall($sql, $params = array());
+
+$alltotal = 0;
+$yestodayMoney = 0;
+foreach ($yestodayOrders as $yestodayOrder) {
+    $alltotal++;
+    $yestodayMoney += $yestodayOrder['goodsPriceTotalReal'] * 100;
+}
+$yestodayMoney = $yestodayMoney / 100;
+
+$sql = "SELECT count(*) as weifah FROM " . tablename('hangyi_order') . "  where sell_id={$uid} AND pay_status=2 AND order_status!=2 AND uniacid={$_W['uniacid']}";
 $weifahTotal = pdo_fetch($sql, $params = array());
 $weifah = (int) $weifahTotal['weifah'];
-
-$sql = "SELECT sum(goodsPriceTotalReal) as yestodayMoney FROM " . tablename('hangyi_order') . " as o left join " . tablename('core_paylog') . "  as p on o.id=p.tid WHERE o.`sell_id`='" . $uid . "' and p.`status`=1 and FROM_UNIXTIME(`pay_time`,'%Y-%m-%d')='" . $yestoday . "' ";
-$re_order = pdo_fetch($sql, $params = array());
-$yestodayMoney = (int) $re_order['yestodayMoney'];
 
 //获取页面配置
 require_once WXZ_EASY_PAY . '/source/Page.class.php';

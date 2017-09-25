@@ -11,6 +11,7 @@ if (!empty($fan) && !empty($fan['openid'])) {
 } else {
     $userinfo = mc_oauth_userinfo();
 }
+
 //获取图片域名
 setting_load('remote');
 if ($_W['setting']['remote']['type']) {
