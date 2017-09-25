@@ -8,8 +8,9 @@
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/vux.css">
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/styleb.css">
         <!-- head 中 -->
-        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/jquery-weui.min.css">
-
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/weui.min.css" />
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/jquery-weui.min.css" />
+    
         <!-- body 最后 -->
         <script src="../addons/wxz_easy_pay/js/jquery.min.js"></script>
         <script src="../addons/wxz_easy_pay/js/jquery-weui.min.js"></script>
@@ -252,7 +253,7 @@
                         {php foreach($products as $product) {}
                         <box class="weui_cell product_list" style="justify-content:flex-end;align-items:center;padding:10px 15px" v-for="gitem in items" v-show="(gitem.type!=2 && gitem.type!=12 && gitem.type!=101) || items.length>1" v-if="item.type!=3">
                             <box style="flex:1;padding-right:10px;flex-direction: column">
-                                <box style="align-items: center">
+                                <box style="align-items: center" onclick="showMsg('{$product['goodsDetail']}')">
                                     <span v-show="items.length==1">{$product['goodsName']} </span>
                                     <span style="color:red;">{$product['goodsNameExt']} </span>
                                     <span style="color:#D1B755;"><span class="postText">满{$product['goodsPostNum']}件包邮</span>{if $product['promotion']}限购一件{/if}</span>
@@ -552,6 +553,12 @@
                         });
                     },
                 });
+                
+                function showMsg(msg) {
+                    if(msg) {
+                        $.alert(msg, "商品描述");
+                    }
+                }
             </script>
         </div>
     </body>
