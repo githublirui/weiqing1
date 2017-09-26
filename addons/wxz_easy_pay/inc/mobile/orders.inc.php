@@ -16,6 +16,7 @@ if ($_GPC['ac'] == 'ajaxdele') {
     }
     exit();
 }
+
 if ($sell_out) {
     $sql = 'SELECT * FROM ' . tablename('hangyi_product') . " WHERE uid = :uid and (`goodsStock` < 1  or `goodsStock`='' or `goodsStock` is NULL)order by id desc";
 } else {

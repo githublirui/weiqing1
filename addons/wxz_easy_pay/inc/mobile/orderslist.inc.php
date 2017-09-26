@@ -86,7 +86,7 @@ if ($_GPC['ac'] == 'ajaxsend') {
     exit();
 }
 
-$sqlPre = 'SELECT u.nickname as nickname,o.order_status as order_status,o.add_time,p.goodsName as goodsName,o.id as id,p.goodsImg as goodsImg,o.buy_nick as buy_nick, o.cell as cell,o.address as address,o.pay_time as pay_time FROM ' . tablename('hangyi_order') . " as o left join " . tablename('hangyi_product') . " as  p on o.pid=p.id left join " . tablename('hangyi_user') . " as u on u.uid=o.buy_id WHERE ";
+$sqlPre = 'SELECT o.pay_status,u.nickname as nickname,o.order_status as order_status,o.add_time,p.goodsName as goodsName,o.id as id,p.goodsImg as goodsImg,o.buy_nick as buy_nick, o.cell as cell,o.address as address,o.pay_time as pay_time FROM ' . tablename('hangyi_order') . " as o left join " . tablename('hangyi_product') . " as  p on o.pid=p.id left join " . tablename('hangyi_user') . " as u on u.uid=o.buy_id WHERE ";
 
 if ($_GPC['order_status']) {
     if ($search) {

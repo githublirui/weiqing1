@@ -3,17 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-        <title>微信支付</title>
+        <title>商品购买</title>
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/share.css">
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/vux.css">
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/styleb.css">
         <!-- head 中 -->
-        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/weui.min.css" />
+        <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/weui.min.css?t=111" />
         <link rel="stylesheet" href="../addons/wxz_easy_pay/css/new/jquery-weui.min.css" />
     
         <!-- body 最后 -->
-        <script src="../addons/wxz_easy_pay/js/jquery.min.js"></script>
-        <script src="../addons/wxz_easy_pay/js/jquery-weui.min.js"></script>
+        <script src="../addons/wxz_easy_pay/js/new/jquery.min.js"></script>
+        <script src="../addons/wxz_easy_pay/js/new/jquery-weui.min.js"></script>
 
         <!-- 如果使用了某些拓展插件还需要额外的JS -->
         <script src="../addons/wxz_easy_pay/js/swiper.min.js"></script>
@@ -478,7 +478,9 @@
                     
                     var goodsNum = parseInt(parent.find(".goodsNum").val());
                     var goodPrice = parent.find(".goodPrice").val();
-
+                    if(goodsNum<=0) {
+                        return;
+                    }
                     //邮费
                     var defaultGoodsPostNum = parseInt($(".defaultGoodsPostNum").val());
                     var defaultPostage = $(".defaultPostage").val();
@@ -570,7 +572,7 @@
                 
                 function showMsg(msg) {
                     if(msg) {
-                        $.alert(msg, "商品描述");
+                        $.alert(msg, "");
                     }
                 }
                 

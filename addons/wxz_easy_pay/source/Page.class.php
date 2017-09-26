@@ -67,6 +67,10 @@ class Page {
             'type' => 'img',
             'help' => "<a href='/addons/wxz_easy_pay/images/pay.png' target='_blank'>模版样例</a>,注:请上传PNG图片(尺寸217x65)"
         ),
+        14 => array(
+            'name' => '发布商品背景颜色',
+            'help' => "请选择背景图颜色 默认:#00C000"
+        ),
     );
 
     /**

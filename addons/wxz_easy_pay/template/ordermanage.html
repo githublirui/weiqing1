@@ -67,8 +67,8 @@
                     <div class="y_sele y_size03" >
                         <select class="form-control" name="pay_status" style='width:100px;'>
                             <option value="0">不限</option>
-                            <option value="1" {if $_GPC['status']==0}selected="selected"{/if}>未支付</option>
-                            <option value="2" {if $_GPC['status']==1}selected="selected"{/if}>支付</option>
+                            <option value="1" {if $_GPC['pay_status']==1}selected="selected"{/if}>未支付</option>
+                            <option value="2" {if $_GPC['pay_status']==2}selected="selected"{/if}>支付</option>
                         </select>
                     </div>
                     <input type="hidden" name="c" value="{$_GPC['c']}" />
@@ -92,8 +92,8 @@
                     <th>订单状态</th>
                     <th>卖家</th>
                     <th>买家</th>
-                    <th>订单总金额</th>
-                    <th>实际支付金额</th>
+                    <th>订单金额</th>
+                    <th>支付金额(含运费)</th>
                     <th>支付时间</th>
                     <th>创建时间</th>
                 </tr>

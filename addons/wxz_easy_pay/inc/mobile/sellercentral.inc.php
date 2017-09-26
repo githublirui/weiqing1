@@ -53,5 +53,5 @@ foreach ($postTpls as $k => $postTpl) {
     $postTpls[$k]['desc'] = json_decode($postTpl['desc'], true);
 }
 
-include $this->template('release_goods');
+include $this->template('sellercentral');
 

@@ -59,14 +59,14 @@ foreach ($list as $k => $row) {
 
     $goodnums = explode(',', $row['goodsNums']);
     $attrs = explode(',', $row['attrs']);
-
+  
     $list[$k]['buyproinfos'] = $row['goodsName'] . "\n";
 
     foreach ($productIds as $pk => $productId) {
         if (!isset($proInfos[$productId])) {
             $proInfos[$productId] = pdo_get('hangyi_product', array('id' => $productId));
         }
-        $list[$k]['buyproinfos'] .= $proInfos[$productId]['goodsNameExt'] . $attrs[$k] . $goodnums[$k] . "个\n";
+        $list[$k]['buyproinfos'] .= $proInfos[$productId]['goodsNameExt'] . $attrs[$pk] . $goodnums[$k] . "个\n";
     }
 
     //卖家信息

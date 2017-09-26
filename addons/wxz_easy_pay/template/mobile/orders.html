@@ -152,10 +152,10 @@
             <div class="weui_grids">
 {loop $trades_p $index $item}
 <div   class="weui_grid weui_grid_2 js_grid" >
-                    <p class="weui_grid_label" onclick="window.location='{php echo $this->createMobileUrl('ordershow')}&orderid={$item['id']}'" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
+                    <p class="weui_grid_label" onclick="window.location='{php echo $this->createMobileUrl('ordershow')}&pid={$item['id']}'" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
                        {$item['goodsName']} {$item['goodsNameExt']}
                     </p>
-                    <p class="weui_grid_icon weui_grid_icon_block" style="width:60px;height:60px;display:block" onclick="window.location='{php echo $this->createMobileUrl('ordershow')}&orderid={$item['id']}'">
+                    <p class="weui_grid_icon weui_grid_icon_block" style="width:60px;height:60px;display:block" onclick="window.location='{php echo $this->createMobileUrl('ordershow')}&pid={$item['id']}'">
                         <img src="{$item['goodsImg']}">
                     </p>
                     <p class="weui_grid_label weui_grid_desc" style="font-size:14px;color:#000">

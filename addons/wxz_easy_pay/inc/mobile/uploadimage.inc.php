@@ -248,7 +248,8 @@ if ($df) {
     //更新支付图片
     //更新批次号
     $result = pdo_query("UPDATE " . tablename('hangyi_product') . " SET `goodsCode`='" . $file_url . "', `batch_id`='" . $pid . "'  WHERE id in (" . implode(',', $pids) . ")");
-    include $this->template('upimg');
+    header('Location: ' . $this->createMobileUrl('ordershow', array('pid' => $pid)));
+    exit;
 }
 
 

@@ -14,18 +14,18 @@
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="number" placeholder="请输入手机号" id="phone"/>
+                    <input class="weui-input" type="number" placeholder="请输入手机号" id="phone" value="{$sellinfo['tel']}"/>
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">微信号</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" placeholder="请输入微信号" id="weixin"/>
+                    <input class="weui-input" placeholder="请输入微信号" id="weixin" value="{$sellinfo['weixin']}"/>
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <textarea placeholder="自提店地址（选填）" id="weui_textarea" class="weui-textarea" rows="3"></textarea>
+                    <textarea placeholder="自提店地址（选填）" id="weui_textarea" class="weui-textarea" rows="3">{$sellinfo['mysaddress']}</textarea>
                 </div>
             </div>
             <div class="weui-btn-area">
