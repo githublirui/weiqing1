@@ -98,6 +98,9 @@ if (!pdo_fieldexists('hangyi_order', 'pids')) {
 if (!pdo_fieldexists('hangyi_order', 'goodsNums')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `goodsNums` varchar(50) DEFAULT 0;");
 }
+if (!pdo_fieldexists('hangyi_order', 'attrs')) {
+    pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `attrs` varchar(50) DEFAULT '';");
+}
 if (!pdo_fieldexists('hangyi_order', 'city')) {
     pdo_query("ALTER TABLE " . tablename('hangyi_order') . " ADD `city` varchar(50) DEFAULT '';");
 }

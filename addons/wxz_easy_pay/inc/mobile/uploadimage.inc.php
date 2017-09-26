@@ -1,9 +1,6 @@
 <?php
 
 global $_GPC, $_W;
-ini_set('post_max_size', '12M');
-ini_set('upload_max_filesize', '10M');
-error_reporting("0");
 
 require_once WXZ_EASY_PAY . '/function/global.func.php';
 require_once WXZ_EASY_PAY . "/pay/imagecuter.php";

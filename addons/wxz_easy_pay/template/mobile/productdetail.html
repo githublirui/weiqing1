@@ -219,6 +219,12 @@
             .weui_cell_select{
                 padding: 0 0 0 15px;
             }
+            .attr {
+                font-size: 12px;border:1px solid;border-radius:7px;padding: 3px;
+            }
+            .attrselect {
+                background: #f59a04;color:#fff;
+            }
         </style>
     </head>
 
@@ -258,6 +264,11 @@
                                     <span style="color:red;">{$product['goodsNameExt']} </span>
                                     <span style="color:#D1B755;"><span class="postText">满{$product['goodsPostNum']}件包邮</span>{if $product['promotion']}限购一件{/if}</span>
                                 </box>
+                                <box style="align-items: center" class='select_attr'>
+                                    {php foreach($productAttrs as $productAttr) {}
+                                    <span class='attr'>{$productAttr}</span>&nbsp;
+                                    {php }}
+                                </box>
                             </box>
                             <box>
                                 <a class="sm-btn lessGoodsNum" >-</a>
@@ -269,6 +280,7 @@
                             <input type="hidden" value="{$product['goodsStock']}" class="defaultGoodsStock" />
                             <input type="hidden" value="{$product['promotion']}" class="defaultPromotion" />
                             <input type="hidden" value="{$product['id']}" class="pids" />
+                            <input type="hidden" value="" class="attrs" name='attrs'/>
                             <!--/默认值-->
                             <input type="hidden" value="0" class="goodPrice" />
                         </box>
@@ -339,10 +351,12 @@
                 function postOrder() {
                     var pids = new Array();
                     var goodsNums = new Array();
+                    var attrs = new Array();
                     
                     $(".product_list").each( function() {
                         pids.push($(this).find(".pids").val());
                         goodsNums.push($(this).find(".goodsNum").val());
+                        attrs.push($(this).find(".attrs").val());
                     });
                  
                     var buyer_name = $("#buyer_name").val();
@@ -390,7 +404,7 @@
                     $.ajax({
                         url: "{php echo $this->createMobileUrl('productdetail')}&ajax=1",
                         type: 'POST',
-                        data: {'postscript': postscript,'pid':{$products[0]['id']}, 'pids': pids, 'goodsNums': goodsNums, 'goodsPriceTotal': goodsPriceTotal, 'buyer_name': buyer_name, 'cell': cell, 'weixin': weixin, 'city': city, 'address': address},
+                        data: {'postscript': postscript,'pid':{$products[0]['id']}, 'pids': pids, 'goodsNums': goodsNums,'attrs':attrs, 'goodsPriceTotal': goodsPriceTotal, 'buyer_name': buyer_name, 'cell': cell, 'weixin': weixin, 'city': city, 'address': address},
                         success: function (res) {
                             if (res) {
                                 window.location.href = "{php echo $this->createMobileUrl('dopay')}&orderid=" + res;
@@ -559,6 +573,13 @@
                         $.alert(msg, "商品描述");
                     }
                 }
+                
+                $(".select_attr span").click( function() {
+                     var attr = $.trim($(this).html());
+                     $(this).parent().find('span').removeClass('attrselect');
+                     $(this).parent().parent().parent().find('.attrs').val(attr);
+                     $(this).addClass('attrselect');
+                })
             </script>
         </div>
     </body>

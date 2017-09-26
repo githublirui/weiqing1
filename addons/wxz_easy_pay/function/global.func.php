@@ -59,6 +59,10 @@ function imageCropper($source_path, $target_width, $target_height) {
  * 上传图片
  */
 function uploadFile() {
+    ini_set('post_max_size', '12M');
+    ini_set('upload_max_filesize', '10M');
+    error_reporting("0");
+
     global $_GPC, $_W;
 
     $uploadDir = IA_ROOT . '/' . $_W['config']['upload']['attachdir'] . '/wxz_easy_pay/' . date('Ymd') . '/';

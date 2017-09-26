@@ -21,6 +21,14 @@ if (!$products) {
 }
 
 $product = $products[0];
+
+//属性
+$productAttrs = [];
+if ($product['goodsAtr']) {
+    $product['goodsAtr'] = str_replace('，', ',', $product['goodsAtr']);
+    $productAttrs = explode(',', $product['goodsAtr']);
+}
+
 $sell_info = pdo_get('hangyi_user', array('uid' => $product['uid']));
 $buy_info = pdo_get('hangyi_user', array('uid' => $userinfo['uid']));
 
@@ -44,6 +52,8 @@ if ($_GPC['ajax']) {
     $city = trim($_GPC['city']);
     $pids = $_GPC['pids'];
     $goodsNums = $_GPC['goodsNums'];
+    $attrs = $_GPC['attrs'];
+    
     $postscript = $_GPC['postscript'];
     $sell_openid = $product['openid'];
     $sell_id = $product['uid'];
@@ -107,6 +117,7 @@ if ($_GPC['ajax']) {
         'pid' => $pid,
         'pids' => implode(',', $buyPids),
         'goodsNums' => implode(',', $buyGoodsNums),
+        'attrs' => implode(',', $attrs),
         'postscript' => $postscript,
         'sell_openid' => $sell_openid,
         'buy_nickname' => $userinfo['nickname'],

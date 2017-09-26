@@ -1,8 +1,11 @@
 <?php
 
 global $_W, $_GPC;
-if (isset($_GPC['status']) && $_GPC['status'] != 2) {
-    $condition .= " AND p.status={$_GPC['status']}";
+
+$condition = "o.uniacid={$_W['uniacid']}";
+
+if ($_GPC['pay_status']) {
+    $condition .= " AND o.pay_status={$_GPC['pay_status']}";
 }
 
 if ($_GPC['words']) {
@@ -14,6 +17,7 @@ if ($_GPC['order_time_start']) {
     $order_time_start = strtotime($_GPC['order_time_start'] . ' 00:00:00');
     $condition .= " AND o.add_time>='{$order_time_start}'";
 }
+
 //结束时间
 if ($_GPC['order_time_end']) {
     $order_time_end = strtotime($_GPC['order_time_end'] . ' 23:59:59');
@@ -21,7 +25,7 @@ if ($_GPC['order_time_end']) {
 }
 
 if ($_GPC['order_id']) {
-    $condition = " AND o.id='{$_GPC['order_id']}'";
+    $condition = " o.id='{$_GPC['order_id']}'";
 }
 
 $pindex = intval($_GPC['page']);
@@ -33,15 +37,54 @@ $start = ($pindex - 1) * $psize;
 $pars = array();
 $pars[':uniacid'] = $_W['uniacid'];
 
-$sql = "SELECT count(*) as num FROM " . tablename('hangyi_order') . " as o left join " . tablename('core_paylog') . " as p on o.id=p.tid WHERE p.`module`='wxz_easy_pay' and p.uniacid=:uniacid  and o.`out_trade_no` IS NOT NULL  {$condition} ";
-$total = pdo_fetchcolumn($sql, $pars);
+$tableOrderName = tablename('hangyi_order');
 
-$sql = "SELECT p.tid as tid,pr.goodsName as goodsName,p.status as status,o.buy_nick as buy_nick,o.sell_nickname,o.goodsPriceTotal as goodsPriceTotal,o.goodsPriceTotalReal as goodsPriceTotalReal,o.add_time as add_time,o.pay_time as pay_time,pr.goodsImg as goodsImg FROM " . tablename('hangyi_order') . " as o left join " . tablename('hangyi_product') . " as pr on pr.id=o.pid left join " . tablename('core_paylog') . " as p on o.id=p.tid WHERE  p.`module`='wxz_easy_pay' and p.uniacid=:uniacid and o.`out_trade_no` IS NOT NULL {$condition} ORDER BY o.`id` DESC  limit $start , $psize";
-$list = pdo_fetchall($sql, $pars);
+$sql = "SELECT count(*) as num FROM {$tableOrderName} o where {$condition}";
+$total = pdo_fetchcolumn($sql);
+
+$sql = "SELECT * FROM {$tableOrderName} o where {$condition} ORDER BY o.`id` DESC  limit $start , $psize";
+
+$list = pdo_fetchall($sql);
 $pager = pagination($total, $pindex, $psize);
 
+$proInfos = array();
+$userInfos = array();
+foreach ($list as $k => $row) {
+    if (!isset($proInfos[$row['pid']])) {
+        $proInfos[$row['pid']] = pdo_get('hangyi_product', array('id' => $row['pid']));
+    }
+    $list[$k]['proinfo'] = $proInfos[$row['pid']];
 
+    $productIds = explode(',', $row['pids']);
 
+    $goodnums = explode(',', $row['goodsNums']);
+    $attrs = explode(',', $row['attrs']);
 
-include $this->template('orders');
+    $list[$k]['buyproinfos'] = $row['goodsName'] . "\n";
+
+    foreach ($productIds as $pk => $productId) {
+        if (!isset($proInfos[$productId])) {
+            $proInfos[$productId] = pdo_get('hangyi_product', array('id' => $productId));
+        }
+        $list[$k]['buyproinfos'] .= $proInfos[$productId]['goodsNameExt'] . $attrs[$k] . $goodnums[$k] . "个\n";
+    }
+
+    //卖家信息
+    if ($row['sell_id']) {
+        if (!isset($userInfos[$row['sell_id']])) {
+            $proInfos[$row['sell_id']] = pdo_get('hangyi_user', array('uid' => $row['sell_id']));
+        }
+        $list[$k]['sellInfo'] = $proInfos[$row['sell_id']];
+    }
+
+    //买家信息
+    if ($row['buy_id']) {
+        if (!isset($userInfos[$row['buy_id']])) {
+            $proInfos[$row['buy_id']] = pdo_get('hangyi_user', array('uid' => $row['buy_id']));
+        }
+        $list[$k]['buyInfo'] = $proInfos[$row['buy_id']];
+    }
+}
+
+include $this->template('ordermanage');
 exit();

@@ -21,6 +21,7 @@ if ($orderinfo) {
     
     $productIds = explode(',', $orderinfo['pids']);
     $goodnums = explode(',', $orderinfo['goodsNums']);
+    $attrs = explode(',', $orderinfo['attrs']);
     
     foreach($productIds as $productId) {
         $product_infos[]  = pdo_get('hangyi_product', array('id' => $productId));
