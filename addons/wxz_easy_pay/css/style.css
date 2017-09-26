@@ -245,7 +245,7 @@ a,input,button,img,textarea{outline:none;}
 .agreement{
     line-height: 1rem;
     color: #04be02;
-    padding-top: 0.6rem;
+    padding-top: 0.1rem;
 }
 .agreement .ico{
     width: 0.3rem;
