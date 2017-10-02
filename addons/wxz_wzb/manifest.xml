@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6">
+	<application setting="false">
+		<name><![CDATA[小智-微直播]]></name>
+		<identifie><![CDATA[wxz_wzb]]></identifie>
+		<version><![CDATA[2.6.5]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[小智-微直播]]></ability>
+		<description><![CDATA[小智-微直播]]></description>
+		<author><![CDATA[wxz:QQ1094913225]]></author>
+		<url><![CDATA[http://bbs.we7.cc/]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+			<message type="text" />
+		</handles>
+		<rule embed="true" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<menu>
+			<entry title="直播间列表" do="liveList" state="" direct="false" />
+			<entry title="直播间分类" do="category_list" state="" direct="false" />
+			<entry title="首页(列表)设置" do="List" state="" direct="false" />
+			<entry title="首页(列表)banner" do="banner_list" state="" direct="false" />
+			<entry title="红包公共参数" do="redPacketSetting" state="" direct="false" />
+			<entry title="批量修改" do="batch" state="" direct="false" />
+		</menu>
+		<home>
+			<entry title="首页" do="index" state="" direct="false" />
+		</home>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[install.php]]></install>
+	<uninstall><![CDATA[
+	DROP TABLE IF EXISTS `ims_wxz_wzb_user`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_share`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_setting`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_red_packet`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_packet_log`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_live_setting`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_live_pic`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_comment`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_banner`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_category`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_help`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_list`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_live_menu`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_live_video_type`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_paylog`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_roll_adv`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_spread_adv`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_tx`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_viewer`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_ds`;
+	DROP TABLE IF EXISTS `ims_wxz_wzb_ds_setting`;
+	]]></uninstall>
+	<upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>
