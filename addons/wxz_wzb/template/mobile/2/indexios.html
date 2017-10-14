@@ -80,8 +80,9 @@
 					},
 					onConnect: function () {
 						//当与服务器连接成功时调用
-
-						enter('{$user["nickname"]}',2000);
+						loginInfo.type = 'into';
+						tis.SendMessage('{$user["nickname"]}','',JSON.stringify(loginInfo));
+						
 						console.log("与服务器重连接成功");
 					},
 					onLoadComponent: function () {

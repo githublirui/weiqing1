@@ -17,5 +17,10 @@ if (isset($_GPC['item']) && $_GPC['item'] == 'ajax' && $_GPC['key'] == 'setting'
 		'dateline'=>time()
 	);
 	pdo_insert('wxz_wzb_comment', $data);
+	$cid=pdo_insertid();
+	$data['id'] = $cid;
+	$data['dateline'] = date('Y-m-d H:i:s',$data['dateline']);
+	echo json_encode(array('s'=>1,'data'=>$data));
+	exit;
 }
 include $this->template('dummyComment');

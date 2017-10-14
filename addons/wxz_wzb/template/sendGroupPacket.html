@@ -184,6 +184,7 @@
 								'type':'grouppacket',
 								'siteroot':"{$_W['siteroot']}"
 							};
+							loginInfo.times=result.dateline;
 							tis.SendMessage(result.content,'',JSON.stringify(loginInfo));
                             util.message('消息提示: 设置成功','', 'success');
 

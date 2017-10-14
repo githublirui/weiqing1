@@ -2610,7 +2610,7 @@ class Wxz_wzbModuleSite extends WeModuleSite {
             pdo_insert('wxz_wzb_comment', $data);
 			$cid=pdo_insertid();
 			$data['id'] = $cid;
-
+			$data['dateline'] = date('Y-m-d H:i:s',$data['dateline']);
 			echo json_encode(array('s'=>1,'data'=>$data));
 			exit;
 		}
