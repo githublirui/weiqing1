@@ -35,7 +35,7 @@ unset($_SESSION['__:proxy:url_from']);
 
 //判断是否中奖，分享
 $sql = "select * from " . tablename('wxz_panorama_win') . " where aid={$aid} AND fans_id =" . $user["uid"];
-$wins = pdo_fetch($sql, $pars);
+$wins = pdo_fetchall($sql, $pars);
 $sql = "select share_num,cellphone from " . tablename('wxz_panorama_fans') . " where uid =" . $user["uid"];
 $is_fans = pdo_fetch($sql, $pars);
 //if ($is_win && $is_fans['share_num'] == '0' && $is_fans['cellphone']) {
