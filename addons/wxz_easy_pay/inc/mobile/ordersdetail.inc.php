@@ -16,7 +16,7 @@ if (empty($_GPC['oid'])) {
 $oid = (int) $_GPC['oid'];
 $getcode = (string) $_GPC['code'];
 
-$orderinfo = pdo_get('hangyi_order', array('id' => $oid, 'sell_openid' => $_W['fans']['openid']));
+$orderinfo = pdo_get('hangyi_order', array('id' => $oid));
 if ($orderinfo) {
 
     $key = "wxz_easy_pay_{$_GPC['oid']}";
